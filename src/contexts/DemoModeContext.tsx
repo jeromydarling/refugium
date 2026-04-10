@@ -57,9 +57,9 @@ export function DemoModeProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const simulateWrite = useCallback((actionLabel?: string) => {
-    toast.success(actionLabel || 'Changes saved', {
-      description: 'Demo mode — no data was written',
-      duration: 2000,
+    toast.success(actionLabel || 'Action completed', {
+      description: 'Demo mode — this action was simulated',
+      duration: 2500,
     });
     return true;
   }, []);
