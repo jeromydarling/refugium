@@ -1,11 +1,12 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { HouseholdCard } from '@/components/people/HouseholdCard';
 import { households, getNeedsForHousehold, getSignalsForHousehold } from '@/data';
 import { useIsDesktop } from '@/hooks/useIsDesktop';
-import { Search } from 'lucide-react';
+import { Search, Filter } from 'lucide-react';
 import { StaggerList } from '@/components/shared/StaggerList';
 
 const STATUS_ORDER: Record<string, number> = { acute: 0, stabilizing: 1, rebuilding: 2, recovered: 3 };
@@ -26,6 +27,7 @@ const STATUS_LABELS: Record<string, string> = {
 
 export default function PeopleTab() {
   const [search, setSearch] = useState('');
+  const [showUnassignedOnly, setShowUnassignedOnly] = useState(false);
   const navigate = useNavigate();
   const isDesktop = useIsDesktop();
 
@@ -33,8 +35,9 @@ export default function PeopleTab() {
     const q = search.toLowerCase();
     return households
       .filter(h => !q || h.familyName.toLowerCase().includes(q) || h.headOfHousehold.toLowerCase().includes(q))
+      .filter(h => !showUnassignedOnly || (h.assignedVolunteerId === null && h.currentStatus !== 'recovered'))
       .sort((a, b) => (STATUS_ORDER[a.currentStatus] ?? 9) - (STATUS_ORDER[b.currentStatus] ?? 9));
-  }, [search]);
+  }, [search, showUnassignedOnly]);
 
   // Compute status counts for KPI cards
   const statusCounts = useMemo(() => {
@@ -66,14 +69,25 @@ export default function PeopleTab() {
         </div>
       )}
 
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          placeholder="Search households..."
-          className="pl-9"
-        />
+      <div className="flex items-center gap-2">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Search households..."
+            className="pl-9"
+          />
+        </div>
+        <Button
+          size="sm"
+          variant={showUnassignedOnly ? 'default' : 'outline'}
+          className="gap-1.5 shrink-0"
+          onClick={() => setShowUnassignedOnly(prev => !prev)}
+        >
+          <Filter className="h-3.5 w-3.5" />
+          {showUnassignedOnly ? 'Show all' : 'Unassigned only'}
+        </Button>
       </div>
 
       <p className="text-sm text-muted-foreground">{filtered.length} Households</p>

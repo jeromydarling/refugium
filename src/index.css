@@ -719,3 +719,14 @@ html.a11y-mode .a11y-voice-hint {
   color: hsl(var(--foreground));
   background: hsl(var(--muted) / 0.5);
 }
+
+/* ─── Print styles ─── */
+@media print {
+  [class*="fixed"], nav, .compass-glow, .action-bar,
+  [aria-label="Open NRI Compass"], [aria-label="Open Refuge"] {
+    display: none !important;
+  }
+  body {
+    font-size: 12pt;
+  }
+}
