@@ -299,7 +299,7 @@ export function NewCaseWizard({ open, onClose, onRefugeCreated }: NewCaseWizardP
                   <p className="text-sm text-muted-foreground mt-1">Tap all that apply — we'll match resources automatically</p>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2 mb-4">
+                <div className="grid grid-cols-2 gap-2 mb-3">
                   {(Object.keys(NEED_CATEGORIES) as NeedCategory[]).map(key => {
                     const cat = NEED_CATEGORIES[key];
                     const Icon = NEED_ICONS[key] || FileText;
@@ -327,10 +327,19 @@ export function NewCaseWizard({ open, onClose, onRefugeCreated }: NewCaseWizardP
                   })}
                 </div>
 
+                {/* What Matters prompts — appear for selected needs */}
                 {selectedNeeds.length > 0 && (
-                  <p className="text-xs text-center text-muted-foreground mb-3">
-                    {selectedNeeds.length} need{selectedNeeds.length > 1 ? 's' : ''} selected
-                  </p>
+                  <div className="mb-3 space-y-1.5 rounded-xl bg-primary/5 border border-primary/10 p-3">
+                    <p className="text-xs font-medium text-primary">Things to ask:</p>
+                    {selectedNeeds.slice(0, 3).map(key => (
+                      <p key={key} className="text-[11px] text-muted-foreground italic leading-relaxed">
+                        {NEED_CATEGORIES[key].whatMatters}
+                      </p>
+                    ))}
+                    {selectedNeeds.length > 3 && (
+                      <p className="text-[10px] text-muted-foreground">+ {selectedNeeds.length - 3} more</p>
+                    )}
+                  </div>
                 )}
 
                 <div className="flex gap-2">

@@ -14,53 +14,50 @@ import {
   Calendar, Sun, Moon, CheckCircle2,
 } from 'lucide-react';
 
-// ── Ignatian Movements × Frankl's Logotherapy ──
-// Each movement pairs Ignatian discernment with Frankl's search for meaning.
+// ── Daily Movements ──
+// Five movements that guide field agents through whole-person care.
+// The meaning dimension is woven in naturally — agents don't need to know
+// the theory to practice it well.
 const MOVEMENTS = [
   {
     key: 'see',
     label: 'See',
     icon: Eye,
     color: 'text-blue-600 bg-blue-100',
-    prompt: 'Who am I present to today? What meaning are they holding onto?',
-    description: 'Presence — encounter the whole person. Frankl taught that even in suffering, people orient toward meaning. What gives this person a reason to keep going?',
-    frankl: 'Creative, experiential, or attitudinal — where is meaning alive for them?',
+    prompt: 'Who am I present to today? What gives them a reason to keep going?',
+    description: 'Before doing anything, see the whole person — their situation, their strengths, what they\'re holding onto. The best help starts with understanding what matters to someone.',
   },
   {
     key: 'discern',
     label: 'Discern',
     icon: Compass,
     color: 'text-amber-600 bg-amber-100',
-    prompt: 'What needs and movements am I noticing — material and existential?',
-    description: 'Reflection — notice not only unmet needs but the inner landscape. Is meaning strengthening or fading? Is there a gap between what this person needs and what gives their life purpose?',
-    frankl: '"Between stimulus and response there is a space. In that space is our power to choose."',
+    prompt: 'What am I noticing — in their needs and in their spirit?',
+    description: 'Look beyond the checklist. Is someone losing hope? Gaining strength? Is there a gap between what they need and what gives their life purpose? The quiet signals matter as much as the urgent ones.',
   },
   {
     key: 'act',
     label: 'Act',
     icon: Zap,
     color: 'text-primary bg-primary/10',
-    prompt: 'What is the one next faithful step that honors both need and meaning?',
-    description: 'Decision — choose the action that serves recovery AND dignity. The best next step often connects a material need to a source of purpose.',
-    frankl: 'Frankl: the task is not to ask what we expect from life, but what life expects from us.',
+    prompt: 'What is the one next step that helps with both the need and the person?',
+    description: 'The best action connects a practical need to something that matters. Replacing tools for a builder. Finding childcare so a mother can breathe. The how matters as much as the what.',
   },
   {
     key: 'accompany',
     label: 'Accompany',
     icon: Heart,
     color: 'text-pink-600 bg-pink-100',
-    prompt: 'How will I stay present? What meaning can I help protect or kindle?',
-    description: 'Continuity — accompaniment is itself a statement of meaning: you are not forgotten. Frankl survived because someone\'s presence reminded him he mattered.',
-    frankl: '"The salvation of man is through love and in love."',
+    prompt: 'How will I stay present? What future are they working toward?',
+    description: 'Showing up again says "you are not forgotten." Ask about their plans, their hopes, the thing they\'re looking forward to. Accompaniment keeps the thread of someone\'s story alive.',
   },
   {
     key: 'restore',
     label: 'Restore',
     icon: RotateCcw,
     color: 'text-green-600 bg-green-100',
-    prompt: 'What meaning emerged today? What changed — in their story and in mine?',
-    description: 'Review — Frankl\'s tragic optimism: meaning can be found in spite of suffering. Did today\'s encounter reveal creative, experiential, or attitudinal meaning?',
-    frankl: '"He who has a why to live for can bear almost any how."',
+    prompt: 'What changed today? What did I learn about what matters to them?',
+    description: 'Honest review. Did the step help? Did something unexpected surface — a strength, a loss, a spark of purpose? What will I carry forward to the next visit?',
   },
 ];
 
@@ -333,9 +330,6 @@ export function WeeklyRhythm() {
                             </div>
                             <p className="text-xs text-muted-foreground mt-0.5 italic">{m.prompt}</p>
                             <p className="text-[11px] text-muted-foreground/70 mt-1">{m.description}</p>
-                            {m.frankl && (
-                              <p className="text-[10px] text-primary/60 mt-1.5 font-medium">{m.frankl}</p>
-                            )}
                           </div>
                         </div>
                       </button>

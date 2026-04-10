@@ -3,12 +3,11 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { getHousehold, getNeedsForHousehold, getSignalsForHousehold, getJourneyForHousehold, getVolunteer, getMeaningMap } from '@/data';
+import { getHousehold, getNeedsForHousehold, getSignalsForHousehold, getJourneyForHousehold, getVolunteer } from '@/data';
 import { NEED_CATEGORIES } from '@/data';
 import { NeedsBadgeRow } from '@/components/people/NeedsBadgeRow';
 import { RecoveryTimeline } from '@/components/people/RecoveryTimeline';
 import { RecoverySignalCard } from '@/components/nri/RecoverySignalCard';
-import { MeaningMapView } from '@/components/people/MeaningMap';
 import { useDemoMode } from '@/contexts/DemoModeContext';
 import { useIsDesktop } from '@/hooks/useIsDesktop';
 import { ArrowLeft, Phone, Mail, MapPin, Mic, ClipboardList, UserPlus } from 'lucide-react';
@@ -52,7 +51,6 @@ export default function PersonDetailPage() {
   const signals = getSignalsForHousehold(household.id);
   const journey = getJourneyForHousehold(household.id);
   const volunteer = household.assignedVolunteerId ? getVolunteer(household.assignedVolunteerId) : null;
-  const meaningMap = getMeaningMap(household.id);
 
   // ── Shared sub-sections ──
   const backButton = (
@@ -140,6 +138,11 @@ export default function PersonDetailPage() {
                   {n.referredTo && (
                     <p className="text-xs text-primary mt-1">Referred to: {n.referredTo}</p>
                   )}
+                  {n.whatMatters && (
+                    <p className="text-xs text-foreground/70 mt-1.5 italic border-l-2 border-accent/40 pl-2">
+                      {n.whatMatters}
+                    </p>
+                  )}
                 </div>
                 <div className="text-right shrink-0">
                   <Badge variant="secondary" className={`text-xs ${cat?.color || ''}`}>{n.status}</Badge>
@@ -159,12 +162,6 @@ export default function PersonDetailPage() {
       <div className="space-y-3">
         {signals.map(s => <RecoverySignalCard key={s.id} signal={s} />)}
       </div>
-    </section>
-  ) : null;
-
-  const meaningSection = meaningMap ? (
-    <section>
-      <MeaningMapView meaningMap={meaningMap} />
     </section>
   ) : null;
 
@@ -238,12 +235,6 @@ export default function PersonDetailPage() {
               <>
                 <Separator />
                 {signalsSection}
-              </>
-            )}
-            {meaningSection && (
-              <>
-                <Separator />
-                {meaningSection}
               </>
             )}
             <Separator />
