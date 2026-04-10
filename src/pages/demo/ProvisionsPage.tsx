@@ -1,11 +1,15 @@
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AnimatedSection } from '@/components/shared/AnimatedSection';
 import { StaggerList } from '@/components/shared/StaggerList';
 import { useIsDesktop } from '@/hooks/useIsDesktop';
+import { useDemoMode } from '@/contexts/DemoModeContext';
+import { donations, getTotalMonetaryDonations, households } from '@/data';
 import {
   Package,
   Truck,
@@ -18,6 +22,11 @@ import {
   Shirt,
   CheckCircle2,
   AlertCircle,
+  DollarSign,
+  Heart,
+  HandHelping,
+  Wrench,
+  Plus,
 } from 'lucide-react';
 import { staggerContainer, staggerItem, cardHover } from '@/lib/animations';
 
@@ -175,6 +184,143 @@ function CategoryCard({ category }: { category: ProvisionCategory }) {
   );
 }
 
+/* ── Donation type badge styles ──────────────────────── */
+const DONATION_TYPE_STYLES: Record<string, { label: string; className: string; icon: typeof DollarSign }> = {
+  monetary: { label: 'Monetary', className: 'bg-emerald-50 text-emerald-800', icon: DollarSign },
+  in_kind: { label: 'In-Kind', className: 'bg-sky-50 text-sky-800', icon: Package },
+  service: { label: 'Service', className: 'bg-violet-50 text-violet-800', icon: HandHelping },
+};
+
+function DonationsTab({ isDesktop }: { isDesktop: boolean }) {
+  const { simulateWrite } = useDemoMode();
+  const totalMonetary = getTotalMonetaryDonations();
+
+  return (
+    <div className="space-y-6">
+      {/* Donation KPIs */}
+      <AnimatedSection delay={0.1}>
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          animate="visible"
+          className={`grid gap-4 ${isDesktop ? 'grid-cols-3' : 'grid-cols-1'}`}
+        >
+          <motion.div variants={staggerItem}>
+            <Card className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-muted text-emerald-700">
+                  <DollarSign className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-foreground">${totalMonetary.toLocaleString()}</p>
+                  <p className="text-xs text-muted-foreground">Total Monetary</p>
+                </div>
+              </div>
+            </Card>
+          </motion.div>
+          <motion.div variants={staggerItem}>
+            <Card className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-muted text-sky-700">
+                  <Heart className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-foreground">{donations.length}</p>
+                  <p className="text-xs text-muted-foreground">Total Donations</p>
+                </div>
+              </div>
+            </Card>
+          </motion.div>
+          <motion.div variants={staggerItem}>
+            <Card className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-muted text-amber-600">
+                  <HandHelping className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-foreground">
+                    {donations.filter(d => d.householdId).length}
+                  </p>
+                  <p className="text-xs text-muted-foreground">Designated Gifts</p>
+                </div>
+              </div>
+            </Card>
+          </motion.div>
+        </motion.div>
+      </AnimatedSection>
+
+      {/* Log Donation button */}
+      <AnimatedSection delay={0.15}>
+        <Button onClick={() => simulateWrite('Donation logged')} className="gap-2">
+          <Plus className="h-4 w-4" />
+          Log Donation
+        </Button>
+      </AnimatedSection>
+
+      {/* Donation list */}
+      <AnimatedSection delay={0.2}>
+        <StaggerList className={`grid gap-4 ${isDesktop ? 'grid-cols-2' : 'grid-cols-1'}`}>
+          {donations.map((donation) => {
+            const typeInfo = DONATION_TYPE_STYLES[donation.type];
+            const TypeIcon = typeInfo.icon;
+            const household = donation.householdId
+              ? households.find(h => h.id === donation.householdId)
+              : null;
+
+            return (
+              <motion.div key={donation.id} {...cardHover}>
+                <Card className="parchment-card p-4">
+                  <div className="flex items-start justify-between gap-3 mb-2">
+                    <div className="flex items-start gap-3 min-w-0">
+                      <div className="p-2 rounded-lg bg-primary/10 text-primary shrink-0">
+                        <TypeIcon className="h-4 w-4" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold text-foreground">{donation.donorName}</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">{donation.purpose}</p>
+                      </div>
+                    </div>
+                    <Badge variant="secondary" className={`text-xs shrink-0 ${typeInfo.className}`}>
+                      {typeInfo.label}
+                    </Badge>
+                  </div>
+
+                  <Separator className="my-2" />
+
+                  <div className="flex items-center justify-between text-xs">
+                    <div className="flex items-center gap-3">
+                      {donation.type === 'monetary' && (
+                        <span className="font-semibold text-emerald-700 text-sm">
+                          ${donation.amount.toLocaleString()}
+                        </span>
+                      )}
+                      {donation.type === 'in_kind' && donation.amount > 0 && (
+                        <span className="font-semibold text-sky-700 text-sm">
+                          ~${donation.amount.toLocaleString()} value
+                        </span>
+                      )}
+                      <span className="text-muted-foreground">
+                        {new Date(donation.date).toLocaleDateString('en-US', {
+                          month: 'short', day: 'numeric', year: 'numeric',
+                        })}
+                      </span>
+                    </div>
+                    {household && (
+                      <Badge variant="outline" className="text-[10px]">
+                        {household.familyName} family
+                      </Badge>
+                    )}
+                  </div>
+                </Card>
+              </motion.div>
+            );
+          })}
+        </StaggerList>
+      </AnimatedSection>
+    </div>
+  );
+}
+
 export default function ProvisionsPage() {
   const isDesktop = useIsDesktop();
 
@@ -193,40 +339,61 @@ export default function ProvisionsPage() {
         </div>
       </AnimatedSection>
 
-      {/* Summary KPIs */}
-      <AnimatedSection delay={0.1}>
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          animate="visible"
-          className={`grid gap-4 ${isDesktop ? 'grid-cols-4' : 'grid-cols-2'}`}
-        >
-          {SUMMARY.map((kpi) => (
-            <motion.div key={kpi.label} variants={staggerItem}>
-              <Card className="p-4">
-                <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-lg bg-muted ${kpi.color}`}>
-                    <kpi.icon className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <p className="text-2xl font-bold text-foreground">{kpi.value}</p>
-                    <p className="text-xs text-muted-foreground">{kpi.label}</p>
-                  </div>
-                </div>
-              </Card>
-            </motion.div>
-          ))}
-        </motion.div>
-      </AnimatedSection>
+      <Tabs defaultValue="supplies">
+        <AnimatedSection delay={0.05}>
+          <TabsList className="mb-4">
+            <TabsTrigger value="supplies">
+              <Warehouse className="h-3.5 w-3.5 mr-1.5" />
+              Supplies
+            </TabsTrigger>
+            <TabsTrigger value="donations">
+              <Heart className="h-3.5 w-3.5 mr-1.5" />
+              Donations
+            </TabsTrigger>
+          </TabsList>
+        </AnimatedSection>
 
-      {/* Category list */}
-      <AnimatedSection delay={0.2}>
-        <StaggerList className={`grid gap-4 ${isDesktop ? 'grid-cols-2' : 'grid-cols-1'}`}>
-          {CATEGORIES.map((cat) => (
-            <CategoryCard key={cat.id} category={cat} />
-          ))}
-        </StaggerList>
-      </AnimatedSection>
+        <TabsContent value="supplies">
+          {/* Summary KPIs */}
+          <AnimatedSection delay={0.1}>
+            <motion.div
+              variants={staggerContainer}
+              initial="hidden"
+              animate="visible"
+              className={`grid gap-4 ${isDesktop ? 'grid-cols-4' : 'grid-cols-2'}`}
+            >
+              {SUMMARY.map((kpi) => (
+                <motion.div key={kpi.label} variants={staggerItem}>
+                  <Card className="p-4">
+                    <div className="flex items-center gap-3">
+                      <div className={`p-2 rounded-lg bg-muted ${kpi.color}`}>
+                        <kpi.icon className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <p className="text-2xl font-bold text-foreground">{kpi.value}</p>
+                        <p className="text-xs text-muted-foreground">{kpi.label}</p>
+                      </div>
+                    </div>
+                  </Card>
+                </motion.div>
+              ))}
+            </motion.div>
+          </AnimatedSection>
+
+          {/* Category list */}
+          <AnimatedSection delay={0.2}>
+            <StaggerList className={`grid gap-4 mt-6 ${isDesktop ? 'grid-cols-2' : 'grid-cols-1'}`}>
+              {CATEGORIES.map((cat) => (
+                <CategoryCard key={cat.id} category={cat} />
+              ))}
+            </StaggerList>
+          </AnimatedSection>
+        </TabsContent>
+
+        <TabsContent value="donations">
+          <DonationsTab isDesktop={isDesktop} />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
