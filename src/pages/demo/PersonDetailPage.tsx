@@ -3,11 +3,12 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { getHousehold, getNeedsForHousehold, getSignalsForHousehold, getJourneyForHousehold, getVolunteer } from '@/data';
+import { getHousehold, getNeedsForHousehold, getSignalsForHousehold, getJourneyForHousehold, getVolunteer, getMeaningMap } from '@/data';
 import { NEED_CATEGORIES } from '@/data';
 import { NeedsBadgeRow } from '@/components/people/NeedsBadgeRow';
 import { RecoveryTimeline } from '@/components/people/RecoveryTimeline';
 import { RecoverySignalCard } from '@/components/nri/RecoverySignalCard';
+import { MeaningMapView } from '@/components/people/MeaningMap';
 import { useDemoMode } from '@/contexts/DemoModeContext';
 import { useIsDesktop } from '@/hooks/useIsDesktop';
 import { ArrowLeft, Phone, Mail, MapPin, Mic, ClipboardList, UserPlus } from 'lucide-react';
@@ -51,6 +52,7 @@ export default function PersonDetailPage() {
   const signals = getSignalsForHousehold(household.id);
   const journey = getJourneyForHousehold(household.id);
   const volunteer = household.assignedVolunteerId ? getVolunteer(household.assignedVolunteerId) : null;
+  const meaningMap = getMeaningMap(household.id);
 
   // ── Shared sub-sections ──
   const backButton = (
@@ -160,6 +162,12 @@ export default function PersonDetailPage() {
     </section>
   ) : null;
 
+  const meaningSection = meaningMap ? (
+    <section>
+      <MeaningMapView meaningMap={meaningMap} />
+    </section>
+  ) : null;
+
   const caseNotesSection = (
     <section>
       <h3 className="text-sm font-semibold text-foreground mb-2">Field Notes</h3>
@@ -232,6 +240,12 @@ export default function PersonDetailPage() {
                 {signalsSection}
               </>
             )}
+            {meaningSection && (
+              <>
+                <Separator />
+                {meaningSection}
+              </>
+            )}
             <Separator />
             {caseNotesSection}
           </div>
@@ -259,6 +273,12 @@ export default function PersonDetailPage() {
           <>
             <Separator />
             {signalsSection}
+          </>
+        )}
+        {meaningSection && (
+          <>
+            <Separator />
+            {meaningSection}
           </>
         )}
         <Separator />

@@ -14,47 +14,53 @@ import {
   Calendar, Sun, Moon, CheckCircle2,
 } from 'lucide-react';
 
-// ── Ignatian Movements ──
+// ── Ignatian Movements × Frankl's Logotherapy ──
+// Each movement pairs Ignatian discernment with Frankl's search for meaning.
 const MOVEMENTS = [
   {
     key: 'see',
     label: 'See',
     icon: Eye,
     color: 'text-blue-600 bg-blue-100',
-    prompt: 'Who am I present to today? What is their context?',
-    description: 'Presence — encounter the person and their situation before acting.',
+    prompt: 'Who am I present to today? What meaning are they holding onto?',
+    description: 'Presence — encounter the whole person. Frankl taught that even in suffering, people orient toward meaning. What gives this person a reason to keep going?',
+    frankl: 'Creative, experiential, or attitudinal — where is meaning alive for them?',
   },
   {
     key: 'discern',
     label: 'Discern',
     icon: Compass,
     color: 'text-amber-600 bg-amber-100',
-    prompt: 'What signals, movements, or unmet needs am I noticing?',
-    description: 'Reflection — notice what the Spirit and the data are saying together.',
+    prompt: 'What needs and movements am I noticing — material and existential?',
+    description: 'Reflection — notice not only unmet needs but the inner landscape. Is meaning strengthening or fading? Is there a gap between what this person needs and what gives their life purpose?',
+    frankl: '"Between stimulus and response there is a space. In that space is our power to choose."',
   },
   {
     key: 'act',
     label: 'Act',
     icon: Zap,
     color: 'text-primary bg-primary/10',
-    prompt: 'What is the one next faithful step?',
-    description: 'Decision — choose the action that most truly serves this person\'s recovery.',
+    prompt: 'What is the one next faithful step that honors both need and meaning?',
+    description: 'Decision — choose the action that serves recovery AND dignity. The best next step often connects a material need to a source of purpose.',
+    frankl: 'Frankl: the task is not to ask what we expect from life, but what life expects from us.',
   },
   {
     key: 'accompany',
     label: 'Accompany',
     icon: Heart,
     color: 'text-pink-600 bg-pink-100',
-    prompt: 'How will I stay present over time? What follow-up is needed?',
-    description: 'Continuity — hold the thread of this relationship beyond today.',
+    prompt: 'How will I stay present? What meaning can I help protect or kindle?',
+    description: 'Continuity — accompaniment is itself a statement of meaning: you are not forgotten. Frankl survived because someone\'s presence reminded him he mattered.',
+    frankl: '"The salvation of man is through love and in love."',
   },
   {
     key: 'restore',
     label: 'Restore',
     icon: RotateCcw,
     color: 'text-green-600 bg-green-100',
-    prompt: 'Did today\'s step help? What changed? What remains?',
-    description: 'Review — honest evaluation in service of the next faithful step.',
+    prompt: 'What meaning emerged today? What changed — in their story and in mine?',
+    description: 'Review — Frankl\'s tragic optimism: meaning can be found in spite of suffering. Did today\'s encounter reveal creative, experiential, or attitudinal meaning?',
+    frankl: '"He who has a why to live for can bear almost any how."',
   },
 ];
 
@@ -327,6 +333,9 @@ export function WeeklyRhythm() {
                             </div>
                             <p className="text-xs text-muted-foreground mt-0.5 italic">{m.prompt}</p>
                             <p className="text-[11px] text-muted-foreground/70 mt-1">{m.description}</p>
+                            {m.frankl && (
+                              <p className="text-[10px] text-primary/60 mt-1.5 font-medium">{m.frankl}</p>
+                            )}
                           </div>
                         </div>
                       </button>
