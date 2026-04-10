@@ -3,9 +3,8 @@ export const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN || 'pk.eyJ1IjoidHJ
 export const MAP_DEFAULTS = {
   center: [-91.1871, 30.4515] as [number, number],
   zoom: 7,
-  // Using light-v11 as reliable default
-  // Custom vintage style: mapbox://styles/transitu/cmns7i5r4000001si3upk9hai
-  style: 'mapbox://styles/mapbox/light-v11',
+  // Custom vintage style
+  style: 'mapbox://styles/transitu/cmns7i5r4000001si3upk9hai',
 };
 
 export const PARTNER_TYPE_COLORS: Record<string, string> = {
