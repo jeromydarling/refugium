@@ -5,7 +5,7 @@ interface LandingMapDecorationProps {
   className?: string;
 }
 
-const isPlaceholderToken = MAPBOX_TOKEN.includes('placeholder');
+const isPlaceholderToken = !MAPBOX_TOKEN || MAPBOX_TOKEN.includes('placeholder');
 
 export default function LandingMapDecoration({
   className = '',
