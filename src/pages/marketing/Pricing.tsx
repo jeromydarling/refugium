@@ -23,7 +23,7 @@ import {
   Shield,
   ArrowUpDown,
   Brain,
-  Infinity,
+  Infinity as InfinityIcon,
   Layers,
   CheckCircle2,
   ArrowRight,
@@ -34,7 +34,7 @@ const features = [
   { icon: Shield, label: "Refuge -- trusted partner directory" },
   { icon: ArrowUpDown, label: "Flow -- volunteer coordination" },
   { icon: Brain, label: "NRI -- Narrative Relationship Intelligence" },
-  { icon: Infinity, label: "Unlimited users and team members" },
+  { icon: InfinityIcon, label: "Unlimited users and team members" },
   { icon: Layers, label: "No tiers, no feature gates, no add-ons" },
 ];
 

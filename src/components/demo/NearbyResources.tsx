@@ -43,7 +43,8 @@ export function NearbyResourcesPanel({ address, zip, state, needs, compact }: Ne
       setResources(r);
       setLoading(false);
     });
-  }, [address, zip, state]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [address, zip, state, needs?.join()]);
 
   if (loading) {
     return (

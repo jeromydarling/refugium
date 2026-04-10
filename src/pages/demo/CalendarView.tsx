@@ -225,7 +225,7 @@ export default function CalendarView() {
     weekLater.setDate(today.getDate() + 7);
     const weekStr = formatDate(weekLater);
     return MOCK_EVENTS.filter(e => e.date >= todayStr && e.date <= weekStr);
-  }, []);
+  }, [today]);
 
   const prevMonth = () => {
     if (currentMonth === 0) { setCurrentMonth(11); setCurrentYear(y => y - 1); }
