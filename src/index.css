@@ -399,6 +399,32 @@
     box-shadow: 0 0 40px hsl(var(--accent) / 0.15), 0 0 80px hsl(var(--accent) / 0.05);
   }
 
+  /* Vintage cartography / parchment */
+  .parchment {
+    background: hsl(var(--ignatian-bg));
+    background-image:
+      radial-gradient(ellipse at 20% 50%, hsl(var(--ignatian-cream) / 0.6) 0%, transparent 70%),
+      radial-gradient(ellipse at 80% 20%, hsl(var(--ignatian-cream-dark) / 0.3) 0%, transparent 60%);
+  }
+
+  .parchment-card {
+    @apply rounded-xl border shadow-sm;
+    background: hsl(var(--ignatian-cream) / 0.7);
+    border-color: hsl(var(--ignatian-border));
+  }
+
+  .field-note {
+    @apply font-serif italic text-sm leading-relaxed;
+    color: hsl(var(--ignatian-brown));
+  }
+
+  .trail-line {
+    stroke: hsl(var(--ignatian-gold));
+    stroke-width: 3;
+    stroke-linecap: round;
+    fill: none;
+  }
+
   .animate-fade-in {
     animation: fadeIn 0.3s ease-out forwards;
   }
