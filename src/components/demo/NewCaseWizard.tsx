@@ -43,12 +43,12 @@ const NEED_ICONS: Partial<Record<NeedCategory, typeof Home>> = {
 interface NewCaseWizardProps {
   open: boolean;
   onClose: () => void;
-  onCaseCreated?: (familyName: string) => void;
+  onRefugeCreated?: (familyName: string) => void;
 }
 
 type Step = 'person' | 'detecting' | 'disaster' | 'needs' | 'matching' | 'done';
 
-export function NewCaseWizard({ open, onClose, onCaseCreated }: NewCaseWizardProps) {
+export function NewCaseWizard({ open, onClose, onRefugeCreated }: NewCaseWizardProps) {
   const { simulateWrite } = useDemoMode();
   const [step, setStep] = useState<Step>('person');
   const [familyName, setFamilyName] = useState('');
@@ -270,7 +270,7 @@ export function NewCaseWizard({ open, onClose, onCaseCreated }: NewCaseWizardPro
                 </Card>
 
                 <Card className="p-4 bg-muted/30 mb-4">
-                  <p className="text-sm font-medium mb-1">Case summary</p>
+                  <p className="text-sm font-medium mb-1">Refuge summary</p>
                   <p className="text-xs text-muted-foreground">
                     {headName} ({familyName} family) &middot; {memberCount} member{parseInt(memberCount) > 1 ? 's' : ''} &middot; {address}
                   </p>
@@ -381,7 +381,7 @@ export function NewCaseWizard({ open, onClose, onCaseCreated }: NewCaseWizardPro
                   >
                     <PartyPopper className="w-8 h-8 text-green-700" />
                   </motion.div>
-                  <h2 className="font-serif text-xl font-bold">Case created!</h2>
+                  <h2 className="font-serif text-xl font-bold">Refuge opened!</h2>
                   <p className="text-sm text-muted-foreground mt-1">
                     The {familyName} family is now being tracked. Here's what we found:
                   </p>
@@ -445,15 +445,15 @@ export function NewCaseWizard({ open, onClose, onCaseCreated }: NewCaseWizardPro
 
                 <Button
                   onClick={() => {
-                    simulateWrite(`Case created for ${familyName} family`);
-                    onCaseCreated?.(familyName);
+                    simulateWrite(`Refuge opened for ${familyName} family`);
+                    onRefugeCreated?.(familyName);
                     handleClose();
                   }}
                   className="w-full gap-2"
                   size="lg"
                 >
                   <CheckCircle2 className="h-4 w-4" />
-                  Start Tracking This Case
+                  Begin This Refuge
                 </Button>
               </motion.div>
             )}
