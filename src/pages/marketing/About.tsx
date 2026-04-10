@@ -7,6 +7,8 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { AnimatedSection } from "@/components/shared/AnimatedSection";
+import { StaggerList } from "@/components/shared/StaggerList";
 import {
   Heart,
   HandHelping,
@@ -88,7 +90,7 @@ export default function About() {
   return (
     <div>
       {/* Header */}
-      <section className="bg-gradient-to-b from-primary/10 to-background py-20 sm:py-28">
+      <AnimatedSection className="bg-gradient-to-b from-primary/10 to-background py-20 sm:py-28">
         <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
           <h1 className="font-serif text-4xl font-bold text-foreground sm:text-5xl">
             About Refugium
@@ -97,7 +99,7 @@ export default function About() {
             See the person. Discern the need. Strengthen the refuge.
           </p>
         </div>
-      </section>
+      </AnimatedSection>
 
       {/* Mission */}
       <section className="bg-background py-16 sm:py-24">
@@ -172,7 +174,7 @@ export default function About() {
               and line of code in Refugium.
             </p>
           </div>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <StaggerList className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {principles.map((principle, index) => (
               <Card
                 key={principle.title}
@@ -198,7 +200,7 @@ export default function About() {
                 </CardContent>
               </Card>
             ))}
-          </div>
+          </StaggerList>
         </div>
       </section>
 

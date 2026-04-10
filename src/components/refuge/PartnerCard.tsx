@@ -1,7 +1,9 @@
+import { motion } from 'framer-motion';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import type { Partner } from '@/data';
 import { Phone, MapPin } from 'lucide-react';
+import { cardHover } from '@/lib/animations';
 
 const TYPE_STYLES: Record<string, string> = {
   church: 'bg-purple-100 text-purple-800',
@@ -17,13 +19,22 @@ const CAPACITY_STYLES: Record<string, string> = {
   full: 'bg-red-100 text-red-800',
 };
 
+const TYPE_BORDER: Record<string, string> = {
+  church: 'border-l-purple-500',
+  nonprofit: 'border-l-blue-500',
+  government: 'border-l-gray-400',
+  host_family: 'border-l-pink-500',
+  business: 'border-l-emerald-500',
+};
+
 interface PartnerCardProps {
   partner: Partner;
 }
 
 export function PartnerCard({ partner }: PartnerCardProps) {
   return (
-    <Card className="p-4">
+    <motion.div {...cardHover}>
+    <Card className={`p-4 border-l-[3px] ${TYPE_BORDER[partner.type] || ''}`}>
       <div className="flex items-start justify-between gap-2 mb-2">
         <h3 className="font-semibold text-sm text-foreground">{partner.name}</h3>
         <Badge variant="secondary" className={`text-xs shrink-0 ${CAPACITY_STYLES[partner.capacity]}`}>
@@ -70,5 +81,6 @@ export function PartnerCard({ partner }: PartnerCardProps) {
         </p>
       )}
     </Card>
+    </motion.div>
   );
 }

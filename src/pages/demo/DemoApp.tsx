@@ -1,6 +1,8 @@
 import { Outlet, Link, useLocation, Navigate } from 'react-router-dom';
 import { DemoBanner } from '@/components/demo/DemoBanner';
+import { DemoSidebar } from '@/components/demo/DemoSidebar';
 import { useDemoMode } from '@/contexts/DemoModeContext';
+import { useIsDesktop } from '@/hooks/useIsDesktop';
 import { Users, Shield, ArrowUpDown, Search } from 'lucide-react';
 
 const TABS = [
@@ -12,11 +14,40 @@ const TABS = [
 export default function DemoApp() {
   const { isDemoMode } = useDemoMode();
   const location = useLocation();
+  const isDesktop = useIsDesktop();
 
   if (!isDemoMode) {
     return <Navigate to="/demo" replace />;
   }
 
+  if (isDesktop) {
+    return (
+      <div className="min-h-screen bg-background flex">
+        {/* Desktop sidebar */}
+        <DemoSidebar />
+
+        {/* Content area offset by sidebar width */}
+        <div className="flex-1 lg:ml-60 flex flex-col min-h-screen">
+          {/* Demo banner */}
+          <DemoBanner />
+
+          {/* Header — no Refugium logo on desktop (it's in sidebar) */}
+          <header className="sticky top-[40px] z-40 bg-background border-b px-6 py-3 flex items-center justify-end">
+            <button className="p-2 text-muted-foreground hover:text-foreground rounded-lg" aria-label="Search">
+              <Search className="h-5 w-5" />
+            </button>
+          </header>
+
+          {/* Content */}
+          <main className="flex-1 overflow-auto">
+            <Outlet />
+          </main>
+        </div>
+      </div>
+    );
+  }
+
+  // Mobile layout — unchanged
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Demo banner */}

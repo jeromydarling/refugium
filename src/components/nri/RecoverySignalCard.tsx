@@ -1,9 +1,11 @@
+import { motion } from 'framer-motion';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { ChevronDown, AlertTriangle, Lightbulb, Link2, PartyPopper, Eye } from 'lucide-react';
 import type { RecoverySignal } from '@/data';
 import { useState } from 'react';
+import { slideUp } from '@/lib/animations';
 
 const KIND_CONFIG: Record<string, { label: string; color: string; icon: typeof AlertTriangle }> = {
   stalled_case: { label: 'Stalled Case', color: 'bg-red-100 text-red-800 border-red-200', icon: AlertTriangle },
@@ -30,6 +32,7 @@ export function RecoverySignalCard({ signal }: RecoverySignalCardProps) {
   const dots = STRENGTH_DOTS[signal.strength] || 1;
 
   return (
+    <motion.div variants={slideUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
     <Card className="border-l-4 border-l-primary/40 p-3">
       <div className="flex items-start gap-2">
         <Icon className="h-4 w-4 mt-0.5 text-muted-foreground shrink-0" />
@@ -73,5 +76,6 @@ export function RecoverySignalCard({ signal }: RecoverySignalCardProps) {
         </div>
       </div>
     </Card>
+    </motion.div>
   );
 }
