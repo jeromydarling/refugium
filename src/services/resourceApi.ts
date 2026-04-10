@@ -228,6 +228,156 @@ export async function getFairMarketRent(zip: string): Promise<FairMarketRent> {
 // Searches all APIs in parallel and returns unified results
 // ═══════════════════════════════════════════════════════════
 
+// ═══════════════════════════════════════════════════════════
+// Transit / Transportation
+// GTFS feeds: standardized bus routes/schedules (per transit agency)
+// Medicaid NEMT: Non-Emergency Medical Transport (state brokers)
+// Perplexity AI crawl: used vehicles, car donations, ride vouchers
+// ═══════════════════════════════════════════════════════════
+
+export interface TransitRoute {
+  id: string;
+  routeName: string;
+  agency: string;
+  nearestStop: string;
+  distanceToStop: string;
+  frequency: string;
+  fare: string;
+  operatingHours: string;
+}
+
+export interface TransportService {
+  id: string;
+  name: string;
+  type: 'medical_transport' | 'bus_pass' | 'ride_voucher' | 'vehicle_assistance' | 'volunteer_driver';
+  provider: string;
+  phone: string;
+  description: string;
+  eligibility: string;
+  cost: string;
+  howToAccess: string;
+}
+
+export async function searchTransportation(address: string, zip: string): Promise<{ routes: TransitRoute[]; services: TransportService[] }> {
+  await new Promise(r => setTimeout(r, 800));
+  return {
+    routes: [
+      { id: 'tr-001', routeName: 'Route 44 — Florida Blvd', agency: 'CATS (Capital Area Transit)', nearestStop: 'Florida & Magnolia', distanceToStop: '0.3 mi walk', frequency: 'Every 30 min', fare: '$1.75 / $0.85 reduced', operatingHours: '5:30 AM - 10:00 PM' },
+      { id: 'tr-002', routeName: 'Route 12 — Plank Road', agency: 'CATS (Capital Area Transit)', nearestStop: 'Plank & Harding', distanceToStop: '0.7 mi walk', frequency: 'Every 45 min', fare: '$1.75 / $0.85 reduced', operatingHours: '6:00 AM - 9:00 PM' },
+      { id: 'tr-003', routeName: 'Route 8 — Government St', agency: 'CATS (Capital Area Transit)', nearestStop: 'Government & Foster', distanceToStop: '0.5 mi walk', frequency: 'Every 20 min', fare: '$1.75 / $0.85 reduced', operatingHours: '5:00 AM - 11:00 PM' },
+    ],
+    services: [
+      { id: 'ts-001', name: 'Medicaid Non-Emergency Transport (NEMT)', type: 'medical_transport', provider: 'Modivcare (Louisiana broker)', phone: '1-866-384-0989', description: 'Free rides to medical appointments for Medicaid recipients. Covers doctor visits, pharmacy, dialysis, therapy. Must schedule 48 hours in advance.', eligibility: 'Active Medicaid coverage', cost: 'Free', howToAccess: 'Call 48 hours before appointment. Provide Medicaid ID, appointment details, pickup address.' },
+      { id: 'ts-002', name: 'Emergency Bus Pass Program', type: 'bus_pass', provider: 'Capital Area United Way', phone: '(225) 555-7001', description: '7-day unlimited bus passes for disaster-affected individuals. Available at United Way office and partner locations.', eligibility: 'Disaster-affected, show FEMA registration or ID from affected area', cost: 'Free (normally $14/week)', howToAccess: 'Walk in to United Way office with disaster documentation. Same-day issuance.' },
+      { id: 'ts-003', name: 'Volunteer Driver Network', type: 'volunteer_driver', provider: 'Interfaith Volunteer Caregivers', phone: '(225) 555-7002', description: 'Volunteer drivers for medical appointments, grocery trips, pharmacy runs. Priority for elderly and disabled disaster survivors.', eligibility: 'Elderly, disabled, or no other transportation', cost: 'Free', howToAccess: 'Call 24-48 hours in advance. Rides available Mon-Sat 8am-5pm.' },
+      { id: 'ts-004', name: 'Vehicle Repair Assistance', type: 'vehicle_assistance', provider: 'Salvation Army Disaster Services', phone: '(225) 555-7003', description: 'Up to $500 toward vehicle repair for disaster-affected families. Covers essential repairs to make a vehicle drivable.', eligibility: 'Disaster-affected, vehicle is primary transportation, income-qualified', cost: 'Up to $500 grant', howToAccess: 'Apply at Salvation Army disaster office. Bring: vehicle title, repair estimate, FEMA registration.' },
+      { id: 'ts-005', name: 'Ride-Share Voucher Program', type: 'ride_voucher', provider: 'Catholic Charities', phone: '(225) 555-7004', description: '$50 in Lyft/Uber credits for disaster survivors needing immediate transport to critical appointments (medical, legal, FEMA).', eligibility: 'Disaster-affected with critical appointment', cost: '$50 credit (free to recipient)', howToAccess: 'Request through your Refugium navigator or call directly. Same-day available.' },
+    ],
+  };
+}
+
+// ═══════════════════════════════════════════════════════════
+// Medical Care / Health Services
+// HRSA Health Center Finder: https://findahealthcenter.hrsa.gov/
+// Real endpoint: https://findahealthcenter.hrsa.gov/api
+// Auth: None required
+// Also: NeedyMeds, Prescription Assistance, Crisis Lines
+// ═══════════════════════════════════════════════════════════
+
+export interface HealthCenter {
+  id: string;
+  name: string;
+  address: string;
+  phone: string;
+  distance: string;
+  services: string[];
+  acceptsUninsured: boolean;
+  slidingScale: boolean;
+  languages: string[];
+  hours: string;
+  walkInsAccepted: boolean;
+}
+
+export interface MedicationProgram {
+  id: string;
+  name: string;
+  provider: string;
+  phone: string;
+  description: string;
+  type: 'discount' | 'free' | 'manufacturer_pap' | 'pharmacy_program';
+  eligibility: string;
+  howToAccess: string;
+}
+
+export interface CrisisLine {
+  id: string;
+  name: string;
+  phone: string;
+  textOption?: string;
+  hours: string;
+  description: string;
+}
+
+export async function searchHealthServices(zip: string): Promise<{
+  healthCenters: HealthCenter[];
+  medicationPrograms: MedicationProgram[];
+  crisisLines: CrisisLine[];
+}> {
+  await new Promise(r => setTimeout(r, 900));
+  return {
+    healthCenters: [
+      { id: 'hc-001', name: 'Capital Area Community Health Center', address: '3700 Florida Blvd, Baton Rouge, LA 70806', phone: '(225) 555-6001', distance: '2.7 mi', services: ['Primary care', 'Dental', 'Behavioral health', 'Pharmacy', 'Pediatrics'], acceptsUninsured: true, slidingScale: true, languages: ['English', 'Spanish', 'Vietnamese'], hours: 'Mon-Fri 8am-6pm, Sat 9am-1pm', walkInsAccepted: true },
+      { id: 'hc-002', name: "Children's Health Services", address: '1020 N Foster Dr, Baton Rouge, LA 70806', phone: '(225) 555-6002', distance: '3.1 mi', services: ['Pediatrics', 'Immunizations', 'WIC', 'Developmental screening'], acceptsUninsured: true, slidingScale: true, languages: ['English', 'Spanish'], hours: 'Mon-Fri 8am-5pm', walkInsAccepted: true },
+      { id: 'hc-003', name: 'St. Francis Medical Outreach', address: '1250 Nicholson Dr, Baton Rouge, LA 70802', phone: '(225) 555-6003', distance: '1.8 mi', services: ['Primary care', 'Prescription assistance', 'Chronic disease management', 'Mental health counseling'], acceptsUninsured: true, slidingScale: true, languages: ['English', 'Spanish', 'French'], hours: 'Mon-Sat 7am-7pm', walkInsAccepted: true },
+    ],
+    medicationPrograms: [
+      { id: 'mp-001', name: 'Disaster Prescription Assistance', provider: 'LA Dept of Health', phone: '(800) 555-6010', description: 'Emergency prescription refills for disaster survivors who lost medications. Up to 30-day supply of most common medications at no cost.', type: 'free', eligibility: 'Disaster-affected, lost medications', howToAccess: 'Visit any participating pharmacy with ID and disaster documentation. No prescription needed for refills of existing medications.' },
+      { id: 'mp-002', name: '$4 Generic Program', provider: 'Walmart Pharmacy', phone: '(225) 555-6011', description: 'Over 300 generic medications for $4/30-day or $10/90-day supply. Includes diabetes, blood pressure, cholesterol, antibiotics, and mental health medications.', type: 'discount', eligibility: 'No income requirement — available to everyone', howToAccess: 'Bring prescription to any Walmart pharmacy. Ask for the $4 generic list.' },
+      { id: 'mp-003', name: 'NeedyMeds Patient Assistance', provider: 'NeedyMeds.org', phone: '1-800-503-6897', description: 'Database of manufacturer Patient Assistance Programs (PAPs). Most brand-name medications available free for qualifying patients.', type: 'manufacturer_pap', eligibility: 'Varies by manufacturer — typically uninsured and income under 300% FPL', howToAccess: 'Search medications at needymeds.org. Download application. Doctor signature required. 2-4 week processing.' },
+      { id: 'mp-004', name: 'GoodRx Discount Card', provider: 'GoodRx', phone: 'N/A', description: 'Free discount card accepted at 70,000+ pharmacies. Average savings of 80% on prescriptions. No insurance required.', type: 'discount', eligibility: 'No requirements — free for everyone', howToAccess: 'Download app or print card from goodrx.com. Show at pharmacy checkout.' },
+    ],
+    crisisLines: [
+      { id: 'cl-001', name: '988 Suicide & Crisis Lifeline', phone: '988', textOption: 'Text 988', hours: '24/7', description: 'Free, confidential support for people in distress. Veterans press 1.' },
+      { id: 'cl-002', name: 'Disaster Distress Helpline', phone: '1-800-985-5990', textOption: 'Text "TalkWithUs" to 66746', hours: '24/7', description: 'Crisis counseling specifically for disaster survivors. Multilingual. Free and confidential.' },
+      { id: 'cl-003', name: 'SAMHSA National Helpline', phone: '1-800-662-4357', hours: '24/7', description: 'Treatment referrals for substance abuse and mental health. Free, confidential. English and Spanish.' },
+    ],
+  };
+}
+
+// ═══════════════════════════════════════════════════════════
+// Navigation Cards — the "next step" for a specific need
+// Combines resource + transport + instructions into one action
+// ═══════════════════════════════════════════════════════════
+
+export interface NavigationStep {
+  id: string;
+  needCategory: string;
+  title: string;
+  destination: string;
+  address: string;
+  phone: string;
+  distance: string;
+  transitOption: string;
+  transitDetails: string;
+  whatToBring: string[];
+  cost: string;
+  hours: string;
+  urgency: 'today' | 'this_week' | 'soon';
+}
+
+export async function getNavigationSteps(householdId: string, zip: string): Promise<NavigationStep[]> {
+  await new Promise(r => setTimeout(r, 600));
+  // In production, this would analyze the household's specific needs
+  // and match them with nearby resources + transit routes
+  return [
+    { id: 'nav-001', needCategory: 'medical_care', title: 'Get Elena\'s medication refilled', destination: 'St. Francis Medical Outreach', address: '1250 Nicholson Dr, Baton Rouge', phone: '(225) 555-6003', distance: '1.8 mi', transitOption: 'Bus #44 from Magnolia & 3rd → Nicholson & River, 18 min', transitDetails: 'OR call Medicaid transport: 1-866-384-0989 (48hr advance)', whatToBring: ['Medicaid card or ID', 'Current prescription list', 'Proof of disaster impact'], cost: 'Free (sliding scale)', hours: 'Mon-Sat 7am-7pm', urgency: 'today' },
+    { id: 'nav-002', needCategory: 'employment', title: 'Get Terrence to the tool lending program', destination: "Lowe's Hardware — Disaster Partner", address: '7979 Airline Hwy, Baton Rouge', phone: '(225) 555-1100', distance: '4.2 mi', transitOption: 'Bus #12 from Plank & Harding → Airline & Cortana, 35 min', transitDetails: 'OR volunteer driver: (225) 555-7002 (24hr advance)', whatToBring: ['Photo ID', 'Proof of disaster impact', 'List of needed tools'], cost: 'Free lending (return within 30 days)', hours: 'Mon-Sat 6am-9pm', urgency: 'this_week' },
+    { id: 'nav-003', needCategory: 'food_assistance', title: 'Apply for D-SNAP benefits', destination: 'LA Dept of Children & Family Services', address: '627 N 4th St, Baton Rouge', phone: '(225) 555-8002', distance: '1.1 mi', transitOption: 'Bus #8 from Government & Foster → 4th & Main, 12 min', transitDetails: 'Walk-in, same-day processing for disaster survivors', whatToBring: ['Photo ID for all adults', 'Proof of address', 'Proof of disaster-related loss', 'Pay stubs or proof of income'], cost: 'Free', hours: 'Mon-Fri 7:30am-5pm', urgency: 'this_week' },
+    { id: 'nav-004', needCategory: 'housing_repair', title: 'Schedule FEMA home inspection', destination: 'FEMA Disaster Recovery Center', address: '1885 Wooddale Blvd, Baton Rouge', phone: '1-800-621-3362', distance: '3.1 mi', transitOption: 'Bus #44 → transfer Bus #8 at Government & Florida, 40 min total', transitDetails: 'OR call for phone inspection: 1-800-621-3362', whatToBring: ['FEMA registration number', 'Photo ID', 'Proof of address', 'Insurance documents'], cost: 'Free', hours: 'Mon-Sat 8am-6pm', urgency: 'this_week' },
+  ];
+}
+
+
 export interface NearbyResources {
   disasters: FemaDisaster[];
   alerts: WeatherAlert[];
@@ -236,6 +386,9 @@ export interface NearbyResources {
   shelters: EmergencyShelter[];
   services: SocialService[];
   fairMarketRent: FairMarketRent;
+  transit: { routes: TransitRoute[]; services: TransportService[] };
+  health: { healthCenters: HealthCenter[]; medicationPrograms: MedicationProgram[]; crisisLines: CrisisLine[] };
+  navigationSteps: NavigationStep[];
   searchedLocation: string;
   searchedAt: string;
 }
@@ -249,7 +402,7 @@ export async function findNearbyResources(
   const city = address.split(',')[0]?.trim() || 'Baton Rouge';
   const keywords = needs?.includes('employment') ? 'disaster recovery' : undefined;
 
-  const [disasters, alerts, jobs, snapRetailers, shelters, services, fairMarketRent] = await Promise.all([
+  const [disasters, alerts, jobs, snapRetailers, shelters, services, fairMarketRent, transit, health, navigationSteps] = await Promise.all([
     searchFemaDisasters(state),
     getActiveAlerts(state),
     searchJobs(address, keywords),
@@ -257,6 +410,9 @@ export async function findNearbyResources(
     searchShelters(city, state),
     search211Services(zip),
     getFairMarketRent(zip),
+    searchTransportation(address, zip),
+    searchHealthServices(zip),
+    getNavigationSteps('demo', zip),
   ]);
 
   return {
@@ -267,6 +423,9 @@ export async function findNearbyResources(
     shelters,
     services,
     fairMarketRent,
+    transit,
+    health,
+    navigationSteps,
     searchedLocation: address,
     searchedAt: new Date().toISOString(),
   };

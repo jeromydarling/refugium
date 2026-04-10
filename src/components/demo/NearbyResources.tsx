@@ -11,7 +11,8 @@ import {
   Briefcase, UtensilsCrossed, Home, Shield, Heart, Scale,
   AlertTriangle, MapPin, Phone, Clock, ExternalLink, Loader2,
   Sparkles, ChevronRight, DollarSign, Cloud, Star,
-  Users, Baby,
+  Users, Baby, Bus, Stethoscope, Pill, ArrowRight, FileText,
+  Navigation,
 } from 'lucide-react';
 
 const CATEGORY_ICONS: Record<string, typeof Briefcase> = {
@@ -118,10 +119,66 @@ export function NearbyResourcesPanel({ address, zip, state, needs, compact }: Ne
         </div>
       )}
 
+      {/* Navigation Steps — the roadmap */}
+      {resources.navigationSteps.length > 0 && (
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <Navigation className="h-4 w-4 text-primary" />
+            <p className="text-xs font-semibold text-foreground">Next Steps — Your Recovery Roadmap</p>
+          </div>
+          <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="space-y-2">
+            {resources.navigationSteps.map(step => (
+              <motion.div key={step.id} variants={staggerItem}>
+                <Card className={`p-3 border-l-3 ${step.urgency === 'today' ? 'border-l-red-400 bg-red-50/30' : step.urgency === 'this_week' ? 'border-l-amber-400' : 'border-l-border'}`}>
+                  <div className="flex items-start gap-2.5">
+                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 mt-0.5 ${step.urgency === 'today' ? 'bg-red-100' : 'bg-primary/10'}`}>
+                      <ArrowRight className={`w-3.5 h-3.5 ${step.urgency === 'today' ? 'text-red-600' : 'text-primary'}`} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm font-semibold text-foreground">{step.title}</p>
+                        <Badge variant="secondary" className={`text-[9px] ${step.urgency === 'today' ? 'bg-red-100 text-red-700' : step.urgency === 'this_week' ? 'bg-amber-100 text-amber-700' : 'bg-muted'}`}>
+                          {step.urgency === 'today' ? 'Today' : step.urgency === 'this_week' ? 'This week' : 'Soon'}
+                        </Badge>
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        {step.destination} &middot; {step.distance}
+                      </p>
+                      <p className="text-[11px] text-muted-foreground flex items-center gap-1 mt-1">
+                        <Bus className="h-3 w-3 shrink-0" />
+                        {step.transitOption}
+                      </p>
+                      {step.transitDetails && (
+                        <p className="text-[10px] text-muted-foreground mt-0.5 italic">{step.transitDetails}</p>
+                      )}
+                      <div className="flex flex-wrap gap-x-3 gap-y-1 mt-1.5 text-[10px] text-muted-foreground">
+                        <span className="flex items-center gap-0.5"><Phone className="h-2.5 w-2.5" />{step.phone}</span>
+                        <span className="flex items-center gap-0.5"><Clock className="h-2.5 w-2.5" />{step.hours}</span>
+                        <span className="flex items-center gap-0.5"><DollarSign className="h-2.5 w-2.5" />{step.cost}</span>
+                      </div>
+                      {step.whatToBring.length > 0 && (
+                        <div className="mt-1.5 p-2 rounded-md bg-muted/40">
+                          <p className="text-[10px] font-medium text-muted-foreground mb-0.5">
+                            <FileText className="h-2.5 w-2.5 inline mr-0.5" />Bring:
+                          </p>
+                          <p className="text-[10px] text-muted-foreground">{step.whatToBring.join(' · ')}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </Card>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      )}
+
       {/* Tabbed resources */}
-      <Tabs defaultValue={needs?.includes('employment') ? 'jobs' : 'services'}>
-        <TabsList className="grid w-full grid-cols-4 h-9">
+      <Tabs defaultValue={needs?.includes('employment') ? 'jobs' : needs?.includes('medical_care') ? 'medical' : needs?.includes('transportation') ? 'transport' : 'services'}>
+        <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6 h-9">
           <TabsTrigger value="jobs" className="text-xs gap-1"><Briefcase className="h-3 w-3" />Jobs</TabsTrigger>
+          <TabsTrigger value="medical" className="text-xs gap-1"><Stethoscope className="h-3 w-3" />Medical</TabsTrigger>
+          <TabsTrigger value="transport" className="text-xs gap-1"><Bus className="h-3 w-3" />Transit</TabsTrigger>
           <TabsTrigger value="food" className="text-xs gap-1"><UtensilsCrossed className="h-3 w-3" />Food</TabsTrigger>
           <TabsTrigger value="shelter" className="text-xs gap-1"><Home className="h-3 w-3" />Shelter</TabsTrigger>
           <TabsTrigger value="services" className="text-xs gap-1"><Heart className="h-3 w-3" />Services</TabsTrigger>
@@ -314,6 +371,140 @@ export function NearbyResourcesPanel({ address, zip, state, needs, compact }: Ne
           </motion.div>
 
           <p className="text-[10px] text-center text-muted-foreground">Powered by 211 &middot; Open Referral HSDS</p>
+        </TabsContent>
+
+        {/* ── Medical ── */}
+        <TabsContent value="medical" className="mt-3 space-y-3">
+          {/* Health Centers */}
+          <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
+            <Stethoscope className="h-3 w-3 inline mr-1" />
+            Nearby Health Centers — No Insurance Required
+          </p>
+          <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="space-y-2">
+            {resources.health.healthCenters.map(hc => (
+              <motion.div key={hc.id} variants={staggerItem}>
+                <Card className="p-3 border-l-2 border-l-green-400">
+                  <p className="text-sm font-medium">{hc.name}</p>
+                  <div className="flex flex-wrap gap-1 mt-1">
+                    {hc.services.map(s => <Badge key={s} variant="secondary" className="text-[9px] bg-green-50 text-green-700">{s}</Badge>)}
+                  </div>
+                  <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2 text-[10px] text-muted-foreground">
+                    <span className="flex items-center gap-1"><MapPin className="h-3 w-3" />{hc.distance}</span>
+                    <span className="flex items-center gap-1"><Phone className="h-3 w-3" />{hc.phone}</span>
+                    <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{hc.hours}</span>
+                  </div>
+                  <div className="flex gap-2 mt-1.5">
+                    {hc.slidingScale && <Badge variant="secondary" className="text-[9px] bg-primary/10 text-primary">Sliding scale</Badge>}
+                    {hc.walkInsAccepted && <Badge variant="secondary" className="text-[9px] bg-amber-100 text-amber-700">Walk-ins OK</Badge>}
+                    {hc.languages.length > 1 && <Badge variant="secondary" className="text-[9px]">{hc.languages.join(', ')}</Badge>}
+                  </div>
+                </Card>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          <Separator />
+
+          {/* Medication Programs */}
+          <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
+            <Pill className="h-3 w-3 inline mr-1" />
+            Medication Assistance
+          </p>
+          {resources.health.medicationPrograms.map(mp => (
+            <Card key={mp.id} className="p-3">
+              <div className="flex items-start justify-between gap-2">
+                <div>
+                  <p className="text-sm font-medium">{mp.name}</p>
+                  <p className="text-xs text-muted-foreground">{mp.provider}</p>
+                  <p className="text-[11px] text-muted-foreground mt-1">{mp.description}</p>
+                  <p className="text-[10px] text-primary mt-1">How: {mp.howToAccess}</p>
+                </div>
+                <Badge variant="secondary" className={`text-[9px] shrink-0 ${mp.type === 'free' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
+                  {mp.type === 'free' ? 'Free' : mp.type === 'discount' ? 'Discount' : 'Assistance'}
+                </Badge>
+              </div>
+            </Card>
+          ))}
+
+          <Separator />
+
+          {/* Crisis Lines */}
+          <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Crisis Lines — 24/7</p>
+          <div className="grid grid-cols-1 gap-2">
+            {resources.health.crisisLines.map(cl => (
+              <Card key={cl.id} className="p-3 bg-red-50/30 border-red-100">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-semibold">{cl.name}</p>
+                    <p className="text-[11px] text-muted-foreground">{cl.description}</p>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <p className="text-sm font-bold text-primary">{cl.phone}</p>
+                    {cl.textOption && <p className="text-[10px] text-muted-foreground">{cl.textOption}</p>}
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+
+          <p className="text-[10px] text-center text-muted-foreground">Powered by HRSA Health Center Finder &middot; NeedyMeds &middot; SAMHSA</p>
+        </TabsContent>
+
+        {/* ── Transportation ── */}
+        <TabsContent value="transport" className="mt-3 space-y-3">
+          {/* Transit Routes */}
+          <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
+            <Bus className="h-3 w-3 inline mr-1" />
+            Nearby Bus Routes
+          </p>
+          <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="space-y-2">
+            {resources.transit.routes.map(route => (
+              <motion.div key={route.id} variants={staggerItem}>
+                <Card className="p-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <p className="text-sm font-medium">{route.routeName}</p>
+                      <p className="text-xs text-muted-foreground">{route.agency}</p>
+                      <p className="text-[11px] text-muted-foreground mt-1">
+                        Nearest stop: {route.nearestStop} ({route.distanceToStop})
+                      </p>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <p className="text-xs font-medium text-primary">{route.fare}</p>
+                      <p className="text-[10px] text-muted-foreground">Every {route.frequency.replace('Every ', '')}</p>
+                    </div>
+                  </div>
+                </Card>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          <Separator />
+
+          {/* Transport Services */}
+          <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
+            Transportation Assistance
+          </p>
+          {resources.transit.services.map(svc => (
+            <Card key={svc.id} className={`p-3 ${svc.type === 'medical_transport' ? 'border-l-2 border-l-green-400 bg-green-50/20' : ''}`}>
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="text-sm font-medium">{svc.name}</p>
+                  <p className="text-xs text-muted-foreground">{svc.provider}</p>
+                  <p className="text-[11px] text-muted-foreground mt-1">{svc.description}</p>
+                  <p className="text-[10px] text-primary mt-1">How: {svc.howToAccess}</p>
+                  <div className="flex gap-3 mt-1.5 text-[10px] text-muted-foreground">
+                    <span className="flex items-center gap-1"><Phone className="h-3 w-3" />{svc.phone}</span>
+                  </div>
+                </div>
+                <Badge variant="secondary" className={`text-[9px] shrink-0 ${svc.cost === 'Free' || svc.cost.includes('Free') ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
+                  {svc.cost}
+                </Badge>
+              </div>
+            </Card>
+          ))}
+
+          <p className="text-[10px] text-center text-muted-foreground">Powered by GTFS Transit Feeds &middot; Medicaid NEMT &middot; 211</p>
         </TabsContent>
       </Tabs>
     </div>
