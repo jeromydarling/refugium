@@ -3,9 +3,11 @@ import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Textarea } from '@/components/ui/textarea';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { getHousehold, getNeedsForHousehold, getSignalsForHousehold, getJourneyForHousehold, getVolunteer } from '@/data';
-import { NEED_CATEGORIES } from '@/data';
+import { NEED_CATEGORIES, volunteers } from '@/data';
 import { NeedsBadgeRow } from '@/components/people/NeedsBadgeRow';
 import { RenewalTrail } from '@/components/people/RenewalTrail';
 import { RecoverySignalCard } from '@/components/nri/RecoverySignalCard';
@@ -13,10 +15,11 @@ import { useDemoMode } from '@/contexts/DemoModeContext';
 import { useIsDesktop } from '@/hooks/useIsDesktop';
 import HouseholdResourceMap from '@/components/map/HouseholdResourceMap';
 import { partners } from '@/data';
+import { toast } from 'sonner';
 import {
   ArrowLeft, Phone, MapPin, Compass, Bus,
   ChevronDown, Mic, ClipboardList, UserPlus,
-  BookOpen, CheckCircle2,
+  BookOpen, CheckCircle2, Share2, ExternalLink, Printer,
 } from 'lucide-react';
 
 // ── Stage label map (mirrors RenewalTrail STAGES) ──
@@ -92,6 +95,11 @@ export default function PersonDetailPage() {
   const { simulateWrite } = useDemoMode();
   const isDesktop = useIsDesktop();
 
+  const [showLogContact, setShowLogContact] = useState(false);
+  const [contactType, setContactType] = useState<'Visit' | 'Call' | 'Text' | 'Email'>('Visit');
+  const [contactNotes, setContactNotes] = useState('');
+  const [showAssignPicker, setShowAssignPicker] = useState(false);
+
   const household = getHousehold(id || '');
   if (!household) {
     return (
@@ -117,22 +125,101 @@ export default function PersonDetailPage() {
   // Completed stages for "Trail Behind"
   const completedStages = journey?.stages.filter(s => s.status === 'completed') || [];
 
+  const activeVolunteers = volunteers.filter(v => v.status === 'active');
+
+  const handleLogContactSave = () => {
+    simulateWrite(`${contactType} logged${contactNotes ? ': ' + contactNotes : ''}`);
+    setShowLogContact(false);
+    setContactNotes('');
+    setContactType('Visit');
+  };
+
+  const handleAssignVolunteer = (volunteerId: string) => {
+    const vol = volunteers.find(v => v.id === volunteerId);
+    if (vol) {
+      simulateWrite(`Assigned to ${vol.name}`);
+    }
+    setShowAssignPicker(false);
+  };
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(window.location.href);
+    toast('Link copied');
+  };
+
+  const handleCopySurvivorLink = () => {
+    const url = `${window.location.origin}/r/${household.id}`;
+    navigator.clipboard.writeText(url);
+    toast('Survivor link copied');
+  };
+
   // ── Action buttons (shared) ──
   const actionButtons = (
     <>
-      <Button size="sm" className="gap-1.5" onClick={() => simulateWrite('Visit logged')}>
+      <Button size="sm" className="gap-1.5" onClick={() => setShowLogContact(prev => !prev)}>
         <Mic className="h-4 w-4" />
-        Log Visit
+        Log Contact
       </Button>
       <Button size="sm" variant="outline" className="gap-1.5" onClick={() => simulateWrite('Needs updated')}>
         <ClipboardList className="h-4 w-4" />
         Update Needs
       </Button>
-      <Button size="sm" variant="outline" className="gap-1.5" onClick={() => simulateWrite('Volunteer assigned')}>
+      <Button size="sm" variant="outline" className="gap-1.5" onClick={() => setShowAssignPicker(prev => !prev)}>
         <UserPlus className="h-4 w-4" />
         Assign
       </Button>
     </>
+  );
+
+  // ── Log Contact inline form ──
+  const logContactForm = showLogContact && (
+    <div className="parchment-card p-4 space-y-3">
+      <p className="text-sm font-semibold">Log Contact</p>
+      <div className="flex gap-1.5 flex-wrap">
+        {(['Visit', 'Call', 'Text', 'Email'] as const).map(type => (
+          <Button
+            key={type}
+            size="sm"
+            variant={contactType === type ? 'default' : 'outline'}
+            className="text-xs"
+            onClick={() => setContactType(type)}
+          >
+            {type}
+          </Button>
+        ))}
+      </div>
+      <Textarea
+        value={contactNotes}
+        onChange={e => setContactNotes(e.target.value)}
+        placeholder="Quick notes..."
+        rows={3}
+        className="text-sm"
+      />
+      <div className="flex gap-2">
+        <Button size="sm" onClick={handleLogContactSave}>Save</Button>
+        <Button size="sm" variant="ghost" onClick={() => setShowLogContact(false)}>Cancel</Button>
+      </div>
+    </div>
+  );
+
+  // ── Assign volunteer picker ──
+  const assignPicker = showAssignPicker && (
+    <div className="parchment-card p-4 space-y-3">
+      <p className="text-sm font-semibold">Assign Volunteer</p>
+      <Select onValueChange={handleAssignVolunteer}>
+        <SelectTrigger className="w-full">
+          <SelectValue placeholder="Select a volunteer..." />
+        </SelectTrigger>
+        <SelectContent>
+          {activeVolunteers.map(v => (
+            <SelectItem key={v.id} value={v.id}>
+              {v.name} — {v.zone}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <Button size="sm" variant="ghost" onClick={() => setShowAssignPicker(false)}>Cancel</Button>
+    </div>
   );
 
   return (
@@ -142,12 +229,27 @@ export default function PersonDetailPage() {
          ═══════════════════════════════════════════════ */}
       <div className="parchment px-4 pt-4 pb-5 sm:px-6">
         <div className={isDesktop ? 'max-w-4xl mx-auto' : ''}>
-          <Link
-            to="/demo/app/people"
-            className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-3"
-          >
-            <ArrowLeft className="h-4 w-4" /> Back
-          </Link>
+          <div className="flex items-center justify-between mb-3">
+            <Link
+              to="/demo/app/people"
+              className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+            >
+              <ArrowLeft className="h-4 w-4" /> Back
+            </Link>
+            <div className="flex items-center gap-1">
+              <Button size="sm" variant="ghost" className="h-8 gap-1.5 text-xs" onClick={handleCopyLink}>
+                <Share2 className="h-3.5 w-3.5" />
+                Share
+              </Button>
+              <Button size="sm" variant="ghost" className="h-8 gap-1.5 text-xs" onClick={handleCopySurvivorLink}>
+                <ExternalLink className="h-3.5 w-3.5" />
+                Survivor Link
+              </Button>
+              <Button size="sm" variant="ghost" className="h-8 w-8 p-0" onClick={() => window.print()} aria-label="Print">
+                <Printer className="h-3.5 w-3.5" />
+              </Button>
+            </div>
+          </div>
 
           <div className="flex items-start justify-between gap-3">
             <div>
@@ -171,6 +273,14 @@ export default function PersonDetailPage() {
           {isDesktop && (
             <div className="mt-4 flex items-center gap-2">
               {actionButtons}
+            </div>
+          )}
+
+          {/* Inline forms (desktop) */}
+          {isDesktop && (
+            <div className="mt-3 space-y-3">
+              {logContactForm}
+              {assignPicker}
             </div>
           )}
         </div>
@@ -339,20 +449,29 @@ export default function PersonDetailPage() {
           9. ACTION BAR — Mobile sticky bottom
          ═══════════════════════════════════════════════ */}
       {!isDesktop && (
-        <div className="fixed bottom-16 left-0 right-0 bg-background/95 backdrop-blur-sm border-t p-3 flex gap-2 z-40">
-          <Button size="sm" className="flex-1 gap-1" onClick={() => simulateWrite('Visit logged')}>
-            <Mic className="h-4 w-4" />
-            Log Visit
-          </Button>
-          <Button size="sm" variant="outline" className="flex-1 gap-1" onClick={() => simulateWrite('Needs updated')}>
-            <ClipboardList className="h-4 w-4" />
-            Update Needs
-          </Button>
-          <Button size="sm" variant="outline" className="flex-1 gap-1" onClick={() => simulateWrite('Volunteer assigned')}>
-            <UserPlus className="h-4 w-4" />
-            Assign
-          </Button>
-        </div>
+        <>
+          {/* Inline forms (mobile) — above the action bar */}
+          {(showLogContact || showAssignPicker) && (
+            <div className="fixed bottom-32 left-0 right-0 bg-background/95 backdrop-blur-sm border-t p-3 z-40 space-y-3">
+              {logContactForm}
+              {assignPicker}
+            </div>
+          )}
+          <div className="fixed bottom-16 left-0 right-0 bg-background/95 backdrop-blur-sm border-t p-3 flex gap-2 z-40 action-bar">
+            <Button size="sm" className="flex-1 gap-1" onClick={() => setShowLogContact(prev => !prev)}>
+              <Mic className="h-4 w-4" />
+              Log Contact
+            </Button>
+            <Button size="sm" variant="outline" className="flex-1 gap-1" onClick={() => simulateWrite('Needs updated')}>
+              <ClipboardList className="h-4 w-4" />
+              Update Needs
+            </Button>
+            <Button size="sm" variant="outline" className="flex-1 gap-1" onClick={() => setShowAssignPicker(prev => !prev)}>
+              <UserPlus className="h-4 w-4" />
+              Assign
+            </Button>
+          </div>
+        </>
       )}
     </div>
   );
