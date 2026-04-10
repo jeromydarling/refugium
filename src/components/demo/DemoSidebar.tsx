@@ -2,7 +2,13 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useDemoMode } from '@/contexts/DemoModeContext';
 import { Button } from '@/components/ui/button';
-import { Users, Shield, ArrowUpDown, LogOut } from 'lucide-react';
+import { Users, Shield, ArrowUpDown, LogOut, LayoutDashboard, LayoutGrid } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
+
+const ORG_ITEMS = [
+  { path: '/demo/app/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { path: '/demo/app/board', label: 'Board', icon: LayoutGrid },
+];
 
 const NAV_ITEMS = [
   { path: '/demo/app/people', label: 'People', icon: Users },
@@ -31,6 +37,35 @@ export function DemoSidebar() {
 
       {/* Navigation */}
       <nav className="flex-1 px-3 space-y-1">
+        {ORG_ITEMS.map(item => {
+          const isActive = location.pathname.startsWith(item.path);
+          return (
+            <Link
+              key={item.path}
+              to={item.path}
+              className="relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors"
+            >
+              {isActive && (
+                <motion.div
+                  layoutId="sidebar-indicator"
+                  className="absolute inset-0 bg-[hsl(var(--sidebar-accent))] rounded-lg"
+                  transition={{ type: 'spring', stiffness: 350, damping: 30 }}
+                />
+              )}
+              <item.icon className={`h-5 w-5 relative z-10 ${isActive ? 'text-[hsl(var(--sidebar-primary))]' : ''}`} />
+              <span className={`relative z-10 ${isActive ? 'text-[hsl(var(--sidebar-primary))]' : ''}`}>
+                {item.label}
+              </span>
+            </Link>
+          );
+        })}
+
+        <div className="px-3 pt-3 pb-1">
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-[hsl(var(--sidebar-foreground))]/40">
+            Navigator
+          </p>
+        </div>
+
         {NAV_ITEMS.map(item => {
           const isActive = location.pathname.startsWith(item.path);
           return (

@@ -14,6 +14,8 @@ import Terms from '@/pages/marketing/Terms';
 // Demo
 import DemoGate from '@/pages/demo/DemoGate';
 import DemoApp from '@/pages/demo/DemoApp';
+import OrgDashboard from '@/pages/demo/OrgDashboard';
+import BoardView from '@/pages/demo/BoardView';
 import PeopleTab from '@/pages/demo/PeopleTab';
 import PersonDetailPage from '@/pages/demo/PersonDetailPage';
 import RefugeTab from '@/pages/demo/RefugeTab';
@@ -42,7 +44,9 @@ export function AppRouter() {
 
       {/* Demo app */}
       <Route path="/demo/app" element={<DemoApp />}>
-        <Route index element={<Navigate to="people" replace />} />
+        <Route index element={<Navigate to="dashboard" replace />} />
+        <Route path="dashboard" element={<OrgDashboard />} />
+        <Route path="board" element={<BoardView />} />
         <Route path="people" element={<PeopleTab />} />
         <Route path="people/:id" element={<PersonDetailPage />} />
         <Route path="refuge" element={<RefugeTab />} />

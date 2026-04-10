@@ -6,10 +6,12 @@ import { DemoSidebar } from '@/components/demo/DemoSidebar';
 import { NewCaseWizard } from '@/components/demo/NewCaseWizard';
 import { useDemoMode } from '@/contexts/DemoModeContext';
 import { useIsDesktop } from '@/hooks/useIsDesktop';
-import { Users, Shield, ArrowUpDown, Search, Plus } from 'lucide-react';
+import { Users, Shield, ArrowUpDown, Search, Plus, LayoutDashboard, LayoutGrid } from 'lucide-react';
 import { buttonTap } from '@/lib/animations';
 
 const TABS = [
+  { path: '/demo/app/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { path: '/demo/app/board', label: 'Board', icon: LayoutGrid },
   { path: '/demo/app/people', label: 'People', icon: Users },
   { path: '/demo/app/refuge', label: 'Refuge', icon: Shield },
   { path: '/demo/app/flow', label: 'Flow', icon: ArrowUpDown },
@@ -87,7 +89,7 @@ export default function DemoApp() {
               <Link
                 key={tab.path}
                 to={tab.path}
-                className={`flex flex-col items-center gap-1 py-3 px-6 text-xs font-medium transition-colors ${
+                className={`flex flex-col items-center gap-0.5 py-2.5 px-2 text-[10px] font-medium transition-colors ${
                   isActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
