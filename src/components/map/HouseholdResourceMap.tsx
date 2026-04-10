@@ -148,6 +148,10 @@ export default function HouseholdResourceMap({
             <MapPin className="w-10 h-10 text-[hsl(var(--ignatian-gold))] mx-auto mb-3" />
             <p className="text-sm font-serif font-medium text-[hsl(var(--ignatian-brown))]">Resource map</p>
             <p className="text-xs text-[hsl(var(--ignatian-muted))] mt-1">{partners.length} organizations nearby ready to help</p>
+            <p className="text-[10px] text-[hsl(var(--ignatian-muted))] mt-2">
+              {isPlaceholder ? 'No token' : mapError ? 'Map error — check console' : 'Loading...'}
+              {' · Token: '}{MAPBOX_TOKEN ? MAPBOX_TOKEN.slice(0, 10) + '...' : 'empty'}
+            </p>
           </div>
         </div>
       </div>
