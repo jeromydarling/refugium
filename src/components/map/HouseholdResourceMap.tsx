@@ -67,7 +67,10 @@ export default function HouseholdResourceMap({
         setMapReady(true);
       });
 
-      map.on('error', () => setMapError(true));
+      map.on('error', (e) => {
+        console.error('[HouseholdResourceMap] Mapbox error:', e);
+        setMapError(true);
+      });
 
       return () => {
         map.remove();

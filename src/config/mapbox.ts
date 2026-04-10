@@ -3,8 +3,9 @@ export const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN || 'pk.eyJ1IjoidHJ
 export const MAP_DEFAULTS = {
   center: [-91.1871, 30.4515] as [number, number],
   zoom: 7,
-  // Custom vintage style based on Standard Oil Company road maps
-  style: 'mapbox://styles/transitu/cmns7i5r4000001si3upk9hai',
+  // Custom vintage style — using streets-v12 as reliable fallback
+  // Your custom style: mapbox://styles/transitu/cmns7i5r4000001si3upk9hai
+  style: 'mapbox://styles/mapbox/streets-v12',
 };
 
 export const PARTNER_TYPE_COLORS: Record<string, string> = {

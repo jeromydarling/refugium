@@ -56,7 +56,8 @@ export default function MapContainer({
         onMapReady?.(map);
       });
 
-      map.on('error', () => {
+      map.on('error', (e) => {
+        console.error('[MapContainer] Mapbox error:', e);
         setMapError(true);
       });
 
