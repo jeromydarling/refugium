@@ -6,67 +6,67 @@
 
 @layer base {
   :root {
-    /* Core Brand — Refugium Deep Teal */
-    --background: 210 12% 96%;
-    --foreground: 210 20% 15%;
+    /* Core Brand — Refugium Cream & Red (Red Cross trust) */
+    --background: 30 25% 97%;
+    --foreground: 25 30% 14%;
 
     /* Marketing theme tokens */
-    --marketing-navy: 210 35% 14%;
-    --marketing-teal: 196 65% 30%;
-    --marketing-amber: 38 75% 55%;
-    --marketing-surface: 210 15% 97%;
-    --marketing-border: 210 12% 90%;
+    --marketing-navy: 25 35% 14%;
+    --marketing-red: 0 65% 42%;
+    --marketing-cream: 30 33% 92%;
+    --marketing-surface: 30 25% 97%;
+    --marketing-border: 30 18% 88%;
 
-    /* Cards & Surfaces */
-    --card: 210 10% 98%;
-    --card-foreground: 210 20% 15%;
+    /* Cards & Surfaces — Warm Cream */
+    --card: 33 30% 97%;
+    --card-foreground: 25 30% 14%;
 
-    --popover: 210 10% 98%;
-    --popover-foreground: 210 20% 15%;
+    --popover: 33 30% 97%;
+    --popover-foreground: 25 30% 14%;
 
-    /* Primary — Deep Teal (shelter, stability, trust) */
-    --primary: 196 65% 30%;
-    --primary-foreground: 40 20% 97%;
+    /* Primary — Warm Red (trust, urgency, humanitarian) */
+    --primary: 0 60% 42%;
+    --primary-foreground: 30 30% 97%;
 
-    /* Secondary — Cool Gray */
-    --secondary: 210 12% 93%;
-    --secondary-foreground: 210 20% 15%;
+    /* Secondary — Warm Stone */
+    --secondary: 30 15% 93%;
+    --secondary-foreground: 25 30% 14%;
 
     /* Muted */
-    --muted: 210 12% 93%;
-    --muted-foreground: 210 8% 50%;
+    --muted: 30 15% 93%;
+    --muted-foreground: 25 10% 50%;
 
-    /* Accent — Warm Amber (hope, recovery) */
-    --accent: 38 75% 55%;
-    --accent-foreground: 210 20% 15%;
+    /* Accent — Deep Cream Gold (warmth, hope) */
+    --accent: 30 45% 50%;
+    --accent-foreground: 30 30% 97%;
 
-    /* Destructive — Muted Rust */
-    --destructive: 8 55% 48%;
-    --destructive-foreground: 40 20% 97%;
+    /* Destructive — Deeper Red */
+    --destructive: 0 72% 38%;
+    --destructive-foreground: 30 30% 97%;
 
     /* Status Colors */
-    --success: 155 35% 38%;
-    --success-foreground: 40 20% 97%;
+    --success: 145 35% 38%;
+    --success-foreground: 30 30% 97%;
     --warning: 35 65% 52%;
-    --warning-foreground: 40 20% 97%;
+    --warning-foreground: 30 30% 97%;
     --info: 205 40% 48%;
-    --info-foreground: 40 20% 97%;
+    --info-foreground: 30 30% 97%;
 
     /* Recovery Stage Colors */
     --stage-intake: 205 40% 48%;
-    --stage-assessment: 196 50% 38%;
-    --stage-stabilizing: 38 65% 52%;
-    --stage-rebuilding: 155 35% 38%;
+    --stage-assessment: 0 45% 50%;
+    --stage-stabilizing: 35 65% 52%;
+    --stage-rebuilding: 145 35% 38%;
     --stage-recovered: 145 40% 42%;
 
-    /* Borders & Inputs */
-    --border: 210 12% 88%;
-    --input: 210 12% 88%;
-    --ring: 196 65% 30%;
+    /* Borders & Inputs — Warm */
+    --border: 30 15% 88%;
+    --input: 30 15% 88%;
+    --ring: 0 60% 42%;
 
     --radius: 0.75rem;
 
-    /* Ignatian / Indoles Warm Palette (retained) */
+    /* Ignatian / Indoles Warm Palette */
     --ignatian-deep: 25 35% 18%;
     --ignatian-brown: 25 28% 29%;
     --ignatian-gold: 30 29% 43%;
@@ -79,61 +79,61 @@
     --ignatian-bg: 30 25% 97%;
     --ignatian-bg-end: 30 22% 91%;
 
-    /* Sidebar — Deep Navy */
-    --sidebar-background: 210 30% 12%;
-    --sidebar-foreground: 210 12% 90%;
-    --sidebar-primary: 196 55% 45%;
-    --sidebar-primary-foreground: 40 20% 97%;
-    --sidebar-accent: 210 25% 18%;
-    --sidebar-accent-foreground: 210 12% 90%;
-    --sidebar-border: 210 25% 18%;
-    --sidebar-ring: 196 55% 45%;
+    /* Sidebar — Deep Warm Brown */
+    --sidebar-background: 25 25% 12%;
+    --sidebar-foreground: 30 15% 90%;
+    --sidebar-primary: 0 55% 50%;
+    --sidebar-primary-foreground: 30 30% 97%;
+    --sidebar-accent: 25 20% 18%;
+    --sidebar-accent-foreground: 30 15% 90%;
+    --sidebar-border: 25 20% 18%;
+    --sidebar-ring: 0 55% 50%;
 
-    /* Chart Colors */
-    --chart-1: 196 65% 30%;
-    --chart-2: 38 75% 55%;
-    --chart-3: 155 35% 38%;
+    /* Chart Colors — Warm Humanitarian */
+    --chart-1: 0 60% 42%;
+    --chart-2: 30 45% 50%;
+    --chart-3: 145 35% 38%;
     --chart-4: 205 40% 48%;
-    --chart-5: 8 55% 48%;
+    --chart-5: 35 65% 52%;
   }
 
   .dark {
-    --background: 210 20% 9%;
-    --foreground: 210 12% 90%;
+    --background: 25 20% 9%;
+    --foreground: 30 15% 90%;
 
-    --card: 210 18% 12%;
-    --card-foreground: 210 12% 90%;
+    --card: 25 18% 12%;
+    --card-foreground: 30 15% 90%;
 
-    --popover: 210 18% 12%;
-    --popover-foreground: 210 12% 90%;
+    --popover: 25 18% 12%;
+    --popover-foreground: 30 15% 90%;
 
-    --primary: 196 55% 40%;
-    --primary-foreground: 40 20% 97%;
+    --primary: 0 55% 48%;
+    --primary-foreground: 30 30% 97%;
 
-    --secondary: 210 18% 18%;
-    --secondary-foreground: 210 12% 90%;
+    --secondary: 25 18% 18%;
+    --secondary-foreground: 30 15% 90%;
 
-    --muted: 210 18% 18%;
-    --muted-foreground: 210 8% 58%;
+    --muted: 25 18% 18%;
+    --muted-foreground: 25 10% 58%;
 
-    --accent: 38 65% 50%;
-    --accent-foreground: 210 20% 15%;
+    --accent: 30 40% 50%;
+    --accent-foreground: 30 30% 97%;
 
-    --destructive: 8 45% 45%;
-    --destructive-foreground: 40 20% 97%;
+    --destructive: 0 50% 42%;
+    --destructive-foreground: 30 30% 97%;
 
-    --border: 210 18% 20%;
-    --input: 210 18% 20%;
-    --ring: 196 55% 40%;
+    --border: 25 18% 20%;
+    --input: 25 18% 20%;
+    --ring: 0 55% 48%;
 
-    --sidebar-background: 210 25% 7%;
-    --sidebar-foreground: 210 12% 90%;
-    --sidebar-primary: 196 55% 45%;
-    --sidebar-primary-foreground: 40 20% 97%;
-    --sidebar-accent: 210 22% 14%;
-    --sidebar-accent-foreground: 210 12% 90%;
-    --sidebar-border: 210 22% 14%;
-    --sidebar-ring: 196 55% 45%;
+    --sidebar-background: 25 22% 7%;
+    --sidebar-foreground: 30 15% 90%;
+    --sidebar-primary: 0 55% 50%;
+    --sidebar-primary-foreground: 30 30% 97%;
+    --sidebar-accent: 25 18% 14%;
+    --sidebar-accent-foreground: 30 15% 90%;
+    --sidebar-border: 25 18% 14%;
+    --sidebar-ring: 0 55% 50%;
   }
 }
 

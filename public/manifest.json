@@ -4,8 +4,8 @@
   "description": "Survivor-Centered Disaster Recovery",
   "start_url": "/refugium/",
   "display": "standalone",
-  "background_color": "#1a4d5c",
-  "theme_color": "#1a4d5c",
+  "background_color": "#f5f0eb",
+  "theme_color": "#9b2c2c",
   "orientation": "portrait-primary",
   "icons": [
     {
