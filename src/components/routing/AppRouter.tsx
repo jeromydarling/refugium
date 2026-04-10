@@ -21,25 +21,26 @@ import PersonDetailPage from '@/pages/demo/PersonDetailPage';
 import RefugeTab from '@/pages/demo/RefugeTab';
 import FlowTab from '@/pages/demo/FlowTab';
 import CalendarView from '@/pages/demo/CalendarView';
-import ComingSoonPage from '@/pages/demo/ComingSoonPage';
+
+// Demo — full feature pages
+import ReportsPage from '@/pages/demo/ReportsPage';
+import VisitsPage from '@/pages/demo/VisitsPage';
+import ActivitiesPage from '@/pages/demo/ActivitiesPage';
+import SettingsPage from '@/pages/demo/SettingsPage';
+import AnchorsPage from '@/pages/demo/AnchorsPage';
+import PipelinePage from '@/pages/demo/PipelinePage';
+import GraphPage from '@/pages/demo/GraphPage';
+import ZonesPage from '@/pages/demo/ZonesPage';
+import ProjectsPage from '@/pages/demo/ProjectsPage';
+import ProvisionsPage from '@/pages/demo/ProvisionsPage';
+import PlaybooksPage from '@/pages/demo/PlaybooksPage';
+import JournalPage from '@/pages/demo/JournalPage';
+
+// Survivor portal
 import SurvivorPortal from '@/pages/SurvivorPortal';
 
 // Not Found
 import NotFound from '@/pages/NotFound';
-
-// Coming soon wrappers for CROS features being melded
-const ReportsPage = () => <ComingSoonPage title="Reports" description="Impact reports, PDF export, template builder, and scheduled delivery to funders. Powered by CROS reporting engine." crosPage="Reports.tsx" />;
-const VisitsPage = () => <ComingSoonPage title="Visits" description="Today's visit schedule with voice notes, field observations, and Ignatian reflection prompts." crosPage="Visits.tsx" />;
-const ActivitiesPage = () => <ComingSoonPage title="Activities" description="Unified timeline of all navigator activities — visits, calls, referrals, and field notes." crosPage="Activities.tsx" />;
-const AnchorsPage = () => <ComingSoonPage title="Anchors" description="Key partner organizations that are pillars of your disaster response — churches, nonprofits, host families." crosPage="Anchors.tsx" />;
-const PipelinePage = () => <ComingSoonPage title="Pipeline" description="Kanban view of partner organizations you're building relationships with over time." crosPage="Pipeline.tsx" />;
-const GraphPage = () => <ComingSoonPage title="Connections" description="Visual relationship map showing how families, partners, volunteers, and resources connect." crosPage="RelationshipGraph.tsx" />;
-const ZonesPage = () => <ComingSoonPage title="Zones" description="Geographic disaster zones with community data, coverage gaps, and resource allocation." crosPage="Metros.tsx" />;
-const ProjectsPage = () => <ComingSoonPage title="Projects" description="Multi-household recovery projects — neighborhood rebuilds, community health initiatives." crosPage="Projects.tsx" />;
-const ProvisionsPage = () => <ComingSoonPage title="Provisions" description="Track physical supplies: donated goods, building materials, medical supplies, furniture deliveries." crosPage="Provisions.tsx" />;
-const PlaybooksPage = () => <ComingSoonPage title="Playbooks" description="Guided workflows for navigators: how to do an intake, handle a stalled refuge, connect to FEMA." crosPage="Playbooks.tsx" />;
-const JournalPage = () => <ComingSoonPage title="Journal" description="Your private field journal — reflect on what you've seen, process what matters, remember why you do this work." crosPage="Impulsus.tsx" />;
-const SettingsPage = () => <ComingSoonPage title="Settings" description="Organization configuration, user roles, region assignment, integrations, and preferences." crosPage="Settings.tsx" />;
 
 export function AppRouter() {
   return (
