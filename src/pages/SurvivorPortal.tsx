@@ -13,7 +13,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { getHousehold, getNeedsForHousehold, getJourneyForHousehold, partners } from '@/data';
+import { getHousehold, getNeedsForHousehold, getJourneyForHousehold, partners, getVolunteer, volunteers } from '@/data';
 import { NEED_CATEGORIES } from '@/data/mockNeeds';
 import { RenewalTrail } from '@/components/people/RenewalTrail';
 import HouseholdResourceMap from '@/components/map/HouseholdResourceMap';
@@ -21,7 +21,7 @@ import { staggerContainer, staggerItem } from '@/lib/animations';
 import {
   MapPin, Phone, CheckCircle2, Circle, ArrowRight, Bus,
   Clock, DollarSign, FileText, Heart, Shield, Compass,
-  PartyPopper, Send, ChevronDown, MessageCircle, Map,
+  PartyPopper, Send, ChevronDown, MessageCircle, Map, Users,
   Home, UtensilsCrossed, Stethoscope, Briefcase, Car, Baby,
   Zap, Scale, Brain, Shirt,
 } from 'lucide-react';
@@ -269,6 +269,109 @@ export default function SurvivorPortal() {
             </Card>
           )}
 
+          {/* ── YOUR COMMUNITY ── */}
+          <div>
+            <p className="font-serif text-base font-semibold mb-2 flex items-center gap-2">
+              <Users className="h-4 w-4 text-[hsl(var(--ignatian-brown))]" /> Your community
+            </p>
+            <p className="text-xs text-muted-foreground mb-3">
+              These are the people and organizations walking with you.
+            </p>
+            <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="space-y-2">
+              {/* Navigator */}
+              {household.assignedVolunteerId && (() => {
+                const vol = getVolunteer(household.assignedVolunteerId!);
+                if (!vol) return null;
+                const initials = vol.name.split(' ').map(n => n[0]).join('').toUpperCase();
+                return (
+                  <motion.div variants={staggerItem}>
+                    <Card className="p-3 parchment-card border-l-2 border-l-primary">
+                      <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0 text-xs font-bold text-primary">
+                          {initials}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold">{vol.name}</p>
+                          <p className="text-[11px] text-muted-foreground">Your navigator · {vol.zone}</p>
+                          <p className="text-[11px] text-muted-foreground flex items-center gap-1 mt-0.5">
+                            <Phone className="h-3 w-3" />{vol.phone}
+                          </p>
+                        </div>
+                        <Badge variant="secondary" className="text-[9px] bg-primary/10 text-primary shrink-0">Navigator</Badge>
+                      </div>
+                    </Card>
+                  </motion.div>
+                );
+              })()}
+
+              {/* Partner organizations that are helping this family */}
+              {needs.filter(n => n.referredTo).map(n => {
+                const partner = partners.find(p => p.name.toLowerCase().includes(n.referredTo!.toLowerCase().split(' ')[0]));
+                const initials = n.referredTo!.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+                return (
+                  <motion.div key={n.id} variants={staggerItem}>
+                    <Card className="p-3 parchment-card">
+                      <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-full bg-[hsl(var(--ignatian-cream-dark))] flex items-center justify-center shrink-0 text-[10px] font-bold text-[hsl(var(--ignatian-brown))]">
+                          {initials}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold">{n.referredTo}</p>
+                          <p className="text-[11px] text-muted-foreground">Helping with: {n.title}</p>
+                          {partner && (
+                            <p className="text-[11px] text-muted-foreground flex items-center gap-1 mt-0.5">
+                              <Phone className="h-3 w-3" />{partner.phone} · {partner.contactPerson}
+                            </p>
+                          )}
+                        </div>
+                        <Badge variant="secondary" className="text-[9px] shrink-0">
+                          {partner?.type.replace('_', ' ') || 'partner'}
+                        </Badge>
+                      </div>
+                      {partner?.notes && (
+                        <p className="text-[10px] italic text-muted-foreground mt-2 ml-12">
+                          {partner.notes}
+                        </p>
+                      )}
+                    </Card>
+                  </motion.div>
+                );
+              })}
+
+              {/* Nearby partners ready to help */}
+              {(() => {
+                const referredNames = needs.filter(n => n.referredTo).map(n => n.referredTo!.toLowerCase());
+                const otherPartners = partners
+                  .filter(p => !referredNames.some(r => p.name.toLowerCase().includes(r.split(' ')[0])))
+                  .slice(0, 3);
+                if (otherPartners.length === 0) return null;
+                return (
+                  <>
+                    <p className="text-[10px] text-muted-foreground mt-2 font-medium uppercase tracking-wider">Also ready to help</p>
+                    {otherPartners.map(p => {
+                      const initials = p.name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+                      return (
+                        <motion.div key={p.id} variants={staggerItem}>
+                          <Card className="p-2.5 flex items-center gap-3 bg-muted/20">
+                            <div className="w-7 h-7 rounded-full bg-muted flex items-center justify-center shrink-0 text-[9px] font-bold text-muted-foreground">
+                              {initials}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs font-medium truncate">{p.name}</p>
+                              <p className="text-[10px] text-muted-foreground">{p.services[0]}</p>
+                            </div>
+                            <p className="text-[10px] text-muted-foreground shrink-0">{p.type.replace('_', ' ')}</p>
+                          </Card>
+                        </motion.div>
+                      );
+                    })}
+                  </>
+                );
+              })()}
+            </motion.div>
+          </div>
+
+          {/* ── HELP NEAR YOU (map) ── */}
           <div>
             <p className="font-serif text-base font-semibold mb-2 flex items-center gap-2">
               <MapPin className="h-4 w-4 text-[hsl(var(--ignatian-brown))]" /> Help near you
