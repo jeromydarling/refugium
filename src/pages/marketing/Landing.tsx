@@ -293,16 +293,18 @@ export default function Landing() {
   return (
     <div>
       {/* ── Hero ─────────────────────────────────────────────────── */}
-      <AnimatedSection className="relative overflow-hidden bg-gradient-to-b from-background via-background to-background">
-        {/* Live map background */}
-        <div
-          ref={heroMapRef}
-          className="absolute inset-0 opacity-[0.12] pointer-events-none"
-          aria-hidden="true"
-        />
+      <section className="relative overflow-hidden min-h-[600px] lg:min-h-[700px] bg-background">
+        {/* Live map background — needs explicit height to render */}
+        <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+          <div
+            ref={heroMapRef}
+            className="w-full h-full"
+            style={{ opacity: 0.25 }}
+          />
+        </div>
 
         {/* Warm overlay on top of map */}
-        <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/70 to-background pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/50 to-background pointer-events-none" />
 
         <div className="relative mx-auto max-w-6xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8 lg:py-40">
           <div className="mx-auto max-w-3xl text-center">
@@ -344,7 +346,7 @@ export default function Landing() {
             </div>
           </div>
         </div>
-      </AnimatedSection>
+      </section>
 
       <WavesDivider className="w-full h-8" />
 
