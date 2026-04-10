@@ -21,3 +21,9 @@ export { journeys, getJourneyForHousehold } from './mockCaseJourneys';
 
 export type { MeaningMap, MeaningObservation } from './mockMeaningMaps';
 export { meaningMaps, getMeaningMap } from './mockMeaningMaps';
+
+export type { Donation } from './mockDonations';
+export { donations, getDonationsForHousehold, getTotalMonetaryDonations } from './mockDonations';
+
+export type { SharedNote } from './mockSharedNotes';
+export { sharedNotes, getSharedNotesForHousehold } from './mockSharedNotes';
