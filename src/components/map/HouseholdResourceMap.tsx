@@ -49,18 +49,15 @@ export default function HouseholdResourceMap({
   useEffect(() => {
     if (!containerRef.current || isPlaceholder) return;
 
+    (mapboxgl as any).accessToken = MAPBOX_TOKEN;
+
     try {
-      (mapboxgl as any).accessToken = MAPBOX_TOKEN;
       const map = new mapboxgl.Map({
         container: containerRef.current,
-        style: MAP_DEFAULTS.style,
+        style: 'mapbox://styles/mapbox/light-v11',
         center: [householdLng, householdLat],
         zoom: 12,
-        attributionControl: false,
       });
-
-      map.addControl(new mapboxgl.NavigationControl(), 'top-right');
-      map.addControl(new mapboxgl.AttributionControl({ compact: true }), 'bottom-right');
 
       map.on('load', () => {
         mapRef.current = map;
@@ -69,14 +66,15 @@ export default function HouseholdResourceMap({
 
       map.on('error', (e) => {
         console.error('[HouseholdResourceMap] Mapbox error:', e);
-        setMapError(true);
+        // Don't set mapError on every error — only on fatal ones
       });
 
       return () => {
         map.remove();
         mapRef.current = null;
       };
-    } catch {
+    } catch (err) {
+      console.error('[HouseholdResourceMap] Init error:', err);
       setMapError(true);
     }
   }, [householdLat, householdLng, isPlaceholder]);

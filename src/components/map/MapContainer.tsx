@@ -58,7 +58,7 @@ export default function MapContainer({
 
       map.on('error', (e) => {
         console.error('[MapContainer] Mapbox error:', e);
-        setMapError(true);
+        // Don't set mapError on tile errors — only log them
       });
 
       mapRef.current = map;
