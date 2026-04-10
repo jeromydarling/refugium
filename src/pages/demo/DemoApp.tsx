@@ -35,10 +35,10 @@ export default function DemoApp() {
             ? 'bottom-8 right-8 px-5 py-3.5 text-sm font-medium'
             : 'bottom-24 right-4 p-4'
         }`}
-        aria-label="New Case"
+        aria-label="Open Refuge"
       >
         <Plus className={isDesktop ? 'h-5 w-5' : 'h-6 w-6'} />
-        {isDesktop && 'New Case'}
+        {isDesktop && 'Open Refuge'}
       </motion.button>
       <NewCaseWizard
         open={wizardOpen}

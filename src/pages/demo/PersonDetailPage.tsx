@@ -115,7 +115,7 @@ export default function PersonDetailPage() {
 
   const recoveryJourney = journey ? (
     <section>
-      <h3 className="text-sm font-semibold text-foreground mb-3">Recovery Journey</h3>
+      <h3 className="text-sm font-semibold text-foreground mb-3">Refuge Journey</h3>
       <RecoveryTimeline journey={journey} />
     </section>
   ) : null;
@@ -162,7 +162,7 @@ export default function PersonDetailPage() {
 
   const caseNotesSection = (
     <section>
-      <h3 className="text-sm font-semibold text-foreground mb-2">Case Notes</h3>
+      <h3 className="text-sm font-semibold text-foreground mb-2">Field Notes</h3>
       <div className="space-y-3">
         {household.caseNotes.map(n => (
           <div key={n.id} className="border-l-2 border-border pl-3">

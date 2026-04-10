@@ -2,6 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { VolunteerCard } from '@/components/flow/VolunteerCard';
 import { TaskCard, type Task } from '@/components/flow/TaskCard';
 import { RecoverySignalCard } from '@/components/nri/RecoverySignalCard';
+import { WeeklyRhythm } from '@/components/demo/WeeklyRhythm';
 import { volunteers, getSystemSignals } from '@/data';
 import { useIsDesktop } from '@/hooks/useIsDesktop';
 import { AlertTriangle } from 'lucide-react';
@@ -32,16 +33,18 @@ export default function FlowTab() {
     </div>
   ) : null;
 
-  // ── Desktop: side-by-side tasks & volunteers ──
+  // ── Desktop: rhythm + side-by-side tasks & volunteers ──
   if (isDesktop) {
     return (
       <div className="p-6 space-y-6">
+        {/* Weekly Rhythm - full width */}
+        <WeeklyRhythm />
+
         {/* NRI alerts full-width */}
         {nriAlerts}
 
         {/* Two-column grid */}
         <div className="grid grid-cols-2 gap-6">
-          {/* Left: Tasks */}
           <div className="space-y-4">
             <h2 className="text-sm font-semibold text-foreground">
               Tasks ({DEMO_TASKS.length})
@@ -51,7 +54,6 @@ export default function FlowTab() {
             </StaggerList>
           </div>
 
-          {/* Right: Volunteers */}
           <div className="space-y-4">
             <h2 className="text-sm font-semibold text-foreground">
               Volunteers ({activeVolunteers.length})
@@ -68,11 +70,14 @@ export default function FlowTab() {
     );
   }
 
-  // ── Mobile: tabbed layout (unchanged) ──
+  // ── Mobile: rhythm at top, then tabbed layout ──
   return (
-    <div className="p-4">
+    <div className="p-4 space-y-4">
+      {/* Weekly Rhythm */}
+      <WeeklyRhythm />
+
       {/* NRI System Alert */}
-      {nriAlerts && <div className="mb-4">{nriAlerts}</div>}
+      {nriAlerts}
 
       <Tabs defaultValue="tasks">
         <TabsList className="grid w-full grid-cols-2 mb-4">
