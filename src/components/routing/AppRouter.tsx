@@ -11,7 +11,7 @@ import Contact from '@/pages/marketing/Contact';
 import Privacy from '@/pages/marketing/Privacy';
 import Terms from '@/pages/marketing/Terms';
 
-// Demo
+// Demo — core pages
 import DemoGate from '@/pages/demo/DemoGate';
 import DemoApp from '@/pages/demo/DemoApp';
 import OrgDashboard from '@/pages/demo/OrgDashboard';
@@ -21,9 +21,24 @@ import PersonDetailPage from '@/pages/demo/PersonDetailPage';
 import RefugeTab from '@/pages/demo/RefugeTab';
 import FlowTab from '@/pages/demo/FlowTab';
 import CalendarView from '@/pages/demo/CalendarView';
+import ComingSoonPage from '@/pages/demo/ComingSoonPage';
 
 // Not Found
 import NotFound from '@/pages/NotFound';
+
+// Coming soon wrappers for CROS features being melded
+const ReportsPage = () => <ComingSoonPage title="Reports" description="Impact reports, PDF export, template builder, and scheduled delivery to funders. Powered by CROS reporting engine." crosPage="Reports.tsx" />;
+const VisitsPage = () => <ComingSoonPage title="Visits" description="Today's visit schedule with voice notes, field observations, and Ignatian reflection prompts." crosPage="Visits.tsx" />;
+const ActivitiesPage = () => <ComingSoonPage title="Activities" description="Unified timeline of all navigator activities — visits, calls, referrals, and field notes." crosPage="Activities.tsx" />;
+const AnchorsPage = () => <ComingSoonPage title="Anchors" description="Key partner organizations that are pillars of your disaster response — churches, nonprofits, host families." crosPage="Anchors.tsx" />;
+const PipelinePage = () => <ComingSoonPage title="Pipeline" description="Kanban view of partner organizations you're building relationships with over time." crosPage="Pipeline.tsx" />;
+const GraphPage = () => <ComingSoonPage title="Connections" description="Visual relationship map showing how families, partners, volunteers, and resources connect." crosPage="RelationshipGraph.tsx" />;
+const ZonesPage = () => <ComingSoonPage title="Zones" description="Geographic disaster zones with community data, coverage gaps, and resource allocation." crosPage="Metros.tsx" />;
+const ProjectsPage = () => <ComingSoonPage title="Projects" description="Multi-household recovery projects — neighborhood rebuilds, community health initiatives." crosPage="Projects.tsx" />;
+const ProvisionsPage = () => <ComingSoonPage title="Provisions" description="Track physical supplies: donated goods, building materials, medical supplies, furniture deliveries." crosPage="Provisions.tsx" />;
+const PlaybooksPage = () => <ComingSoonPage title="Playbooks" description="Guided workflows for navigators: how to do an intake, handle a stalled refuge, connect to FEMA." crosPage="Playbooks.tsx" />;
+const JournalPage = () => <ComingSoonPage title="Journal" description="Your private field journal — reflect on what you've seen, process what matters, remember why you do this work." crosPage="Impulsus.tsx" />;
+const SettingsPage = () => <ComingSoonPage title="Settings" description="Organization configuration, user roles, region assignment, integrations, and preferences." crosPage="Settings.tsx" />;
 
 export function AppRouter() {
   return (
@@ -46,13 +61,35 @@ export function AppRouter() {
       {/* Demo app */}
       <Route path="/demo/app" element={<DemoApp />}>
         <Route index element={<Navigate to="dashboard" replace />} />
+
+        {/* Command */}
         <Route path="dashboard" element={<OrgDashboard />} />
         <Route path="board" element={<BoardView />} />
+        <Route path="reports" element={<ReportsPage />} />
+
+        {/* Navigator */}
         <Route path="people" element={<PeopleTab />} />
         <Route path="people/:id" element={<PersonDetailPage />} />
         <Route path="refuge" element={<RefugeTab />} />
         <Route path="flow" element={<FlowTab />} />
         <Route path="calendar" element={<CalendarView />} />
+        <Route path="visits" element={<VisitsPage />} />
+        <Route path="activities" element={<ActivitiesPage />} />
+
+        {/* Network */}
+        <Route path="anchors" element={<AnchorsPage />} />
+        <Route path="pipeline" element={<PipelinePage />} />
+        <Route path="graph" element={<GraphPage />} />
+        <Route path="zones" element={<ZonesPage />} />
+
+        {/* Operations */}
+        <Route path="projects" element={<ProjectsPage />} />
+        <Route path="provisions" element={<ProvisionsPage />} />
+        <Route path="playbooks" element={<PlaybooksPage />} />
+
+        {/* Personal */}
+        <Route path="journal" element={<JournalPage />} />
+        <Route path="settings" element={<SettingsPage />} />
       </Route>
 
       {/* Catch-all */}
