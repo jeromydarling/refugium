@@ -56,10 +56,10 @@ const INTEGRATIONS: Integration[] = [
 ];
 
 const ROLE_COLORS: Record<string, string> = {
-  Director: 'bg-purple-100 text-purple-800',
-  Coordinator: 'bg-blue-100 text-blue-800',
-  Navigator: 'bg-green-100 text-green-800',
-  Volunteer: 'bg-amber-100 text-amber-800',
+  Director: 'bg-violet-50 text-violet-800',
+  Coordinator: 'bg-sky-50 text-sky-800',
+  Navigator: 'bg-emerald-50 text-emerald-800',
+  Volunteer: 'bg-amber-50 text-amber-800',
 };
 
 export default function SettingsPage() {
@@ -213,7 +213,7 @@ export default function SettingsPage() {
                             </p>
                           </div>
                           {integration.status === 'connected' ? (
-                            <Badge className="text-xs bg-green-100 text-green-800 shrink-0" variant="secondary">
+                            <Badge className="text-xs bg-emerald-50 text-emerald-800 shrink-0" variant="secondary">
                               <Shield className="h-3 w-3 mr-1" />
                               Connected
                             </Badge>

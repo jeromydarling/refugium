@@ -23,23 +23,23 @@ import {
 } from 'lucide-react';
 
 const TYPE_META: Record<string, { label: string; icon: typeof Building2; color: string }> = {
-  church: { label: 'Church', icon: Church, color: 'bg-purple-100 text-purple-700' },
-  nonprofit: { label: 'Nonprofit', icon: Building2, color: 'bg-blue-100 text-blue-700' },
+  church: { label: 'Church', icon: Church, color: 'bg-violet-50 text-violet-800' },
+  nonprofit: { label: 'Nonprofit', icon: Building2, color: 'bg-sky-50 text-sky-800' },
   government: { label: 'Government', icon: Landmark, color: 'bg-slate-100 text-slate-700' },
-  host_family: { label: 'Host Family', icon: Home, color: 'bg-amber-100 text-amber-700' },
-  business: { label: 'Business', icon: Store, color: 'bg-green-100 text-green-700' },
+  host_family: { label: 'Host Family', icon: Home, color: 'bg-amber-50 text-amber-800' },
+  business: { label: 'Business', icon: Store, color: 'bg-stone-100 text-stone-700' },
 };
 
 const TRUST_META: Record<string, { label: string; color: string }> = {
-  verified: { label: 'Verified', color: 'bg-green-100 text-green-700' },
-  established: { label: 'Established', color: 'bg-blue-100 text-blue-700' },
-  new: { label: 'New', color: 'bg-amber-100 text-amber-700' },
+  verified: { label: 'Verified', color: 'bg-emerald-50 text-emerald-800' },
+  established: { label: 'Established', color: 'bg-sky-50 text-sky-800' },
+  new: { label: 'New', color: 'bg-amber-50 text-amber-800' },
 };
 
 const CAPACITY_META: Record<string, { label: string; color: string }> = {
-  available: { label: 'Available', color: 'text-green-600' },
-  limited: { label: 'Limited', color: 'text-amber-600' },
-  full: { label: 'Full', color: 'text-red-600' },
+  available: { label: 'Available', color: 'text-emerald-700' },
+  limited: { label: 'Limited', color: 'text-amber-700' },
+  full: { label: 'Full', color: 'text-red-700' },
 };
 
 // Mock relationship scores seeded by partner id
@@ -110,7 +110,7 @@ export default function AnchorsPage() {
           </Card>
           <Card className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-muted text-green-600">
+              <div className="p-2 rounded-lg bg-muted text-emerald-700">
                 <CheckCircle2 className="h-5 w-5" />
               </div>
               <div>

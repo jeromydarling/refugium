@@ -99,9 +99,9 @@ const MOCK_PLAYBOOKS: Playbook[] = [
 ];
 
 const DIFFICULTY_STYLE: Record<string, { color: string; variant: 'default' | 'secondary' | 'outline' }> = {
-  Essential: { color: 'bg-green-100 text-green-800', variant: 'secondary' },
-  Intermediate: { color: 'bg-amber-100 text-amber-800', variant: 'secondary' },
-  Advanced: { color: 'bg-red-100 text-red-800', variant: 'secondary' },
+  Essential: { color: 'bg-emerald-50 text-emerald-800', variant: 'secondary' },
+  Intermediate: { color: 'bg-amber-50 text-amber-800', variant: 'secondary' },
+  Advanced: { color: 'bg-red-50 text-red-800', variant: 'secondary' },
 };
 
 function PlaybookCard({ playbook }: { playbook: Playbook }) {

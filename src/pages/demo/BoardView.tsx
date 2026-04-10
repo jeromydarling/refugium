@@ -13,18 +13,18 @@ import { staggerContainer, staggerItem, cardHover } from '@/lib/animations';
 type JourneyStage = 'intake' | 'assessment' | 'stabilization' | 'repair_rebuild' | 'closure';
 
 const COLUMNS: { stage: JourneyStage; label: string; color: string }[] = [
-  { stage: 'intake', label: 'Intake', color: 'bg-blue-500' },
-  { stage: 'assessment', label: 'Assessment', color: 'bg-cyan-500' },
-  { stage: 'stabilization', label: 'Stabilization', color: 'bg-amber-500' },
+  { stage: 'intake', label: 'Intake', color: 'bg-sky-400' },
+  { stage: 'assessment', label: 'Assessment', color: 'bg-slate-400' },
+  { stage: 'stabilization', label: 'Stabilization', color: 'bg-amber-400' },
   { stage: 'repair_rebuild', label: 'Repair & Rebuild', color: 'bg-primary' },
-  { stage: 'closure', label: 'Closure', color: 'bg-green-500' },
+  { stage: 'closure', label: 'Closure', color: 'bg-emerald-400' },
 ];
 
 const STATUS_BORDER: Record<string, string> = {
-  acute: 'border-l-red-500',
-  stabilizing: 'border-l-amber-500',
-  rebuilding: 'border-l-blue-500',
-  recovered: 'border-l-green-500',
+  acute: 'border-l-red-400',
+  stabilizing: 'border-l-amber-400',
+  rebuilding: 'border-l-sky-400',
+  recovered: 'border-l-emerald-400',
 };
 
 const STALL_THRESHOLD_DAYS = 14;

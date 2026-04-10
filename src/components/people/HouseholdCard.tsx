@@ -6,17 +6,17 @@ import { Users, AlertCircle } from 'lucide-react';
 import { cardHover } from '@/lib/animations';
 
 const STATUS_STYLES: Record<string, string> = {
-  acute: 'bg-red-100 text-red-800',
-  stabilizing: 'bg-amber-100 text-amber-800',
-  rebuilding: 'bg-blue-100 text-blue-800',
-  recovered: 'bg-green-100 text-green-800',
+  acute: 'bg-red-50 text-red-800',
+  stabilizing: 'bg-amber-50 text-amber-800',
+  rebuilding: 'bg-sky-50 text-sky-800',
+  recovered: 'bg-emerald-50 text-emerald-800',
 };
 
 const STATUS_BORDER: Record<string, string> = {
-  acute: 'border-l-red-500',
-  stabilizing: 'border-l-amber-500',
-  rebuilding: 'border-l-blue-500',
-  recovered: 'border-l-green-500',
+  acute: 'border-l-red-400',
+  stabilizing: 'border-l-amber-400',
+  rebuilding: 'border-l-sky-400',
+  recovered: 'border-l-emerald-400',
 };
 
 interface HouseholdCardProps {

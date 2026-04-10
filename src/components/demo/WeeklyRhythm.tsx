@@ -23,7 +23,7 @@ const MOVEMENTS = [
     key: 'see',
     label: 'See',
     icon: Eye,
-    color: 'text-blue-600 bg-blue-100',
+    color: 'text-sky-800 bg-sky-50',
     prompt: 'Who am I present to today? What gives them a reason to keep going?',
     description: 'Before doing anything, see the whole person — their situation, their strengths, what they\'re holding onto. The best help starts with understanding what matters to someone.',
   },
@@ -31,7 +31,7 @@ const MOVEMENTS = [
     key: 'discern',
     label: 'Discern',
     icon: Compass,
-    color: 'text-amber-600 bg-amber-100',
+    color: 'text-amber-800 bg-amber-50',
     prompt: 'What am I noticing — in their needs and in their spirit?',
     description: 'Look beyond the checklist. Is someone losing hope? Gaining strength? Is there a gap between what they need and what gives their life purpose? The quiet signals matter as much as the urgent ones.',
   },
@@ -47,7 +47,7 @@ const MOVEMENTS = [
     key: 'accompany',
     label: 'Accompany',
     icon: Heart,
-    color: 'text-pink-600 bg-pink-100',
+    color: 'text-rose-800 bg-rose-50',
     prompt: 'How will I stay present? What future are they working toward?',
     description: 'Showing up again says "you are not forgotten." Ask about their plans, their hopes, the thing they\'re looking forward to. Accompaniment keeps the thread of someone\'s story alive.',
   },
@@ -55,7 +55,7 @@ const MOVEMENTS = [
     key: 'restore',
     label: 'Restore',
     icon: RotateCcw,
-    color: 'text-green-600 bg-green-100',
+    color: 'text-emerald-800 bg-emerald-50',
     prompt: 'What changed today? What did I learn about what matters to them?',
     description: 'Honest review. Did the step help? Did something unexpected surface — a strength, a loss, a spark of purpose? What will I carry forward to the next visit?',
   },
@@ -106,8 +106,8 @@ const WEEKLY_VISITS: Record<number, { householdId: string; time: string; type: '
 
 const VISIT_TYPE_STYLES: Record<string, string> = {
   visit: 'bg-primary/10 text-primary',
-  'follow-up': 'bg-amber-100 text-amber-700',
-  assessment: 'bg-blue-100 text-blue-700',
+  'follow-up': 'bg-amber-50 text-amber-800',
+  assessment: 'bg-sky-50 text-sky-800',
 };
 
 interface DailyExamenState {
@@ -195,7 +195,7 @@ export function WeeklyRhythm() {
                 </div>
               )}
               {completed > 0 && (
-                <p className="text-[9px] text-green-600 mt-0.5">{completed}/5</p>
+                <p className="text-[9px] text-emerald-700 mt-0.5">{completed}/5</p>
               )}
             </button>
           );
@@ -309,14 +309,14 @@ export function WeeklyRhythm() {
                         onClick={() => toggleMovement(expandedDay, m.key)}
                         className={`w-full text-left rounded-xl border p-3 transition-all ${
                           state.checked
-                            ? 'border-green-200 bg-green-50/50'
+                            ? 'border-emerald-200 bg-emerald-50/50'
                             : 'border-border hover:border-primary/20 hover:bg-muted/30'
                         }`}
                       >
                         <div className="flex items-start gap-3">
                           <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${m.color}`}>
                             {state.checked ? (
-                              <CheckCircle2 className="w-4 h-4 text-green-600" />
+                              <CheckCircle2 className="w-4 h-4 text-emerald-700" />
                             ) : (
                               <Icon className="w-4 h-4" />
                             )}
@@ -325,7 +325,7 @@ export function WeeklyRhythm() {
                             <div className="flex items-center gap-2">
                               <span className="text-sm font-semibold">{m.label}</span>
                               {state.checked && (
-                                <Badge variant="secondary" className="text-[10px] bg-green-100 text-green-700">Done</Badge>
+                                <Badge variant="secondary" className="text-[10px] bg-emerald-50 text-emerald-800">Done</Badge>
                               )}
                             </div>
                             <p className="text-xs text-muted-foreground mt-0.5 italic">{m.prompt}</p>
@@ -344,7 +344,7 @@ export function WeeklyRhythm() {
                   animate={{ opacity: 1, scale: 1 }}
                   className="text-center py-3"
                 >
-                  <p className="text-sm font-serif font-medium text-green-700">
+                  <p className="text-sm font-serif font-medium text-emerald-800">
                     Today's examen complete.
                   </p>
                   <p className="text-xs text-muted-foreground mt-1 italic">

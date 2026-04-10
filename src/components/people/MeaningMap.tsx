@@ -8,22 +8,22 @@ const PATHWAY_CONFIG = {
     label: 'Creative',
     description: 'Meaning through giving — work, creation, contribution',
     icon: Flame,
-    color: 'text-orange-600 bg-orange-100',
-    borderColor: 'border-l-orange-400',
+    color: 'text-amber-800 bg-amber-50',
+    borderColor: 'border-l-amber-400',
   },
   experiential: {
     label: 'Experiential',
     description: 'Meaning through receiving — love, beauty, encounter',
     icon: Sparkles,
-    color: 'text-blue-600 bg-blue-100',
-    borderColor: 'border-l-blue-400',
+    color: 'text-sky-800 bg-sky-50',
+    borderColor: 'border-l-sky-400',
   },
   attitudinal: {
     label: 'Attitudinal',
     description: 'Meaning through facing suffering — courage, dignity',
     icon: Mountain,
-    color: 'text-purple-600 bg-purple-100',
-    borderColor: 'border-l-purple-400',
+    color: 'text-violet-800 bg-violet-50',
+    borderColor: 'border-l-violet-400',
   },
 };
 

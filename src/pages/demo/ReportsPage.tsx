@@ -29,7 +29,7 @@ const MOCK_REPORTS = [
     title: 'Monthly Impact Report — March 2026',
     date: 'March 31, 2026',
     type: 'Impact',
-    typeColor: 'bg-blue-100 text-blue-800',
+    typeColor: 'bg-sky-50 text-sky-800',
     description:
       'Comprehensive overview of families served, needs resolved, volunteer hours, and partner engagement for the month.',
     icon: FileBarChart,
@@ -39,7 +39,7 @@ const MOCK_REPORTS = [
     title: 'Quarterly Narrative Report — Q1 2026',
     date: 'March 31, 2026',
     type: 'Narrative',
-    typeColor: 'bg-purple-100 text-purple-800',
+    typeColor: 'bg-violet-50 text-violet-800',
     description:
       'Story-driven report featuring family journeys, volunteer spotlights, and community impact testimonials for funders.',
     icon: FilePieChart,
@@ -49,7 +49,7 @@ const MOCK_REPORTS = [
     title: 'Funder Summary — Hurricane Francine Response',
     date: 'March 15, 2026',
     type: 'Funder',
-    typeColor: 'bg-green-100 text-green-800',
+    typeColor: 'bg-emerald-50 text-emerald-800',
     description:
       'Grant-specific summary of Hurricane Francine disaster response: expenditures, outcomes, and remaining needs.',
     icon: FileSpreadsheet,
@@ -59,7 +59,7 @@ const MOCK_REPORTS = [
     title: 'Annual Volunteer Engagement Report',
     date: 'February 28, 2026',
     type: 'Annual',
-    typeColor: 'bg-amber-100 text-amber-800',
+    typeColor: 'bg-amber-50 text-amber-800',
     description:
       'Year-end report on volunteer recruitment, retention, hours logged, and skills deployed across all zones.',
     icon: FileBarChart,
@@ -89,19 +89,19 @@ export default function ReportsPage() {
       label: 'Needs Resolved',
       value: kpis.needsResolved,
       icon: CheckCircle2,
-      color: 'text-green-600',
+      color: 'text-emerald-700',
     },
     {
       label: 'Volunteer Hours',
       value: kpis.volunteerHours.toLocaleString(),
       icon: Clock,
-      color: 'text-amber-500',
+      color: 'text-amber-600',
     },
     {
       label: 'Active Partners',
       value: kpis.activePartners,
       icon: Handshake,
-      color: 'text-blue-500',
+      color: 'text-sky-700',
     },
   ];
 

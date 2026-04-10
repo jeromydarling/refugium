@@ -7,17 +7,17 @@ import { useDemoMode } from '@/contexts/DemoModeContext';
 import { cardHover } from '@/lib/animations';
 
 const PRIORITY_STYLES: Record<string, string> = {
-  critical: 'bg-red-100 text-red-800',
-  high: 'bg-orange-100 text-orange-800',
-  medium: 'bg-amber-100 text-amber-800',
-  low: 'bg-slate-100 text-slate-800',
+  critical: 'bg-red-50 text-red-800',
+  high: 'bg-amber-50 text-amber-800',
+  medium: 'bg-stone-100 text-stone-700',
+  low: 'bg-slate-100 text-slate-600',
 };
 
 const PRIORITY_BORDER: Record<string, string> = {
-  critical: 'border-l-red-500',
-  high: 'border-l-orange-500',
-  medium: 'border-l-amber-500',
-  low: 'border-l-slate-400',
+  critical: 'border-l-red-400',
+  high: 'border-l-amber-400',
+  medium: 'border-l-stone-400',
+  low: 'border-l-slate-300',
 };
 
 export interface Task {

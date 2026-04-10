@@ -133,10 +133,10 @@ export default function VisitsPage() {
   );
 
   const PURPOSE_COLORS: Record<string, string> = {
-    'Follow-up': 'bg-blue-100 text-blue-800',
-    Assessment: 'bg-amber-100 text-amber-800',
-    'Home Visit': 'bg-green-100 text-green-800',
-    Intake: 'bg-purple-100 text-purple-800',
+    'Follow-up': 'bg-sky-50 text-sky-800',
+    Assessment: 'bg-amber-50 text-amber-800',
+    'Home Visit': 'bg-emerald-50 text-emerald-800',
+    Intake: 'bg-violet-50 text-violet-800',
   };
 
   return (
@@ -222,7 +222,7 @@ export default function VisitsPage() {
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-base font-semibold flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4 text-green-600" />
+              <CheckCircle2 className="h-4 w-4 text-emerald-700" />
               Recent Completed Visits
             </CardTitle>
           </CardHeader>

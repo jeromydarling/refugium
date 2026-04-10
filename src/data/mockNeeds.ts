@@ -1,18 +1,18 @@
 export type NeedCategory = 'housing_repair' | 'temporary_shelter' | 'food_assistance' | 'medical_care' | 'mental_health' | 'legal_aid' | 'employment' | 'transportation' | 'childcare' | 'utilities' | 'documentation' | 'clothing';
 
 export const NEED_CATEGORIES: Record<NeedCategory, { label: string; color: string; whatMatters: string }> = {
-  housing_repair: { label: 'Housing Repair', color: 'bg-blue-100 text-blue-800', whatMatters: 'What does home mean to this family? What are they most eager to get back to?' },
-  temporary_shelter: { label: 'Temporary Shelter', color: 'bg-indigo-100 text-indigo-800', whatMatters: 'Who do they need to be near? What would help them feel safe right now?' },
-  food_assistance: { label: 'Food', color: 'bg-green-100 text-green-800', whatMatters: 'Are there meals or traditions that ground this family? What does sharing food mean to them?' },
-  medical_care: { label: 'Medical', color: 'bg-red-100 text-red-800', whatMatters: 'What are they most worried about health-wise? What would give them peace of mind?' },
-  mental_health: { label: 'Mental Health', color: 'bg-purple-100 text-purple-800', whatMatters: 'What was their life like before this? What are they holding onto that gives them strength?' },
-  legal_aid: { label: 'Legal', color: 'bg-amber-100 text-amber-800', whatMatters: 'What outcome would let them move forward? What does resolution look like to them?' },
-  employment: { label: 'Employment', color: 'bg-orange-100 text-orange-800', whatMatters: 'What kind of work gives them energy? What were they building before the disaster?' },
-  transportation: { label: 'Transportation', color: 'bg-cyan-100 text-cyan-800', whatMatters: 'Where do they most need to get to? Who are they trying to stay connected with?' },
-  childcare: { label: 'Childcare', color: 'bg-pink-100 text-pink-800', whatMatters: 'What do the children need to feel normal again? What would free the parent to breathe?' },
-  utilities: { label: 'Utilities', color: 'bg-yellow-100 text-yellow-800', whatMatters: 'What daily routine are they missing most? What would make the house feel like home?' },
-  documentation: { label: 'Documentation', color: 'bg-slate-100 text-slate-800', whatMatters: 'What are they most anxious about losing? What does having their documents back represent?' },
-  clothing: { label: 'Clothing', color: 'bg-teal-100 text-teal-800', whatMatters: 'Is there something specific they lost that mattered — a uniform, a child\'s favorite outfit?' },
+  housing_repair: { label: 'Housing Repair', color: 'bg-stone-100 text-stone-700', whatMatters: 'What does home mean to this family? What are they most eager to get back to?' },
+  temporary_shelter: { label: 'Temporary Shelter', color: 'bg-slate-100 text-slate-700', whatMatters: 'Who do they need to be near? What would help them feel safe right now?' },
+  food_assistance: { label: 'Food', color: 'bg-amber-50 text-amber-800', whatMatters: 'Are there meals or traditions that ground this family? What does sharing food mean to them?' },
+  medical_care: { label: 'Medical', color: 'bg-red-50 text-red-800', whatMatters: 'What are they most worried about health-wise? What would give them peace of mind?' },
+  mental_health: { label: 'Mental Health', color: 'bg-violet-50 text-violet-800', whatMatters: 'What was their life like before this? What are they holding onto that gives them strength?' },
+  legal_aid: { label: 'Legal', color: 'bg-amber-50 text-amber-800', whatMatters: 'What outcome would let them move forward? What does resolution look like to them?' },
+  employment: { label: 'Employment', color: 'bg-stone-100 text-stone-700', whatMatters: 'What kind of work gives them energy? What were they building before the disaster?' },
+  transportation: { label: 'Transportation', color: 'bg-sky-50 text-sky-800', whatMatters: 'Where do they most need to get to? Who are they trying to stay connected with?' },
+  childcare: { label: 'Childcare', color: 'bg-rose-50 text-rose-800', whatMatters: 'What do the children need to feel normal again? What would free the parent to breathe?' },
+  utilities: { label: 'Utilities', color: 'bg-amber-50 text-amber-700', whatMatters: 'What daily routine are they missing most? What would make the house feel like home?' },
+  documentation: { label: 'Documentation', color: 'bg-slate-100 text-slate-600', whatMatters: 'What are they most anxious about losing? What does having their documents back represent?' },
+  clothing: { label: 'Clothing', color: 'bg-stone-100 text-stone-600', whatMatters: 'Is there something specific they lost that mattered — a uniform, a child\'s favorite outfit?' },
 };
 
 export interface NeedInstance {

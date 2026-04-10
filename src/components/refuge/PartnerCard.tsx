@@ -6,25 +6,25 @@ import { Phone, MapPin } from 'lucide-react';
 import { cardHover } from '@/lib/animations';
 
 const TYPE_STYLES: Record<string, string> = {
-  church: 'bg-purple-100 text-purple-800',
-  nonprofit: 'bg-blue-100 text-blue-800',
-  government: 'bg-slate-100 text-slate-800',
-  host_family: 'bg-pink-100 text-pink-800',
-  business: 'bg-emerald-100 text-emerald-800',
+  church: 'bg-violet-50 text-violet-800',
+  nonprofit: 'bg-sky-50 text-sky-800',
+  government: 'bg-slate-100 text-slate-700',
+  host_family: 'bg-rose-50 text-rose-800',
+  business: 'bg-stone-100 text-stone-700',
 };
 
 const CAPACITY_STYLES: Record<string, string> = {
-  available: 'bg-green-100 text-green-800',
-  limited: 'bg-amber-100 text-amber-800',
-  full: 'bg-red-100 text-red-800',
+  available: 'bg-emerald-50 text-emerald-800',
+  limited: 'bg-amber-50 text-amber-800',
+  full: 'bg-red-50 text-red-800',
 };
 
 const TYPE_BORDER: Record<string, string> = {
-  church: 'border-l-purple-500',
-  nonprofit: 'border-l-blue-500',
-  government: 'border-l-gray-400',
-  host_family: 'border-l-pink-500',
-  business: 'border-l-emerald-500',
+  church: 'border-l-violet-400',
+  nonprofit: 'border-l-sky-400',
+  government: 'border-l-stone-400',
+  host_family: 'border-l-rose-400',
+  business: 'border-l-stone-400',
 };
 
 interface PartnerCardProps {

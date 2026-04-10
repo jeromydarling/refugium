@@ -115,28 +115,28 @@ function buildZones(): Zone[] {
 const STATUS_META: Record<string, { label: string; color: string; badgeColor: string; Icon: typeof CheckCircle2 }> = {
   good: {
     label: 'Good Coverage',
-    color: 'text-green-600',
-    badgeColor: 'bg-green-100 text-green-700',
+    color: 'text-emerald-700',
+    badgeColor: 'bg-emerald-50 text-emerald-800',
     Icon: CheckCircle2,
   },
   needs_attention: {
     label: 'Needs Attention',
-    color: 'text-amber-600',
-    badgeColor: 'bg-amber-100 text-amber-700',
+    color: 'text-amber-700',
+    badgeColor: 'bg-amber-50 text-amber-800',
     Icon: AlertTriangle,
   },
   critical: {
     label: 'Critical',
-    color: 'text-red-600',
-    badgeColor: 'bg-red-100 text-red-700',
+    color: 'text-red-700',
+    badgeColor: 'bg-red-50 text-red-800',
     Icon: ShieldAlert,
   },
 };
 
 function progressColor(status: Zone['status']): string {
-  if (status === 'good') return '[&>div]:bg-green-500';
-  if (status === 'needs_attention') return '[&>div]:bg-amber-500';
-  return '[&>div]:bg-red-500';
+  if (status === 'good') return '[&>div]:bg-emerald-400';
+  if (status === 'needs_attention') return '[&>div]:bg-amber-400';
+  return '[&>div]:bg-red-400';
 }
 
 export default function ZonesPage() {
@@ -177,7 +177,7 @@ export default function ZonesPage() {
           </Card>
           <Card className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-muted text-blue-500">
+              <div className="p-2 rounded-lg bg-muted text-sky-600">
                 <Users className="h-5 w-5" />
               </div>
               <div>
@@ -188,7 +188,7 @@ export default function ZonesPage() {
           </Card>
           <Card className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-muted text-green-600">
+              <div className="p-2 rounded-lg bg-muted text-emerald-600">
                 <UserCheck className="h-5 w-5" />
               </div>
               <div>
@@ -199,7 +199,7 @@ export default function ZonesPage() {
           </Card>
           <Card className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-muted text-red-500">
+              <div className="p-2 rounded-lg bg-muted text-red-400">
                 <ShieldAlert className="h-5 w-5" />
               </div>
               <div>
@@ -284,7 +284,7 @@ export default function ZonesPage() {
                   )}
 
                   {zone.activeAlerts === 0 && (
-                    <div className="flex items-center gap-1.5 text-[11px] text-green-600">
+                    <div className="flex items-center gap-1.5 text-[11px] text-emerald-700">
                       <CheckCircle2 className="h-3 w-3" />
                       No active alerts
                     </div>
