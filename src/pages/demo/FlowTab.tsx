@@ -3,7 +3,9 @@ import { VolunteerCard } from '@/components/flow/VolunteerCard';
 import { TaskCard, type Task } from '@/components/flow/TaskCard';
 import { RecoverySignalCard } from '@/components/nri/RecoverySignalCard';
 import { volunteers, getSystemSignals } from '@/data';
+import { useIsDesktop } from '@/hooks/useIsDesktop';
 import { AlertTriangle } from 'lucide-react';
+import { StaggerList } from '@/components/shared/StaggerList';
 
 const DEMO_TASKS: Task[] = [
   { id: 't-001', title: 'Follow up with Johnson family', priority: 'critical', householdName: 'Johnson', assignedTo: 'Unassigned', dueDate: 'Overdue' },
@@ -18,19 +20,59 @@ const DEMO_TASKS: Task[] = [
 export default function FlowTab() {
   const systemSignals = getSystemSignals();
   const activeVolunteers = volunteers.filter(v => v.status === 'active');
+  const isDesktop = useIsDesktop();
 
+  const nriAlerts = systemSignals.length > 0 ? (
+    <div className="space-y-2">
+      <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+        <AlertTriangle className="h-4 w-4 text-accent animate-pulse" />
+        NRI Alerts
+      </div>
+      {systemSignals.map(s => <RecoverySignalCard key={s.id} signal={s} />)}
+    </div>
+  ) : null;
+
+  // ── Desktop: side-by-side tasks & volunteers ──
+  if (isDesktop) {
+    return (
+      <div className="p-6 space-y-6">
+        {/* NRI alerts full-width */}
+        {nriAlerts}
+
+        {/* Two-column grid */}
+        <div className="grid grid-cols-2 gap-6">
+          {/* Left: Tasks */}
+          <div className="space-y-4">
+            <h2 className="text-sm font-semibold text-foreground">
+              Tasks ({DEMO_TASKS.length})
+            </h2>
+            <StaggerList className="space-y-3">
+              {DEMO_TASKS.map(t => <TaskCard key={t.id} task={t} />)}
+            </StaggerList>
+          </div>
+
+          {/* Right: Volunteers */}
+          <div className="space-y-4">
+            <h2 className="text-sm font-semibold text-foreground">
+              Volunteers ({activeVolunteers.length})
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              {activeVolunteers.length} active &middot; {volunteers.filter(v => v.status === 'on_break').length} on break &middot; {volunteers.filter(v => v.status === 'new').length} new
+            </p>
+            <StaggerList className="space-y-3">
+              {volunteers.map(v => <VolunteerCard key={v.id} volunteer={v} />)}
+            </StaggerList>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Mobile: tabbed layout (unchanged) ──
   return (
     <div className="p-4">
       {/* NRI System Alert */}
-      {systemSignals.length > 0 && (
-        <div className="mb-4 space-y-2">
-          <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-            <AlertTriangle className="h-4 w-4 text-accent" />
-            NRI Alerts
-          </div>
-          {systemSignals.map(s => <RecoverySignalCard key={s.id} signal={s} />)}
-        </div>
-      )}
+      {nriAlerts && <div className="mb-4">{nriAlerts}</div>}
 
       <Tabs defaultValue="tasks">
         <TabsList className="grid w-full grid-cols-2 mb-4">
@@ -38,15 +80,19 @@ export default function FlowTab() {
           <TabsTrigger value="volunteers">Volunteers ({activeVolunteers.length})</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="tasks" className="space-y-3">
-          {DEMO_TASKS.map(t => <TaskCard key={t.id} task={t} />)}
+        <TabsContent value="tasks">
+          <StaggerList className="space-y-3">
+            {DEMO_TASKS.map(t => <TaskCard key={t.id} task={t} />)}
+          </StaggerList>
         </TabsContent>
 
         <TabsContent value="volunteers" className="space-y-3">
           <p className="text-sm text-muted-foreground">
             {activeVolunteers.length} active &middot; {volunteers.filter(v => v.status === 'on_break').length} on break &middot; {volunteers.filter(v => v.status === 'new').length} new
           </p>
-          {volunteers.map(v => <VolunteerCard key={v.id} volunteer={v} />)}
+          <StaggerList className="space-y-3">
+            {volunteers.map(v => <VolunteerCard key={v.id} volunteer={v} />)}
+          </StaggerList>
         </TabsContent>
       </Tabs>
     </div>

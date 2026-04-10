@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { AnimatedSection } from "@/components/shared/AnimatedSection";
+import { scaleIn } from "@/lib/animations";
 import {
   Card,
   CardHeader,
@@ -62,7 +65,7 @@ export default function Pricing() {
   return (
     <div>
       {/* Header */}
-      <section className="bg-gradient-to-b from-primary/10 to-background py-20 sm:py-28">
+      <AnimatedSection className="bg-gradient-to-b from-primary/10 to-background py-20 sm:py-28">
         <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
           <h1 className="font-serif text-4xl font-bold text-foreground sm:text-5xl">
             Simple, honest pricing.
@@ -72,11 +75,12 @@ export default function Pricing() {
             is too important for pricing games.
           </p>
         </div>
-      </section>
+      </AnimatedSection>
 
       {/* Pricing Card */}
-      <section className="bg-background py-16 sm:py-24">
+      <AnimatedSection className="bg-background py-16 sm:py-24">
         <div className="mx-auto max-w-xl px-4 sm:px-6 lg:px-8">
+          <motion.div variants={scaleIn} initial="hidden" whileInView="visible" viewport={{ once: true }}>
           <Card className="relative overflow-hidden border-2 border-primary/20 shadow-lg">
             <div className="absolute left-0 top-0 h-1.5 w-full bg-gradient-to-r from-primary to-accent" />
             <CardHeader className="pb-4 pt-10 text-center">
@@ -122,11 +126,12 @@ export default function Pricing() {
               </p>
             </CardFooter>
           </Card>
+          </motion.div>
         </div>
-      </section>
+      </AnimatedSection>
 
       {/* FAQ */}
-      <section className="bg-muted/30 py-16 sm:py-24">
+      <AnimatedSection className="bg-muted/30 py-16 sm:py-24">
         <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
           <h2 className="mb-10 text-center font-serif text-3xl font-bold text-foreground">
             Frequently asked questions
@@ -144,10 +149,10 @@ export default function Pricing() {
             ))}
           </Accordion>
         </div>
-      </section>
+      </AnimatedSection>
 
       {/* Bottom CTA */}
-      <section className="bg-background py-16 sm:py-24">
+      <AnimatedSection className="bg-background py-16 sm:py-24">
         <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
           <h2 className="font-serif text-2xl font-bold text-foreground sm:text-3xl">
             Questions about pricing?
@@ -162,7 +167,7 @@ export default function Pricing() {
             </Link>
           </Button>
         </div>
-      </section>
+      </AnimatedSection>
     </div>
   );
 }

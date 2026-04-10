@@ -1,13 +1,22 @@
+import { motion } from 'framer-motion';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import type { Household } from '@/data';
 import { Users, AlertCircle } from 'lucide-react';
+import { cardHover } from '@/lib/animations';
 
 const STATUS_STYLES: Record<string, string> = {
   acute: 'bg-red-100 text-red-800',
   stabilizing: 'bg-amber-100 text-amber-800',
   rebuilding: 'bg-blue-100 text-blue-800',
   recovered: 'bg-green-100 text-green-800',
+};
+
+const STATUS_BORDER: Record<string, string> = {
+  acute: 'border-l-red-500',
+  stabilizing: 'border-l-amber-500',
+  rebuilding: 'border-l-blue-500',
+  recovered: 'border-l-green-500',
 };
 
 interface HouseholdCardProps {
@@ -23,8 +32,9 @@ export function HouseholdCard({ household, needCount, hasSignals, onClick }: Hou
   );
 
   return (
+    <motion.div {...cardHover}>
     <Card
-      className="p-4 cursor-pointer hover:shadow-md transition-shadow active:scale-[0.99]"
+      className={`p-4 cursor-pointer hover:shadow-md transition-shadow active:scale-[0.99] border-l-[3px] ${STATUS_BORDER[household.currentStatus] || ''}`}
       onClick={onClick}
     >
       <div className="flex items-start justify-between gap-3">
@@ -64,5 +74,6 @@ export function HouseholdCard({ household, needCount, hasSignals, onClick }: Hou
         </span>
       </div>
     </Card>
+    </motion.div>
   );
 }

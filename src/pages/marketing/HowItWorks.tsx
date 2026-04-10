@@ -12,6 +12,8 @@ import {
   CardTitle,
   CardContent,
 } from "@/components/ui/card";
+import { AnimatedSection } from "@/components/shared/AnimatedSection";
+import { StaggerList } from "@/components/shared/StaggerList";
 import {
   Users,
   Shield,
@@ -126,7 +128,7 @@ function FeatureList({
   features: { icon: React.ElementType; title: string; description: string }[];
 }) {
   return (
-    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <StaggerList className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {features.map((feature) => (
         <Card
           key={feature.title}
@@ -147,7 +149,7 @@ function FeatureList({
           </CardContent>
         </Card>
       ))}
-    </div>
+    </StaggerList>
   );
 }
 
@@ -155,7 +157,7 @@ export default function HowItWorks() {
   return (
     <div>
       {/* Header */}
-      <section className="bg-gradient-to-b from-primary/10 to-background py-20 sm:py-28">
+      <AnimatedSection className="bg-gradient-to-b from-primary/10 to-background py-20 sm:py-28">
         <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
           <h1 className="font-serif text-4xl font-bold text-foreground sm:text-5xl">
             How Refugium Works
@@ -166,10 +168,10 @@ export default function HowItWorks() {
             you didn't ask for.
           </p>
         </div>
-      </section>
+      </AnimatedSection>
 
       {/* Tabs */}
-      <section className="bg-background py-16 sm:py-24">
+      <AnimatedSection className="bg-background py-16 sm:py-24">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <Tabs defaultValue="people" className="w-full">
             <div className="mb-12 flex justify-center">
@@ -249,10 +251,10 @@ export default function HowItWorks() {
             </TabsContent>
           </Tabs>
         </div>
-      </section>
+      </AnimatedSection>
 
       {/* CTA */}
-      <section className="bg-muted/30 py-16 sm:py-24">
+      <AnimatedSection className="bg-muted/30 py-16 sm:py-24">
         <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
           <h2 className="font-serif text-2xl font-bold text-foreground sm:text-3xl">
             See it in action
@@ -282,7 +284,7 @@ export default function HowItWorks() {
             </span>
           </div>
         </div>
-      </section>
+      </AnimatedSection>
     </div>
   );
 }

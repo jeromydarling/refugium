@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -20,20 +21,45 @@ import {
   ArrowRight,
   CheckCircle2,
 } from "lucide-react";
+import { AnimatedSection } from "@/components/shared/AnimatedSection";
+import { StaggerList } from "@/components/shared/StaggerList";
+import { cardHover } from "@/lib/animations";
+import { DecorativeDots } from "@/components/marketing/DecorativeDots";
+import { WavesDivider } from "@/components/marketing/WavesDivider";
 
 export default function Landing() {
   return (
     <div>
       {/* ── Hero ─────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-primary/10 via-primary/5 to-background">
+      <AnimatedSection className="relative overflow-hidden bg-gradient-to-b from-primary/10 via-primary/5 to-background">
+        {/* Decorative SVG circles */}
+        <svg className="absolute left-10 top-20 opacity-20" width="80" height="80" viewBox="0 0 80 80" fill="none" aria-hidden="true">
+          <circle cx="40" cy="40" r="38" className="stroke-primary/30" strokeWidth="2" />
+          <circle cx="40" cy="40" r="24" className="stroke-primary/20" strokeWidth="2" />
+          <circle cx="40" cy="40" r="10" className="fill-primary/10" />
+        </svg>
+        <svg className="absolute right-16 bottom-24 opacity-20" width="60" height="60" viewBox="0 0 60 60" fill="none" aria-hidden="true">
+          <circle cx="30" cy="30" r="28" className="stroke-accent/30" strokeWidth="2" />
+          <circle cx="30" cy="30" r="14" className="fill-accent/10" />
+        </svg>
+        <svg className="absolute right-1/3 top-12 opacity-15" width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+          <circle cx="20" cy="20" r="18" className="stroke-primary/25" strokeWidth="1.5" />
+        </svg>
+
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,hsl(196_65%_30%/0.15),transparent)]" />
         <div className="relative mx-auto max-w-6xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8 lg:py-40">
           <div className="mx-auto max-w-3xl text-center">
-            <Badge variant="secondary" className="mb-6">
-              Survivor-centered disaster recovery
-            </Badge>
+            <motion.div
+              animate={{ y: [0, -8, 0] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <Badge variant="secondary" className="mb-6">
+                Survivor-centered disaster recovery
+              </Badge>
+            </motion.div>
             <h1 className="font-serif text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-              See the person. Discern the need. Strengthen the refuge.
+              See the person. Discern the need.{" "}
+              <span className="text-gradient">Strengthen the refuge.</span>
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground sm:text-xl">
               When the cameras leave and the long tail of recovery begins,
@@ -58,10 +84,12 @@ export default function Landing() {
             </div>
           </div>
         </div>
-      </section>
+      </AnimatedSection>
+
+      <WavesDivider className="w-full h-8" />
 
       {/* ── Problem Statement ────────────────────────────────────── */}
-      <section className="bg-background py-20 sm:py-28">
+      <AnimatedSection className="bg-background py-20 sm:py-28">
         <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
           <h2 className="font-serif text-3xl font-bold text-foreground sm:text-4xl">
             In the weeks and months after disaster, the hardest work begins.
@@ -75,10 +103,12 @@ export default function Landing() {
             changes that.
           </p>
         </div>
-      </section>
+      </AnimatedSection>
+
+      <WavesDivider className="w-full h-8" flip />
 
       {/* ── Three Pillars ────────────────────────────────────────── */}
-      <section className="bg-muted/30 py-20 sm:py-28">
+      <AnimatedSection className="bg-muted/30 py-20 sm:py-28">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto mb-16 max-w-2xl text-center">
             <h2 className="font-serif text-3xl font-bold text-foreground sm:text-4xl">
@@ -89,73 +119,56 @@ export default function Landing() {
               your team already does.
             </p>
           </div>
-          <div className="grid gap-8 md:grid-cols-3">
-            {/* People */}
-            <Card className="relative overflow-hidden border-none bg-background shadow-md transition-shadow hover:shadow-lg">
-              <div className="absolute left-0 top-0 h-1 w-full bg-primary" />
-              <CardHeader className="pb-4">
-                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                  <Users className="h-6 w-6 text-primary" />
-                </div>
-                <CardTitle className="font-serif text-xl font-semibold">
-                  People
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-base leading-relaxed">
-                  Every survivor is a story, not a case number. Track
-                  households, unmet needs, and recovery journeys with the
-                  dignity each person deserves.
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            {/* Refuge */}
-            <Card className="relative overflow-hidden border-none bg-background shadow-md transition-shadow hover:shadow-lg">
-              <div className="absolute left-0 top-0 h-1 w-full bg-primary" />
-              <CardHeader className="pb-4">
-                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                  <Shield className="h-6 w-6 text-primary" />
-                </div>
-                <CardTitle className="font-serif text-xl font-semibold">
-                  Refuge
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-base leading-relaxed">
-                  Your trusted network is the refuge. Build and maintain a
-                  living directory of partners, resources, and referral
-                  pathways you can count on.
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            {/* Flow */}
-            <Card className="relative overflow-hidden border-none bg-background shadow-md transition-shadow hover:shadow-lg">
-              <div className="absolute left-0 top-0 h-1 w-full bg-primary" />
-              <CardHeader className="pb-4">
-                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                  <ArrowUpDown className="h-6 w-6 text-primary" />
-                </div>
-                <CardTitle className="font-serif text-xl font-semibold">
-                  Flow
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-base leading-relaxed">
-                  Volunteer coordination that respects capacity. Match
-                  willing hands to real needs without burning anyone out.
-                </CardDescription>
-              </CardContent>
-            </Card>
-          </div>
+          <StaggerList className="grid gap-8 md:grid-cols-3">
+            {[
+              {
+                icon: Users,
+                title: "People",
+                description:
+                  "Every survivor is a story, not a case number. Track households, unmet needs, and recovery journeys with the dignity each person deserves.",
+              },
+              {
+                icon: Shield,
+                title: "Refuge",
+                description:
+                  "Your trusted network is the refuge. Build and maintain a living directory of partners, resources, and referral pathways you can count on.",
+              },
+              {
+                icon: ArrowUpDown,
+                title: "Flow",
+                description:
+                  "Volunteer coordination that respects capacity. Match willing hands to real needs without burning anyone out.",
+              },
+            ].map((pillar) => (
+              <motion.div key={pillar.title} {...cardHover}>
+                <Card className="relative overflow-hidden border-none bg-background shadow-md transition-shadow hover:shadow-lg">
+                  <div className="absolute left-0 top-0 h-[3px] w-full bg-gradient-to-r from-primary to-accent" />
+                  <CardHeader className="pb-4">
+                    <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+                      <pillar.icon className="h-6 w-6 text-primary" />
+                    </div>
+                    <CardTitle className="font-serif text-xl font-semibold">
+                      {pillar.title}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <CardDescription className="text-base leading-relaxed">
+                      {pillar.description}
+                    </CardDescription>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </StaggerList>
         </div>
-      </section>
+      </AnimatedSection>
+
+      <WavesDivider className="w-full h-8" />
 
       {/* ── NRI Teaser ───────────────────────────────────────────── */}
-      <section className="bg-background py-20 sm:py-28">
+      <AnimatedSection className="bg-background py-20 sm:py-28">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-4xl rounded-2xl bg-gradient-to-br from-primary/5 via-primary/10 to-accent/5 p-8 sm:p-12 lg:p-16">
+          <div className="glass-card glow-primary mx-auto max-w-4xl rounded-2xl bg-gradient-to-br from-primary/5 via-primary/10 to-accent/5 p-8 sm:p-12 lg:p-16">
             <div className="flex flex-col items-start gap-6 lg:flex-row lg:items-center lg:gap-12">
               <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-primary/10">
                 <Brain className="h-8 w-8 text-primary" />
@@ -184,10 +197,12 @@ export default function Landing() {
             </div>
           </div>
         </div>
-      </section>
+      </AnimatedSection>
+
+      <WavesDivider className="w-full h-8" flip />
 
       {/* ── For Whom ─────────────────────────────────────────────── */}
-      <section className="bg-muted/30 py-20 sm:py-28">
+      <AnimatedSection className="bg-muted/30 py-20 sm:py-28">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto mb-12 max-w-2xl text-center">
             <h2 className="font-serif text-3xl font-bold text-foreground sm:text-4xl">
@@ -198,7 +213,7 @@ export default function Landing() {
               spotlight fades.
             </p>
           </div>
-          <div className="mx-auto grid max-w-3xl gap-4 sm:grid-cols-2">
+          <StaggerList className="mx-auto grid max-w-3xl gap-4 sm:grid-cols-2">
             {[
               {
                 icon: HandHelping,
@@ -229,13 +244,15 @@ export default function Landing() {
                 </p>
               </div>
             ))}
-          </div>
+          </StaggerList>
         </div>
-      </section>
+      </AnimatedSection>
+
+      <WavesDivider className="w-full h-8" />
 
       {/* ── Pricing Preview ──────────────────────────────────────── */}
-      <section className="bg-background py-20 sm:py-28">
-        <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
+      <AnimatedSection className="bg-background py-20 sm:py-28">
+        <div className="glow-accent mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
           <h2 className="font-serif text-3xl font-bold text-foreground sm:text-4xl">
             $49/month. One price. One app. For everyone.
           </h2>
@@ -250,11 +267,15 @@ export default function Landing() {
             </Link>
           </Button>
         </div>
-      </section>
+      </AnimatedSection>
+
+      <WavesDivider className="w-full h-8" flip />
 
       {/* ── Final CTA ────────────────────────────────────────────── */}
-      <section className="bg-gradient-to-b from-primary/5 to-primary/15 py-20 sm:py-28">
-        <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
+      <AnimatedSection className="relative overflow-hidden bg-gradient-to-br from-primary/10 via-primary/15 to-accent/10 py-20 sm:py-28">
+        <DecorativeDots className="absolute left-6 top-8 opacity-40" />
+        <DecorativeDots className="absolute right-6 bottom-8 opacity-40" />
+        <div className="relative mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
           <h2 className="font-serif text-3xl font-bold text-foreground sm:text-4xl">
             Ready to strengthen the refuge?
           </h2>
@@ -288,7 +309,7 @@ export default function Landing() {
             </span>
           </div>
         </div>
-      </section>
+      </AnimatedSection>
     </div>
   );
 }
