@@ -11,6 +11,7 @@ import { Separator } from '@/components/ui/separator';
 import { useDemoMode } from '@/contexts/DemoModeContext';
 import { partners, resources } from '@/data';
 import { NEED_CATEGORIES, type NeedCategory } from '@/data/mockNeeds';
+import { NearbyResourcesPanel } from '@/components/demo/NearbyResources';
 import {
   MapPin, Users, CloudLightning, CheckCircle2, ArrowRight, ArrowLeft,
   Loader2, Sparkles, Home, UtensilsCrossed, Stethoscope, Brain,
@@ -370,9 +371,9 @@ export function NewCaseWizard({ open, onClose, onRefugeCreated }: NewCaseWizardP
                   >
                     <Sparkles className="w-8 h-8 text-accent" />
                   </motion.div>
-                  <h2 className="font-serif text-xl font-bold">Matching resources...</h2>
+                  <h2 className="font-serif text-xl font-bold">Finding everything nearby...</h2>
                   <p className="text-sm text-muted-foreground mt-2">
-                    Searching 211, Findhelp, and {partners.length} trusted local partners
+                    Searching FEMA, USAJOBS, SNAP, 211, shelters, and {partners.length} trusted local partners
                   </p>
                 </div>
               </motion.div>
@@ -412,43 +413,13 @@ export function NewCaseWizard({ open, onClose, onRefugeCreated }: NewCaseWizardP
                   </div>
                 </Card>
 
-                {/* Matched partners */}
-                <div className="mb-3">
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
-                    {matchedPartners.length} Matched Partners
-                  </p>
-                  <div className="space-y-1.5">
-                    {matchedPartners.map(p => (
-                      <div key={p.id} className="flex items-center justify-between text-sm p-2 rounded-lg bg-muted/30">
-                        <div className="flex items-center gap-2 min-w-0">
-                          <Shield className="h-3.5 w-3.5 text-primary shrink-0" />
-                          <span className="truncate">{p.name}</span>
-                        </div>
-                        <Badge variant="outline" className="text-[10px] shrink-0 ml-2">
-                          {p.type.replace('_', ' ')}
-                        </Badge>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Matched resources */}
-                <div className="mb-4">
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
-                    {matchedResources.length} Public Resources
-                  </p>
-                  <div className="space-y-1.5">
-                    {matchedResources.map(r => (
-                      <div key={r.id} className="flex items-center justify-between text-sm p-2 rounded-lg bg-muted/30">
-                        <div className="flex items-center gap-2 min-w-0">
-                          <Phone className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-                          <span className="truncate">{r.name}</span>
-                        </div>
-                        <span className="text-xs text-muted-foreground shrink-0 ml-2">{r.phone}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                {/* Nearby Resources — the full picture */}
+                <NearbyResourcesPanel
+                  address={address}
+                  zip={address.match(/\d{5}/)?.[0] || '70802'}
+                  state={address.match(/,\s*([A-Z]{2})/)?.[1] || 'LA'}
+                  needs={selectedNeeds}
+                />
 
                 <Separator className="my-4" />
 
