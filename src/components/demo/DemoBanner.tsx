@@ -16,13 +16,13 @@ export function DemoBanner() {
   };
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-[60] bg-primary text-primary-foreground px-4 py-2 flex items-center justify-between gap-3 text-sm shadow-md">
-      <div className="flex items-center gap-3 min-w-0">
-        <Eye className="h-4 w-4 shrink-0 opacity-80" />
+    <div className="bg-primary text-primary-foreground px-4 py-1.5 flex items-center justify-between gap-3 text-xs shrink-0">
+      <div className="flex items-center gap-2 min-w-0">
+        <Eye className="h-3 w-3 shrink-0 opacity-80" />
         <span className="font-medium truncate">
-          Demo Mode &mdash; {demoSession.organization || 'Refugium'}
+          Demo &mdash; {demoSession.organization || 'Refugium'}
         </span>
-        <Badge variant="secondary" className="text-xs shrink-0">
+        <Badge variant="secondary" className="text-[10px] shrink-0">
           Read-only
         </Badge>
       </div>
@@ -31,7 +31,7 @@ export function DemoBanner() {
         variant="ghost"
         size="sm"
         onClick={handleExit}
-        className="h-7 text-primary-foreground hover:bg-primary-foreground/20 text-xs gap-1"
+        className="h-6 text-primary-foreground hover:bg-primary-foreground/20 text-[10px] gap-1 px-2"
       >
         <LogOut className="h-3 w-3" />
         Exit
