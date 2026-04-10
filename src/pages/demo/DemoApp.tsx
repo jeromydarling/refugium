@@ -6,7 +6,7 @@ import { DemoSidebar } from '@/components/demo/DemoSidebar';
 import { NewCaseWizard } from '@/components/demo/NewCaseWizard';
 import { useDemoMode } from '@/contexts/DemoModeContext';
 import { useIsDesktop } from '@/hooks/useIsDesktop';
-import { Users, Shield, ArrowUpDown, Search, Plus, LayoutDashboard, LayoutGrid } from 'lucide-react';
+import { Users, Shield, ArrowUpDown, Search, Plus, LayoutDashboard, LayoutGrid, Calendar } from 'lucide-react';
 import { buttonTap } from '@/lib/animations';
 
 const TABS = [
@@ -49,17 +49,25 @@ export default function DemoApp() {
     </>
   );
 
+  // Derive page title from current path
+  const pageTitle = (() => {
+    const path = location.pathname;
+    if (path.includes('/dashboard')) return 'Dashboard';
+    if (path.includes('/board')) return 'Board';
+    if (path.includes('/people/')) return 'Household';
+    if (path.includes('/people')) return 'People';
+    if (path.includes('/refuge')) return 'Refuge';
+    if (path.includes('/flow')) return 'Flow';
+    if (path.includes('/calendar')) return 'Calendar';
+    return 'Refugium';
+  })();
+
   if (isDesktop) {
     return (
       <div className="min-h-screen bg-background flex">
         <DemoSidebar />
         <div className="flex-1 lg:ml-60 flex flex-col min-h-screen">
           <DemoBanner />
-          <header className="sticky top-[40px] z-40 bg-background border-b px-6 py-3 flex items-center justify-end">
-            <button className="p-2 text-muted-foreground hover:text-foreground rounded-lg" aria-label="Search">
-              <Search className="h-5 w-5" />
-            </button>
-          </header>
           <main className="flex-1 overflow-auto">
             <Outlet />
           </main>
@@ -72,11 +80,9 @@ export default function DemoApp() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <DemoBanner />
-      <header className="sticky top-[40px] z-40 bg-background border-b px-4 py-3 flex items-center justify-between">
+      <header className="sticky top-0 z-40 bg-background border-b px-4 py-2.5 flex items-center justify-between">
         <h1 className="font-serif text-lg font-bold text-primary">Refugium</h1>
-        <button className="p-2 text-muted-foreground hover:text-foreground rounded-lg" aria-label="Search">
-          <Search className="h-5 w-5" />
-        </button>
+        <span className="text-sm font-medium text-muted-foreground">{pageTitle}</span>
       </header>
       <main className="flex-1 pb-20 overflow-auto">
         <Outlet />
