@@ -74,6 +74,26 @@ export default function DemoGate() {
             <Button type="submit" className="w-full" size="lg">
               Enter Demo
             </Button>
+            <div className="relative my-2">
+              <div className="absolute inset-0 flex items-center"><span className="w-full border-t" /></div>
+              <div className="relative flex justify-center text-xs uppercase"><span className="bg-card px-2 text-muted-foreground">or</span></div>
+            </div>
+            <Button
+              type="button"
+              variant="ghost"
+              className="w-full text-muted-foreground"
+              onClick={() => {
+                startDemo({
+                  name: 'Demo User',
+                  email: 'demo@refugium.app',
+                  organization: 'Demo Organization',
+                  grantedAt: new Date().toISOString(),
+                });
+                navigate('/demo/app');
+              }}
+            >
+              Skip — enter as guest
+            </Button>
             <p className="text-xs text-center text-muted-foreground">
               This is a read-only demo with sample data. No real information is stored.
             </p>
