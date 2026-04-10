@@ -4,9 +4,9 @@ import type { Resource } from '@/data';
 import { Phone, Clock, MapPin } from 'lucide-react';
 
 const AVAIL_STYLES: Record<string, string> = {
-  available: 'bg-green-100 text-green-800',
-  limited: 'bg-amber-100 text-amber-800',
-  waitlist: 'bg-red-100 text-red-800',
+  available: 'bg-emerald-50 text-emerald-800',
+  limited: 'bg-amber-50 text-amber-800',
+  waitlist: 'bg-red-50 text-red-800',
 };
 
 interface ResourceCardProps {

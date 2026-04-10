@@ -29,23 +29,23 @@ const STAGE_LABELS: Record<string, string> = {
 };
 
 const STATUS_STYLES: Record<string, string> = {
-  acute: 'bg-red-100 text-red-800',
-  stabilizing: 'bg-amber-100 text-amber-800',
-  rebuilding: 'bg-blue-100 text-blue-800',
-  recovered: 'bg-green-100 text-green-800',
+  acute: 'bg-red-50 text-red-800',
+  stabilizing: 'bg-amber-50 text-amber-800',
+  rebuilding: 'bg-sky-50 text-sky-800',
+  recovered: 'bg-emerald-50 text-emerald-800',
 };
 
 const PRIORITY_DOTS: Record<string, string> = {
-  critical: 'bg-red-500',
-  high: 'bg-orange-500',
-  medium: 'bg-amber-500',
-  low: 'bg-slate-400',
+  critical: 'bg-red-400',
+  high: 'bg-amber-400',
+  medium: 'bg-stone-400',
+  low: 'bg-slate-300',
 };
 
 const STATUS_BADGE_STYLE: Record<string, string> = {
-  unmet: 'bg-red-100 text-red-800',
-  in_progress: 'bg-amber-100 text-amber-800',
-  met: 'bg-green-100 text-green-800',
+  unmet: 'bg-red-50 text-red-800',
+  in_progress: 'bg-amber-50 text-amber-800',
+  met: 'bg-emerald-50 text-emerald-800',
 };
 
 // ── Hardcoded next-step cards for the demo ──
@@ -254,8 +254,8 @@ export default function PersonDetailPage() {
                     variant="secondary"
                     className={`shrink-0 text-xs ${
                       step.urgency === 'Today'
-                        ? 'bg-red-100 text-red-800'
-                        : 'bg-amber-100 text-amber-800'
+                        ? 'bg-red-50 text-red-800'
+                        : 'bg-amber-50 text-amber-800'
                     }`}
                   >
                     {step.urgency}
@@ -460,7 +460,7 @@ function TrailBehind({ stages }: TrailBehindProps) {
                         {new Date(s.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
                       </span>
                     )}
-                    <CheckCircle2 className="h-3.5 w-3.5 text-green-600/60" />
+                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-700/60" />
                   </div>
                   {s.notes && (
                     <p className="font-serif italic text-sm text-[hsl(var(--ignatian-brown))] opacity-80 mt-1 leading-relaxed">

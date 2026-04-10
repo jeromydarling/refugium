@@ -33,10 +33,10 @@ interface HouseholdWeb {
 }
 
 const TYPE_META: Record<ConnectionType, { label: string; color: string; borderColor: string }> = {
-  navigator: { label: 'Navigator', color: 'bg-blue-100 text-blue-700', borderColor: 'border-l-blue-500' },
-  partner: { label: 'Partner', color: 'bg-green-100 text-green-700', borderColor: 'border-l-green-500' },
-  host: { label: 'Host', color: 'bg-amber-100 text-amber-700', borderColor: 'border-l-amber-500' },
-  peer: { label: 'Peer', color: 'bg-purple-100 text-purple-700', borderColor: 'border-l-purple-500' },
+  navigator: { label: 'Navigator', color: 'bg-sky-50 text-sky-800', borderColor: 'border-l-sky-400' },
+  partner: { label: 'Partner', color: 'bg-emerald-50 text-emerald-800', borderColor: 'border-l-emerald-400' },
+  host: { label: 'Host', color: 'bg-amber-50 text-amber-800', borderColor: 'border-l-amber-400' },
+  peer: { label: 'Peer', color: 'bg-violet-50 text-violet-800', borderColor: 'border-l-violet-400' },
 };
 
 function buildConnectionWebs(): HouseholdWeb[] {
@@ -193,7 +193,7 @@ export default function GraphPage() {
           </Card>
           <Card className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-muted text-green-600">
+              <div className="p-2 rounded-lg bg-muted text-emerald-700">
                 <Handshake className="h-5 w-5" />
               </div>
               <div>

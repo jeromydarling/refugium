@@ -29,12 +29,12 @@ interface CalendarEvent {
 
 const EVENT_CONFIG: Record<string, { label: string; color: string; icon: typeof Home }> = {
   visit: { label: 'Home Visit', color: 'bg-primary/10 text-primary border-l-primary', icon: Home },
-  followup: { label: 'Follow-up', color: 'bg-amber-100 text-amber-800 border-l-amber-500', icon: Heart },
-  distribution: { label: 'Distribution', color: 'bg-blue-100 text-blue-800 border-l-blue-500', icon: Truck },
-  clinic: { label: 'Health Clinic', color: 'bg-green-100 text-green-800 border-l-green-500', icon: Stethoscope },
-  meeting: { label: 'Team Meeting', color: 'bg-purple-100 text-purple-800 border-l-purple-500', icon: Megaphone },
-  training: { label: 'Training', color: 'bg-indigo-100 text-indigo-800 border-l-indigo-500', icon: GraduationCap },
-  delivery: { label: 'Supply Delivery', color: 'bg-orange-100 text-orange-800 border-l-orange-500', icon: UtensilsCrossed },
+  followup: { label: 'Follow-up', color: 'bg-amber-50 text-amber-800 border-l-amber-400', icon: Heart },
+  distribution: { label: 'Distribution', color: 'bg-sky-50 text-sky-800 border-l-sky-400', icon: Truck },
+  clinic: { label: 'Health Clinic', color: 'bg-emerald-50 text-emerald-800 border-l-emerald-400', icon: Stethoscope },
+  meeting: { label: 'Team Meeting', color: 'bg-violet-50 text-violet-800 border-l-violet-400', icon: Megaphone },
+  training: { label: 'Training', color: 'bg-slate-100 text-slate-700 border-l-slate-400', icon: GraduationCap },
+  delivery: { label: 'Supply Delivery', color: 'bg-amber-50 text-amber-700 border-l-amber-400', icon: UtensilsCrossed },
 };
 
 function generateMockEvents(): CalendarEvent[] {

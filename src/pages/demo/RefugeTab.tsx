@@ -47,9 +47,9 @@ export default function RefugeTab() {
   );
 
   const infoBanner = (
-    <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 flex gap-2">
-      <Info className="h-4 w-4 text-blue-600 shrink-0 mt-0.5" />
-      <p className="text-xs text-blue-800">
+    <div className="bg-sky-50 border border-sky-200 rounded-lg p-3 flex gap-2">
+      <Info className="h-4 w-4 text-sky-700 shrink-0 mt-0.5" />
+      <p className="text-xs text-sky-800">
         In production, Refugium connects to 211 and Findhelp for real-time public resources searchable by ZIP code.
       </p>
     </div>

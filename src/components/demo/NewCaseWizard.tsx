@@ -250,7 +250,7 @@ export function NewCaseWizard({ open, onClose, onRefugeCreated }: NewCaseWizardP
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ type: 'spring', stiffness: 200, delay: 0.1 }}
-                    className="mx-auto w-14 h-14 rounded-2xl bg-amber-100 flex items-center justify-center mb-3"
+                    className="mx-auto w-14 h-14 rounded-2xl bg-amber-50 flex items-center justify-center mb-3"
                   >
                     <CloudLightning className="w-7 h-7 text-amber-700" />
                   </motion.div>
@@ -266,7 +266,7 @@ export function NewCaseWizard({ open, onClose, onRefugeCreated }: NewCaseWizardP
                         {detectedDisaster.region} &middot; {new Date(detectedDisaster.date).toLocaleDateString()}
                       </p>
                     </div>
-                    <Badge className="bg-amber-100 text-amber-800">{detectedDisaster.type}</Badge>
+                    <Badge className="bg-amber-50 text-amber-800">{detectedDisaster.type}</Badge>
                   </div>
                 </Card>
 
@@ -387,9 +387,9 @@ export function NewCaseWizard({ open, onClose, onRefugeCreated }: NewCaseWizardP
                     initial={{ scale: 0, rotate: -45 }}
                     animate={{ scale: 1, rotate: 0 }}
                     transition={{ type: 'spring', stiffness: 200 }}
-                    className="mx-auto w-16 h-16 rounded-2xl bg-green-100 flex items-center justify-center mb-3"
+                    className="mx-auto w-16 h-16 rounded-2xl bg-emerald-50 flex items-center justify-center mb-3"
                   >
-                    <PartyPopper className="w-8 h-8 text-green-700" />
+                    <PartyPopper className="w-8 h-8 text-emerald-800" />
                   </motion.div>
                   <h2 className="font-serif text-xl font-bold">Refuge opened!</h2>
                   <p className="text-sm text-muted-foreground mt-1">
@@ -398,7 +398,7 @@ export function NewCaseWizard({ open, onClose, onRefugeCreated }: NewCaseWizardP
                 </div>
 
                 {/* Summary card */}
-                <Card className="p-4 border-l-4 border-l-green-500 mb-4">
+                <Card className="p-4 border-l-4 border-l-emerald-400 mb-4">
                   <div className="space-y-1 text-sm">
                     <p><span className="font-medium">{headName}</span> ({familyName} family)</p>
                     <p className="text-xs text-muted-foreground">{address}</p>

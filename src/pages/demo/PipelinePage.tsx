@@ -45,9 +45,9 @@ interface PipelineOrg {
 
 const COLUMN_META: Record<string, { label: string; color: string; bgColor: string }> = {
   identified: { label: 'Identified', color: 'text-slate-600', bgColor: 'bg-slate-50' },
-  contacted: { label: 'Contacted', color: 'text-blue-600', bgColor: 'bg-blue-50' },
-  partnered: { label: 'Partnered', color: 'text-amber-600', bgColor: 'bg-amber-50' },
-  active: { label: 'Active', color: 'text-green-600', bgColor: 'bg-green-50' },
+  contacted: { label: 'Contacted', color: 'text-sky-800', bgColor: 'bg-sky-50' },
+  partnered: { label: 'Partnered', color: 'text-amber-800', bgColor: 'bg-amber-50' },
+  active: { label: 'Active', color: 'text-emerald-800', bgColor: 'bg-emerald-50' },
 };
 
 function buildPipelineData(): PipelineOrg[] {

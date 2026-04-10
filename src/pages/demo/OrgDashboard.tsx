@@ -138,25 +138,25 @@ export default function OrgDashboard() {
       label: 'Active Needs',
       value: kpis.activeNeeds,
       icon: AlertCircle,
-      color: 'text-red-500',
+      color: 'text-red-400',
     },
     {
       label: 'Volunteers Active',
       value: kpis.volunteersActive,
       icon: UserCheck,
-      color: 'text-green-600',
+      color: 'text-emerald-600',
     },
     {
       label: 'Avg Days to Stabilize',
       value: kpis.avgDaysToStabilize,
       icon: Clock,
-      color: 'text-amber-500',
+      color: 'text-amber-600',
     },
     {
       label: 'NRI Alerts',
       value: kpis.nriAlerts,
       icon: Radio,
-      color: 'text-purple-500',
+      color: 'text-violet-500',
     },
   ];
 
@@ -236,7 +236,7 @@ export default function OrgDashboard() {
               {/* Most urgent households */}
               <div>
                 <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
-                  <AlertCircle className="h-4 w-4 text-red-500" />
+                  <AlertCircle className="h-4 w-4 text-red-400" />
                   Most Urgent Refuges
                 </h3>
                 <div className="space-y-2">
@@ -298,7 +298,7 @@ export default function OrgDashboard() {
                 {/* NRI System Signals */}
                 <div>
                   <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
-                    <Radio className="h-4 w-4 text-purple-500" />
+                    <Radio className="h-4 w-4 text-violet-500" />
                     NRI System Signals
                   </h3>
                   <div className="space-y-2">

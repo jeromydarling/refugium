@@ -21,8 +21,8 @@ export function RecoveryTimeline({ journey }: RecoveryTimelineProps) {
           {/* Line + dot */}
           <div className="flex flex-col items-center">
             {s.status === 'completed' ? (
-              <div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center shrink-0">
-                <Check className="w-3.5 h-3.5 text-green-700" />
+              <div className="w-6 h-6 rounded-full bg-emerald-50 flex items-center justify-center shrink-0">
+                <Check className="w-3.5 h-3.5 text-emerald-800" />
               </div>
             ) : s.status === 'active' ? (
               <div className="w-6 h-6 rounded-full bg-primary/15 flex items-center justify-center shrink-0 ring-2 ring-primary/30">
@@ -34,7 +34,7 @@ export function RecoveryTimeline({ journey }: RecoveryTimelineProps) {
               </div>
             )}
             {i < journey.stages.length - 1 && (
-              <div className={`w-0.5 flex-1 min-h-[24px] ${s.status === 'completed' ? 'bg-green-200' : 'bg-border'}`} />
+              <div className={`w-0.5 flex-1 min-h-[24px] ${s.status === 'completed' ? 'bg-emerald-200' : 'bg-border'}`} />
             )}
           </div>
 

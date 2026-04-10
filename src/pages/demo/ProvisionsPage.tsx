@@ -25,9 +25,9 @@ import { staggerContainer, staggerItem, cardHover } from '@/lib/animations';
 
 const SUMMARY = [
   { label: 'Total Items', value: 340, icon: Package, color: 'text-primary' },
-  { label: 'Distributed', value: 280, icon: CheckCircle2, color: 'text-green-600' },
-  { label: 'In Stock', value: 60, icon: Warehouse, color: 'text-blue-500' },
-  { label: 'Pending Delivery', value: 15, icon: Truck, color: 'text-amber-500' },
+  { label: 'Distributed', value: 280, icon: CheckCircle2, color: 'text-emerald-700' },
+  { label: 'In Stock', value: 60, icon: Warehouse, color: 'text-sky-700' },
+  { label: 'Pending Delivery', value: 15, icon: Truck, color: 'text-amber-600' },
 ];
 
 /* ── Category data ───────────────────────────────────────── */

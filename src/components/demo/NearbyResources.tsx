@@ -89,16 +89,16 @@ export function NearbyResourcesPanel({ address, zip, state, needs, compact }: Ne
       {activeDisaster && (
         <Card className="p-3 border-l-4 border-l-amber-400">
           <div className="flex items-start gap-2">
-            <Cloud className="h-4 w-4 text-amber-600 mt-0.5 shrink-0" />
+            <Cloud className="h-4 w-4 text-amber-700 mt-0.5 shrink-0" />
             <div>
               <p className="text-xs font-semibold text-foreground">{activeDisaster.title}</p>
               <p className="text-[11px] text-muted-foreground">
                 FEMA DR-{activeDisaster.disasterNumber} &middot; Declared {new Date(activeDisaster.declarationDate).toLocaleDateString()}
               </p>
               <div className="flex flex-wrap gap-1 mt-1.5">
-                {activeDisaster.iaProgramDeclared && <Badge variant="secondary" className="text-[10px] bg-green-100 text-green-700">Individual Assistance</Badge>}
-                {activeDisaster.paProgramDeclared && <Badge variant="secondary" className="text-[10px] bg-blue-100 text-blue-700">Public Assistance</Badge>}
-                {activeDisaster.hmProgramDeclared && <Badge variant="secondary" className="text-[10px] bg-purple-100 text-purple-700">Hazard Mitigation</Badge>}
+                {activeDisaster.iaProgramDeclared && <Badge variant="secondary" className="text-[10px] bg-emerald-50 text-emerald-800">Individual Assistance</Badge>}
+                {activeDisaster.paProgramDeclared && <Badge variant="secondary" className="text-[10px] bg-sky-50 text-sky-800">Public Assistance</Badge>}
+                {activeDisaster.hmProgramDeclared && <Badge variant="secondary" className="text-[10px] bg-violet-50 text-violet-800">Hazard Mitigation</Badge>}
               </div>
             </div>
           </div>
@@ -109,9 +109,9 @@ export function NearbyResourcesPanel({ address, zip, state, needs, compact }: Ne
       {hasAlerts && (
         <div className="space-y-1.5">
           {resources.alerts.map(alert => (
-            <Card key={alert.id} className={`p-2.5 ${alert.severity === 'Extreme' || alert.severity === 'Severe' ? 'border-red-300 bg-red-50/50' : 'border-amber-200 bg-amber-50/50'}`}>
+            <Card key={alert.id} className={`p-2.5 ${alert.severity === 'Extreme' || alert.severity === 'Severe' ? 'border-red-200 bg-red-50/40' : 'border-amber-200 bg-amber-50/40'}`}>
               <div className="flex items-center gap-2">
-                <AlertTriangle className={`h-3.5 w-3.5 shrink-0 ${alert.severity === 'Extreme' || alert.severity === 'Severe' ? 'text-red-600' : 'text-amber-600'}`} />
+                <AlertTriangle className={`h-3.5 w-3.5 shrink-0 ${alert.severity === 'Extreme' || alert.severity === 'Severe' ? 'text-red-700' : 'text-amber-700'}`} />
                 <p className="text-xs font-medium">{alert.headline}</p>
               </div>
             </Card>
@@ -131,13 +131,13 @@ export function NearbyResourcesPanel({ address, zip, state, needs, compact }: Ne
               <motion.div key={step.id} variants={staggerItem}>
                 <Card className={`p-3 border-l-3 ${step.urgency === 'today' ? 'border-l-red-400 bg-red-50/30' : step.urgency === 'this_week' ? 'border-l-amber-400' : 'border-l-border'}`}>
                   <div className="flex items-start gap-2.5">
-                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 mt-0.5 ${step.urgency === 'today' ? 'bg-red-100' : 'bg-primary/10'}`}>
-                      <ArrowRight className={`w-3.5 h-3.5 ${step.urgency === 'today' ? 'text-red-600' : 'text-primary'}`} />
+                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 mt-0.5 ${step.urgency === 'today' ? 'bg-red-50' : 'bg-primary/10'}`}>
+                      <ArrowRight className={`w-3.5 h-3.5 ${step.urgency === 'today' ? 'text-red-700' : 'text-primary'}`} />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <p className="text-sm font-semibold text-foreground">{step.title}</p>
-                        <Badge variant="secondary" className={`text-[9px] ${step.urgency === 'today' ? 'bg-red-100 text-red-700' : step.urgency === 'this_week' ? 'bg-amber-100 text-amber-700' : 'bg-muted'}`}>
+                        <Badge variant="secondary" className={`text-[9px] ${step.urgency === 'today' ? 'bg-red-50 text-red-800' : step.urgency === 'this_week' ? 'bg-amber-50 text-amber-800' : 'bg-muted'}`}>
                           {step.urgency === 'today' ? 'Today' : step.urgency === 'this_week' ? 'This week' : 'Soon'}
                         </Badge>
                       </div>
@@ -274,7 +274,7 @@ export function NearbyResourcesPanel({ address, zip, state, needs, compact }: Ne
           {/* D-SNAP and food services from 211 */}
           <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">Food Assistance Programs</p>
           {resources.services.filter(s => s.category === 'food').map(svc => (
-            <Card key={svc.id} className="p-3 border-l-2 border-l-green-400">
+            <Card key={svc.id} className="p-3 border-l-2 border-l-emerald-400">
               <p className="text-sm font-medium">{svc.name}</p>
               <p className="text-xs text-muted-foreground mt-0.5">{svc.description}</p>
               <div className="flex items-center gap-3 mt-2 text-[10px] text-muted-foreground">
@@ -304,8 +304,8 @@ export function NearbyResourcesPanel({ address, zip, state, needs, compact }: Ne
                     </div>
                     <div className="text-right shrink-0 space-y-1">
                       <Badge variant="secondary" className="text-[10px]">{shelter.type}</Badge>
-                      {shelter.acceptsFamilies && <Badge variant="secondary" className="text-[10px] bg-green-100 text-green-700"><Users className="h-2.5 w-2.5 mr-0.5" />Families</Badge>}
-                      {shelter.acceptsPets && <Badge variant="secondary" className="text-[10px] bg-blue-100 text-blue-700">Pets OK</Badge>}
+                      {shelter.acceptsFamilies && <Badge variant="secondary" className="text-[10px] bg-emerald-50 text-emerald-800"><Users className="h-2.5 w-2.5 mr-0.5" />Families</Badge>}
+                      {shelter.acceptsPets && <Badge variant="secondary" className="text-[10px] bg-sky-50 text-sky-800">Pets OK</Badge>}
                     </div>
                   </div>
                 </Card>
@@ -383,10 +383,10 @@ export function NearbyResourcesPanel({ address, zip, state, needs, compact }: Ne
           <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="space-y-2">
             {resources.health.healthCenters.map(hc => (
               <motion.div key={hc.id} variants={staggerItem}>
-                <Card className="p-3 border-l-2 border-l-green-400">
+                <Card className="p-3 border-l-2 border-l-emerald-400">
                   <p className="text-sm font-medium">{hc.name}</p>
                   <div className="flex flex-wrap gap-1 mt-1">
-                    {hc.services.map(s => <Badge key={s} variant="secondary" className="text-[9px] bg-green-50 text-green-700">{s}</Badge>)}
+                    {hc.services.map(s => <Badge key={s} variant="secondary" className="text-[9px] bg-emerald-50 text-emerald-700">{s}</Badge>)}
                   </div>
                   <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2 text-[10px] text-muted-foreground">
                     <span className="flex items-center gap-1"><MapPin className="h-3 w-3" />{hc.distance}</span>
@@ -395,7 +395,7 @@ export function NearbyResourcesPanel({ address, zip, state, needs, compact }: Ne
                   </div>
                   <div className="flex gap-2 mt-1.5">
                     {hc.slidingScale && <Badge variant="secondary" className="text-[9px] bg-primary/10 text-primary">Sliding scale</Badge>}
-                    {hc.walkInsAccepted && <Badge variant="secondary" className="text-[9px] bg-amber-100 text-amber-700">Walk-ins OK</Badge>}
+                    {hc.walkInsAccepted && <Badge variant="secondary" className="text-[9px] bg-amber-50 text-amber-800">Walk-ins OK</Badge>}
                     {hc.languages.length > 1 && <Badge variant="secondary" className="text-[9px]">{hc.languages.join(', ')}</Badge>}
                   </div>
                 </Card>
@@ -419,7 +419,7 @@ export function NearbyResourcesPanel({ address, zip, state, needs, compact }: Ne
                   <p className="text-[11px] text-muted-foreground mt-1">{mp.description}</p>
                   <p className="text-[10px] text-primary mt-1">How: {mp.howToAccess}</p>
                 </div>
-                <Badge variant="secondary" className={`text-[9px] shrink-0 ${mp.type === 'free' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
+                <Badge variant="secondary" className={`text-[9px] shrink-0 ${mp.type === 'free' ? 'bg-emerald-50 text-emerald-800' : 'bg-sky-50 text-sky-800'}`}>
                   {mp.type === 'free' ? 'Free' : mp.type === 'discount' ? 'Discount' : 'Assistance'}
                 </Badge>
               </div>
@@ -486,7 +486,7 @@ export function NearbyResourcesPanel({ address, zip, state, needs, compact }: Ne
             Transportation Assistance
           </p>
           {resources.transit.services.map(svc => (
-            <Card key={svc.id} className={`p-3 ${svc.type === 'medical_transport' ? 'border-l-2 border-l-green-400 bg-green-50/20' : ''}`}>
+            <Card key={svc.id} className={`p-3 ${svc.type === 'medical_transport' ? 'border-l-2 border-l-emerald-400 bg-emerald-50/20' : ''}`}>
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
                   <p className="text-sm font-medium">{svc.name}</p>
@@ -497,7 +497,7 @@ export function NearbyResourcesPanel({ address, zip, state, needs, compact }: Ne
                     <span className="flex items-center gap-1"><Phone className="h-3 w-3" />{svc.phone}</span>
                   </div>
                 </div>
-                <Badge variant="secondary" className={`text-[9px] shrink-0 ${svc.cost === 'Free' || svc.cost.includes('Free') ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
+                <Badge variant="secondary" className={`text-[9px] shrink-0 ${svc.cost === 'Free' || svc.cost.includes('Free') ? 'bg-emerald-50 text-emerald-800' : 'bg-sky-50 text-sky-800'}`}>
                   {svc.cost}
                 </Badge>
               </div>
