@@ -1,78 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&display=swap');
-
 @layer base {
   :root {
-    /* Core Brand - Warm Earthy */
-    --background: 30 20% 96%;
-    --foreground: 25 30% 14%;
+    /* Core Brand — Refugium Deep Teal */
+    --background: 210 12% 96%;
+    --foreground: 210 20% 15%;
 
-    /* Marketing theme tokens (RadiatingHope-inspired) */
-    --marketing-navy: 220 40% 16%;
-    --marketing-blue: 209 75% 56%;
-    --marketing-surface: 220 20% 97%;
-    --marketing-border: 220 15% 90%;
+    /* Marketing theme tokens */
+    --marketing-navy: 210 35% 14%;
+    --marketing-teal: 196 65% 30%;
+    --marketing-amber: 38 75% 55%;
+    --marketing-surface: 210 15% 97%;
+    --marketing-border: 210 12% 90%;
 
     /* Cards & Surfaces */
-    --card: 35 25% 98%;
-    --card-foreground: 25 30% 14%;
+    --card: 210 10% 98%;
+    --card-foreground: 210 20% 15%;
 
-    --popover: 35 25% 98%;
-    --popover-foreground: 25 30% 14%;
+    --popover: 210 10% 98%;
+    --popover-foreground: 210 20% 15%;
 
-    /* Primary - Muted Forest Green */
-    --primary: 155 25% 35%;
+    /* Primary — Deep Teal (shelter, stability, trust) */
+    --primary: 196 65% 30%;
     --primary-foreground: 40 20% 97%;
 
-    /* Secondary - Warm Stone */
-    --secondary: 30 15% 93%;
-    --secondary-foreground: 25 30% 14%;
+    /* Secondary — Cool Gray */
+    --secondary: 210 12% 93%;
+    --secondary-foreground: 210 20% 15%;
 
     /* Muted */
-    --muted: 30 15% 93%;
-    --muted-foreground: 25 10% 50%;
+    --muted: 210 12% 93%;
+    --muted-foreground: 210 8% 50%;
 
-    /* Accent - Soft Sage */
-    --accent: 145 18% 45%;
-    --accent-foreground: 40 20% 97%;
+    /* Accent — Warm Amber (hope, recovery) */
+    --accent: 38 75% 55%;
+    --accent-foreground: 210 20% 15%;
 
-    /* Destructive - Muted Clay */
-    --destructive: 8 45% 52%;
+    /* Destructive — Muted Rust */
+    --destructive: 8 55% 48%;
     --destructive-foreground: 40 20% 97%;
 
-    /* Status Colors - Desaturated */
-    --success: 145 30% 42%;
+    /* Status Colors */
+    --success: 155 35% 38%;
     --success-foreground: 40 20% 97%;
-    --warning: 35 55% 52%;
+    --warning: 35 65% 52%;
     --warning-foreground: 40 20% 97%;
-    --info: 185 25% 45%;
+    --info: 205 40% 48%;
     --info-foreground: 40 20% 97%;
 
-    /* Journey Chapter Colors - Earthy Spectrum */
-    --stage-target: 25 35% 50%;
-    --stage-contacted: 185 25% 45%;
-    --stage-discovery: 155 25% 38%;
-    --stage-proposal: 35 55% 50%;
-    --stage-agreement: 15 40% 48%;
-    --stage-signed: 145 30% 42%;
-    --stage-volume: 140 20% 40%;
-
-    /* Metro Status */
-    --status-expansion: 145 30% 42%;
-    --status-anchor-build: 35 55% 52%;
-    --status-ecosystem: 185 25% 45%;
+    /* Recovery Stage Colors */
+    --stage-intake: 205 40% 48%;
+    --stage-assessment: 196 50% 38%;
+    --stage-stabilizing: 38 65% 52%;
+    --stage-rebuilding: 155 35% 38%;
+    --stage-recovered: 145 40% 42%;
 
     /* Borders & Inputs */
-    --border: 30 15% 88%;
-    --input: 30 15% 88%;
-    --ring: 155 25% 35%;
+    --border: 210 12% 88%;
+    --input: 210 12% 88%;
+    --ring: 196 65% 30%;
 
     --radius: 0.75rem;
 
-    /* Ignatian / Indoles Warm Palette */
+    /* Ignatian / Indoles Warm Palette (retained) */
     --ignatian-deep: 25 35% 18%;
     --ignatian-brown: 25 28% 29%;
     --ignatian-gold: 30 29% 43%;
@@ -85,61 +79,61 @@
     --ignatian-bg: 30 25% 97%;
     --ignatian-bg-end: 30 22% 91%;
 
-    /* Sidebar - Deep Warm Charcoal */
-    --sidebar-background: 25 20% 12%;
-    --sidebar-foreground: 30 15% 90%;
-    --sidebar-primary: 155 25% 50%;
+    /* Sidebar — Deep Navy */
+    --sidebar-background: 210 30% 12%;
+    --sidebar-foreground: 210 12% 90%;
+    --sidebar-primary: 196 55% 45%;
     --sidebar-primary-foreground: 40 20% 97%;
-    --sidebar-accent: 25 18% 18%;
-    --sidebar-accent-foreground: 30 15% 90%;
-    --sidebar-border: 25 18% 18%;
-    --sidebar-ring: 155 25% 50%;
+    --sidebar-accent: 210 25% 18%;
+    --sidebar-accent-foreground: 210 12% 90%;
+    --sidebar-border: 210 25% 18%;
+    --sidebar-ring: 196 55% 45%;
 
-    /* Chart Colors - Earthy */
-    --chart-1: 155 25% 38%;
-    --chart-2: 145 18% 45%;
-    --chart-3: 35 55% 52%;
-    --chart-4: 25 35% 50%;
-    --chart-5: 185 25% 45%;
+    /* Chart Colors */
+    --chart-1: 196 65% 30%;
+    --chart-2: 38 75% 55%;
+    --chart-3: 155 35% 38%;
+    --chart-4: 205 40% 48%;
+    --chart-5: 8 55% 48%;
   }
 
   .dark {
-    --background: 25 20% 9%;
-    --foreground: 30 15% 90%;
+    --background: 210 20% 9%;
+    --foreground: 210 12% 90%;
 
-    --card: 25 18% 12%;
-    --card-foreground: 30 15% 90%;
+    --card: 210 18% 12%;
+    --card-foreground: 210 12% 90%;
 
-    --popover: 25 18% 12%;
-    --popover-foreground: 30 15% 90%;
+    --popover: 210 18% 12%;
+    --popover-foreground: 210 12% 90%;
 
-    --primary: 155 25% 45%;
+    --primary: 196 55% 40%;
     --primary-foreground: 40 20% 97%;
 
-    --secondary: 25 18% 18%;
-    --secondary-foreground: 30 15% 90%;
+    --secondary: 210 18% 18%;
+    --secondary-foreground: 210 12% 90%;
 
-    --muted: 25 18% 18%;
-    --muted-foreground: 25 10% 58%;
+    --muted: 210 18% 18%;
+    --muted-foreground: 210 8% 58%;
 
-    --accent: 145 18% 50%;
-    --accent-foreground: 40 20% 97%;
+    --accent: 38 65% 50%;
+    --accent-foreground: 210 20% 15%;
 
-    --destructive: 8 40% 45%;
+    --destructive: 8 45% 45%;
     --destructive-foreground: 40 20% 97%;
 
-    --border: 25 18% 20%;
-    --input: 25 18% 20%;
-    --ring: 155 25% 45%;
+    --border: 210 18% 20%;
+    --input: 210 18% 20%;
+    --ring: 196 55% 40%;
 
-    --sidebar-background: 25 20% 7%;
-    --sidebar-foreground: 30 15% 90%;
-    --sidebar-primary: 155 25% 50%;
+    --sidebar-background: 210 25% 7%;
+    --sidebar-foreground: 210 12% 90%;
+    --sidebar-primary: 196 55% 45%;
     --sidebar-primary-foreground: 40 20% 97%;
-    --sidebar-accent: 25 18% 14%;
-    --sidebar-accent-foreground: 30 15% 90%;
-    --sidebar-border: 25 18% 14%;
-    --sidebar-ring: 155 25% 50%;
+    --sidebar-accent: 210 22% 14%;
+    --sidebar-accent-foreground: 210 12% 90%;
+    --sidebar-border: 210 22% 14%;
+    --sidebar-ring: 196 55% 45%;
   }
 }
 

@@ -1,306 +1,333 @@
-import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { Button } from '@/components/ui/button';
-import { ArrowRight, Eye, Layers, Compass, ShieldCheck } from 'lucide-react';
-import SeoHead from '@/components/seo/SeoHead';
-import SeoBreadcrumb from '@/components/seo/SeoBreadcrumb';
-import SeoInternalLinks from '@/components/seo/SeoInternalLinks';
-import RoleIdentityBlock from '@/components/seo/RoleIdentityBlock';
-import ConceptLinks from '@/components/seo/ConceptLinks';
-import { faqSchema } from '@/lib/seo/seoConfig';
-import NarrativeGraphLinks from '@/components/marketing/NarrativeGraphLinks';
-import { getConceptRelatedNodes, definedTermSchema } from '@/content/narrativeGraph';
-import RelatedNarrativesCard from '@/components/marketing/RelatedNarrativesCard';
-import nriHero from '@/assets/nri-hero.webp';
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
-  activeHero,
-  aiStrengths,
-  aiLimits,
-  coreLoop,
-  adoptionBridge,
-  principles,
-  trustBoundaries,
-  restoration,
-  closingManifesto,
-  nriFaq,
-} from '@/content/nriMarketingContent';
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
+import {
+  Brain,
+  Eye,
+  AlertTriangle,
+  Lightbulb,
+  ShieldOff,
+  Bot,
+  Database,
+  Compass,
+  TrendingUp,
+  Clock,
+  Users,
+  Link2,
+  ArrowRight,
+  CheckCircle2,
+  XCircle,
+} from "lucide-react";
 
-const serif = { fontFamily: 'Georgia, "Times New Roman", serif' };
+const nriDoes = [
+  {
+    icon: Eye,
+    title: "Pattern recognition",
+    description:
+      "NRI watches for patterns across your entire caseload -- recurring needs, seasonal trends, and demographic clusters that would take weeks to notice manually.",
+  },
+  {
+    icon: AlertTriangle,
+    title: "Stalled case detection",
+    description:
+      "When a family's recovery has gone quiet for too long, NRI surfaces it gently. Not an alarm -- a nudge for your team to check in.",
+  },
+  {
+    icon: Lightbulb,
+    title: "Quiet signal surfacing",
+    description:
+      "The subtle things: a volunteer who's been overextended, a resource that keeps running out, a partner who hasn't responded in weeks. NRI notices so you can discern.",
+  },
+];
 
-const stepIcons = [Eye, Layers, Compass];
+const nriDoesNot = [
+  {
+    icon: Bot,
+    title: "No chatbot",
+    description:
+      "NRI is not a conversational AI. It doesn't talk to survivors or make recommendations without human discernment.",
+  },
+  {
+    icon: ShieldOff,
+    title: "No automated decisions",
+    description:
+      "NRI never closes a case, denies a resource, or changes a status. Every action requires a human being making a thoughtful choice.",
+  },
+  {
+    icon: Database,
+    title: "No data harvesting",
+    description:
+      "Your data stays yours. NRI works within your organization's data boundary. Nothing is sold, shared, or used to train external models.",
+  },
+];
+
+const signalTypes = [
+  {
+    icon: Clock,
+    title: "Stalled progress",
+    description:
+      "A household that hasn't had any activity, referral, or contact in a configurable number of days.",
+  },
+  {
+    icon: TrendingUp,
+    title: "Recurring patterns",
+    description:
+      "The same unmet need appearing across multiple households -- suggesting a systemic gap, not just an individual one.",
+  },
+  {
+    icon: Users,
+    title: "Capacity alerts",
+    description:
+      "A volunteer whose task count has crossed a threshold, or a team that's been short-staffed for consecutive weeks.",
+  },
+  {
+    icon: Link2,
+    title: "Connection opportunities",
+    description:
+      "Two households with complementary needs and resources -- a connection your team might not have thought to make.",
+  },
+];
 
 export default function NRI() {
-  const { t } = useTranslation('marketing');
   return (
-    <div className="bg-white">
-      <SeoHead
-        title="NRI™ — Narrative Relational Intelligence | Recognize · Synthesize · Prioritize"
-        description="NRI is human-first intelligence that recognizes signals, synthesizes stories, and prioritizes your attention — grounded in relationships, not cold analytics."
-        keywords={['narrative intelligence', 'NRI', 'human-first AI', 'relationship intelligence', 'community awareness', 'recognize synthesize prioritize']}
-        canonical="/nri"
-        jsonLd={[faqSchema(nriFaq), definedTermSchema('nri')].filter(Boolean)}
-      />
-      <SeoBreadcrumb items={[{ label: 'Home', to: '/' }, { label: 'NRI™' }]} />
-
-      {/* ── Section 1 — Hero ── */}
-      <section className="relative overflow-hidden">
-        <img src={nriHero} alt="" aria-hidden="true" loading="eager" className="pointer-events-none absolute inset-0 w-full h-full opacity-[0.15] object-cover object-center scale-[2.4] origin-top" />
-        <div className="relative max-w-2xl mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-16 sm:pb-20 text-center">
-        <p className="text-sm font-medium text-[hsl(var(--marketing-blue))] uppercase tracking-wider mb-4">
-          {activeHero.eyebrow}
-        </p>
-        <h1
-          className="text-3xl sm:text-4xl md:text-5xl font-bold text-[hsl(var(--marketing-navy))] leading-[1.15] tracking-tight mb-8"
-        >
-          {activeHero.title}
-        </h1>
-        <div className="space-y-5 text-[hsl(var(--marketing-navy)/0.7)] leading-relaxed whitespace-pre-line" style={serif}>
-          <p>{activeHero.subtitle}</p>
-        </div>
-        <p className="text-sm text-[hsl(var(--marketing-navy)/0.45)] mt-8 italic" style={serif}>
-          {activeHero.footnote}
-        </p>
-        </div>
-      </section>
-
-      {/* ── Section 2 — What AI Is Good For ── */}
-      <section className="bg-[hsl(var(--marketing-surface))] py-16 sm:py-24">
-        <div className="max-w-2xl mx-auto px-4 sm:px-6">
-          <h2 className="text-2xl sm:text-3xl font-semibold text-[hsl(var(--marketing-navy))] mb-8 text-center" style={serif}>
-            {aiStrengths.heading}
-          </h2>
-          <div className="space-y-5 text-[hsl(var(--marketing-navy)/0.7)] leading-relaxed" style={serif}>
-            {aiStrengths.body.map((p, i) => (
-              <p key={i}>{p}</p>
-            ))}
-            <ul className="space-y-2 pl-4">
-              {aiStrengths.bullets.map((item) => (
-                <li key={item} className="flex items-center gap-3">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--marketing-blue))] flex-shrink-0" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-            <p>{aiStrengths.bridge}</p>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Section 3 — Where AI Stops ── */}
-      <section className="py-16 sm:py-24">
-        <div className="max-w-2xl mx-auto px-4 sm:px-6">
-          <h2 className="text-2xl sm:text-3xl font-semibold text-[hsl(var(--marketing-navy))] mb-8 text-center" style={serif}>
-            {aiLimits.heading}
-          </h2>
-          <div className="space-y-5 text-[hsl(var(--marketing-navy)/0.7)] leading-relaxed" style={serif}>
-            {aiLimits.body.map((p, i) => (
-              <p key={i}>{p}</p>
-            ))}
-            <p className="text-lg text-[hsl(var(--marketing-navy))] font-medium">
-              {aiLimits.closing}
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Section 4 — The NRI Core Loop ── */}
-      <section className="bg-[hsl(var(--marketing-surface))] py-16 sm:py-24">
-        <div className="max-w-[960px] mx-auto px-4 sm:px-6">
-          <h2 className="text-2xl sm:text-3xl font-semibold text-[hsl(var(--marketing-navy))] mb-4 text-center" style={serif}>
-            {coreLoop.heading}
-          </h2>
-          <p className="text-center text-[hsl(var(--marketing-navy)/0.6)] leading-relaxed mb-12 max-w-xl mx-auto" style={serif}>
-            {coreLoop.intro}
-          </p>
-
-          <div className="grid sm:grid-cols-3 gap-6">
-            {coreLoop.steps.map((step, i) => {
-              const Icon = stepIcons[i];
-              return (
-                <div
-                  key={step.label}
-                  className="bg-white rounded-2xl border border-[hsl(var(--marketing-border))] p-8"
-                >
-                  <div className="w-12 h-12 rounded-2xl bg-[hsl(var(--marketing-blue)/0.08)] flex items-center justify-center mb-5">
-                    <Icon className="h-5 w-5 text-[hsl(var(--marketing-blue))]" />
-                  </div>
-                  <h3
-                    className="text-lg font-semibold text-[hsl(var(--marketing-navy))] mb-3"
-                    style={serif}
-                  >
-                    {step.label}
-                  </h3>
-                  <p className="text-sm text-[hsl(var(--marketing-navy)/0.65)] leading-relaxed mb-4">
-                    {step.description}
-                  </p>
-                  <ul className="space-y-2">
-                    {step.examples.map((ex) => (
-                      <li key={ex} className="flex items-start gap-2.5 text-xs text-[hsl(var(--marketing-navy)/0.5)] leading-relaxed">
-                        <span className="mt-1.5 w-1 h-1 rounded-full bg-[hsl(var(--marketing-blue)/0.4)] shrink-0" />
-                        {ex}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              );
-            })}
-          </div>
-
-          <p className="text-center mt-10 text-[hsl(var(--marketing-navy)/0.6)] italic" style={serif}>
-            {coreLoop.closing}
+    <div>
+      {/* Header */}
+      <section className="bg-gradient-to-b from-primary/10 to-background py-20 sm:py-28">
+        <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
+          <Badge variant="secondary" className="mb-6">
+            Narrative Relationship Intelligence
+          </Badge>
+          <h1 className="font-serif text-4xl font-bold text-foreground sm:text-5xl">
+            The quiet engine that notices what humans miss.
+          </h1>
+          <p className="mt-6 text-lg text-muted-foreground">
+            NRI is Refugium's pattern-detection layer. It watches the data your
+            team already enters and surfaces signals worth paying attention
+            to -- gently, respectfully, and always in service of human
+            discernment.
           </p>
         </div>
       </section>
 
-      {/* ── Section 5 — Why This Matters (Adoption Bridge) ── */}
-      <section className="py-16 sm:py-24">
-        <div className="max-w-2xl mx-auto px-4 sm:px-6">
-          <h2 className="text-2xl sm:text-3xl font-semibold text-[hsl(var(--marketing-navy))] mb-10 text-center" style={serif}>
-            {adoptionBridge.heading}
-          </h2>
-          <div className="space-y-10">
-            {adoptionBridge.hurdles.map((h) => (
-              <div key={h.objection}>
-                <p className="text-lg font-medium text-[hsl(var(--marketing-navy))] mb-3" style={serif}>
-                  {h.objection}
-                </p>
-                <p className="text-[hsl(var(--marketing-navy)/0.65)] leading-relaxed" style={serif}>
-                  {h.response}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Section 6 — Principles ── */}
-      <section className="bg-[hsl(var(--marketing-surface))] py-16 sm:py-24">
-        <div className="max-w-[960px] mx-auto px-4 sm:px-6">
-          <h2 className="text-2xl sm:text-3xl font-semibold text-[hsl(var(--marketing-navy))] mb-4 text-center" style={serif}>
-            {principles.heading}
-          </h2>
-          <p className="text-center text-[hsl(var(--marketing-navy)/0.6)] leading-relaxed mb-12 max-w-xl mx-auto" style={serif}>
-            {principles.intro}
-          </p>
-
-          <div className="grid sm:grid-cols-3 gap-6">
-            {principles.items.map((p) => (
-              <div
-                key={p.name}
-                className="bg-white rounded-2xl border border-[hsl(var(--marketing-border))] p-8"
-              >
-                <h3 className="text-lg font-semibold text-[hsl(var(--marketing-navy))] mb-2" style={serif}>
-                  {p.name}
-                </h3>
-                <p className="text-sm font-medium text-[hsl(var(--marketing-navy)/0.75)] mb-4">
-                  {p.definition}
-                </p>
-                <p className="text-xs text-[hsl(var(--marketing-navy)/0.5)] leading-relaxed italic">
-                  {p.example}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Section 7 — Trust & Boundaries ── */}
-      <section className="py-16 sm:py-24">
-        <div className="max-w-2xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <ShieldCheck className="h-6 w-6 text-[hsl(var(--marketing-blue))]" />
-            <h2 className="text-2xl sm:text-3xl font-semibold text-[hsl(var(--marketing-navy))]" style={serif}>
-              {trustBoundaries.heading}
+      {/* What NRI Does */}
+      <section className="bg-background py-16 sm:py-24">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-12 text-center">
+            <h2 className="font-serif text-3xl font-bold text-foreground sm:text-4xl">
+              What NRI does
             </h2>
+            <p className="mt-3 text-muted-foreground">
+              Careful attention at scale -- not artificial intelligence, but
+              augmented attentiveness.
+            </p>
           </div>
-          <p className="text-center text-[hsl(var(--marketing-navy)/0.6)] leading-relaxed mb-10" style={serif}>
-            {trustBoundaries.intro}
-          </p>
+          <div className="grid gap-8 md:grid-cols-3">
+            {nriDoes.map((item) => (
+              <Card
+                key={item.title}
+                className="border-none bg-muted/40 shadow-sm"
+              >
+                <CardHeader>
+                  <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+                    <item.icon className="h-6 w-6 text-primary" />
+                  </div>
+                  <CardTitle className="text-lg font-semibold">
+                    {item.title}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-sm leading-relaxed">
+                    {item.description}
+                  </CardDescription>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
 
-          <div className="space-y-6">
-            {trustBoundaries.commitments.map((c) => (
-              <div key={c.statement} className="border-l-2 border-[hsl(var(--marketing-blue)/0.3)] pl-5">
-                <p className="font-medium text-[hsl(var(--marketing-navy))] mb-1">{c.statement}</p>
-                <p className="text-sm text-[hsl(var(--marketing-navy)/0.6)] leading-relaxed">{c.detail}</p>
+      {/* What NRI Does NOT */}
+      <section className="bg-muted/30 py-16 sm:py-24">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-12 text-center">
+            <h2 className="font-serif text-3xl font-bold text-foreground sm:text-4xl">
+              What NRI does not do
+            </h2>
+            <p className="mt-3 text-muted-foreground">
+              Boundaries matter. Here is what NRI will never be.
+            </p>
+          </div>
+          <div className="grid gap-8 md:grid-cols-3">
+            {nriDoesNot.map((item) => (
+              <Card
+                key={item.title}
+                className="border border-destructive/20 bg-background shadow-sm"
+              >
+                <CardHeader>
+                  <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-destructive/10">
+                    <item.icon className="h-6 w-6 text-destructive" />
+                  </div>
+                  <CardTitle className="text-lg font-semibold">
+                    {item.title}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-sm leading-relaxed">
+                    {item.description}
+                  </CardDescription>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* The Ignatian Principle */}
+      <section className="bg-background py-16 sm:py-24">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+          <div className="rounded-2xl bg-gradient-to-br from-primary/5 via-primary/10 to-accent/5 p-8 sm:p-12">
+            <div className="flex flex-col items-start gap-6 lg:flex-row lg:items-center lg:gap-10">
+              <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-primary/10">
+                <Compass className="h-8 w-8 text-primary" />
+              </div>
+              <div>
+                <h2 className="font-serif text-2xl font-bold text-foreground sm:text-3xl">
+                  Discernment before automation
+                </h2>
+                <p className="mt-4 leading-relaxed text-muted-foreground">
+                  In the Ignatian tradition, discernment is the practice of
+                  paying attention to what matters before choosing how to
+                  act. NRI is built on this principle. It never automates a
+                  decision that belongs to a human being. Instead, it does
+                  the patient work of noticing -- and then presents what it
+                  finds to a person who can bring wisdom, context, and
+                  compassion to the moment. Technology serves discernment.
+                  Discernment serves the person.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Signal Types */}
+      <section className="bg-muted/30 py-16 sm:py-24">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-12 text-center">
+            <h2 className="font-serif text-3xl font-bold text-foreground sm:text-4xl">
+              How NRI works: Signal types
+            </h2>
+            <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">
+              NRI continuously monitors your organization's data and
+              generates signals in four categories. Each signal is presented
+              to your team for review -- never acted on automatically.
+            </p>
+          </div>
+          <div className="grid gap-6 sm:grid-cols-2">
+            {signalTypes.map((signal) => (
+              <div
+                key={signal.title}
+                className="flex gap-4 rounded-xl bg-background p-6 shadow-sm"
+              >
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                  <signal.icon className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-foreground">
+                    {signal.title}
+                  </h3>
+                  <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                    {signal.description}
+                  </p>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── Restoration note ── */}
-      <section className="bg-[hsl(var(--marketing-surface))] py-12">
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 text-center">
-          <p className="text-[hsl(var(--marketing-navy)/0.65)] leading-relaxed italic" style={serif}>
-            {restoration.body}
-          </p>
-        </div>
-      </section>
-
-      {/* ── Section 8 — Closing Manifesto + CTA ── */}
-      <section className="py-16 sm:py-24">
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 text-center">
-          <h2 className="text-2xl sm:text-3xl font-semibold text-[hsl(var(--marketing-navy))] mb-8" style={serif}>
-            {closingManifesto.heading}
+      {/* At a Glance: Does vs Doesn't */}
+      <section className="bg-background py-16 sm:py-24">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+          <h2 className="mb-10 text-center font-serif text-3xl font-bold text-foreground sm:text-4xl">
+            NRI at a glance
           </h2>
-          <div className="space-y-5 text-[hsl(var(--marketing-navy)/0.7)] leading-relaxed" style={serif}>
-            {closingManifesto.body.map((p, i) => (
-              <p key={i}>{p}</p>
-            ))}
-            <p className="text-lg text-[hsl(var(--marketing-navy))] font-medium whitespace-pre-line">
-              {closingManifesto.closing}
-            </p>
+          <div className="grid gap-8 md:grid-cols-2">
+            <div className="rounded-xl border border-primary/20 bg-primary/5 p-6">
+              <h3 className="mb-4 flex items-center gap-2 font-semibold text-primary">
+                <CheckCircle2 className="h-5 w-5" />
+                NRI will
+              </h3>
+              <ul className="space-y-3">
+                {[
+                  "Surface patterns in your existing data",
+                  "Flag cases that may need attention",
+                  "Highlight resource gaps and trends",
+                  "Suggest connections between people and partners",
+                  "Respect every data boundary you set",
+                ].map((item) => (
+                  <li
+                    key={item}
+                    className="flex items-start gap-2 text-sm text-muted-foreground"
+                  >
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="rounded-xl border border-destructive/20 bg-destructive/5 p-6">
+              <h3 className="mb-4 flex items-center gap-2 font-semibold text-destructive">
+                <XCircle className="h-5 w-5" />
+                NRI will never
+              </h3>
+              <ul className="space-y-3">
+                {[
+                  "Make decisions on behalf of your team",
+                  "Contact survivors directly",
+                  "Share data outside your organization",
+                  "Replace human judgment or discernment",
+                  "Optimize for speed over dignity",
+                ].map((item) => (
+                  <li
+                    key={item}
+                    className="flex items-start gap-2 text-sm text-muted-foreground"
+                  >
+                    <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
-
-          {/* Early adopter nudge */}
-          <p className="mt-8 text-sm text-[hsl(var(--marketing-navy)/0.5)] italic" style={serif}>
-            {closingManifesto.earlyAdopter}
-          </p>
-
-          {/* Primary CTA */}
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-            <Link to={closingManifesto.cta.primary.to}>
-              <Button
-                size="lg"
-                className="rounded-full bg-[hsl(var(--marketing-navy))] text-white hover:bg-[hsl(var(--marketing-navy)/0.9)] px-8 h-12 text-base"
-              >
-                {closingManifesto.cta.primary.label} <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-            {closingManifesto.cta.secondary.map((s) => (
-              <Link key={s.to} to={s.to}>
-                <Button
-                  variant="outline"
-                  className="rounded-full border-[hsl(var(--marketing-border))] text-[hsl(var(--marketing-navy)/0.7)] hover:bg-[hsl(var(--marketing-surface))] px-6 h-11 text-sm"
-                >
-                  {s.label}
-                </Button>
-              </Link>
-            ))}
-          </div>
-
-          {/* Role identity block */}
-          <RoleIdentityBlock heading={t('nriPage.roleIdentityHeading')} />
         </div>
       </section>
 
-      {/* ── Cross-links ── */}
-      <ConceptLinks conceptSlug="nri" heading={t('roleDeepPage.relatedConceptsHeading')} />
-
-      <div className="max-w-2xl mx-auto px-4 sm:px-6">
-        <NarrativeGraphLinks nodes={getConceptRelatedNodes('nri')} />
-        <RelatedNarrativesCard currentPath="/nri" />
-      </div>
-
-      <SeoInternalLinks
-        heading={t('nriPage.seoLinksHeading')}
-        links={[
-          { label: 'Archetypes', to: '/archetypes', description: 'See how NRI adapts to your mission type.' },
-          { label: 'Roles', to: '/roles', description: 'Find where you fit — Shepherd, Companion, or Visitor.' },
-          { label: 'Signals', to: '/signum', description: 'Anonymized narrative signals.' },
-          { label: 'Compare', to: '/compare', description: 'See how CROS differs from legacy CRMs.' },
-        ]}
-      />
+      {/* CTA */}
+      <section className="bg-gradient-to-b from-primary/5 to-primary/15 py-16 sm:py-24">
+        <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
+          <h2 className="font-serif text-2xl font-bold text-foreground sm:text-3xl">
+            See NRI in action
+          </h2>
+          <p className="mt-4 text-muted-foreground">
+            Explore the demo to see how NRI surfaces signals across a sample
+            caseload. No signup required.
+          </p>
+          <Button asChild size="lg" className="mt-8">
+            <Link to="/demo">
+              Try the Demo
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+        </div>
+      </section>
     </div>
   );
 }

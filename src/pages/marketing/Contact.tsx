@@ -1,148 +1,157 @@
-import { useState, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ArrowRight, CheckCircle2, Loader2 } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
-import { archetypes, type ArchetypeKey } from '@/config/brand';
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Mail, MessageSquare } from "lucide-react";
 
 export default function Contact() {
-  const { t } = useTranslation('marketing');
-  const [submitted, setSubmitted] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState('');
-  const lastSubmitRef = useRef(0);
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError('');
-
-    // Client-side rate limit (1 per 10s)
-    const now = Date.now();
-    if (now - lastSubmitRef.current < 10_000) {
-      setError(t('contactPage.rateLimitError'));
-      return;
-    }
-
-    const form = new FormData(e.currentTarget);
-    const honeypot = form.get('website') as string;
-    if (honeypot) return; // bot detected
-
-    const name = (form.get('name') as string || '').trim();
-    const email = (form.get('email') as string || '').trim();
-    const organization = (form.get('organization') as string || '').trim();
-    const archetype = form.get('archetype') as string || '';
-    const message = (form.get('message') as string || '').trim();
-
-    if (!name || !email) {
-      setError(t('contactPage.nameEmailRequired'));
-      return;
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setError(t('contactPage.invalidEmail'));
-      return;
-    }
-
-    setSubmitting(true);
-    lastSubmitRef.current = now;
-
-    const { error: dbError } = await supabase.from('inbound_leads').insert({
-      name,
-      email,
-      organization: organization || null,
-      archetype: archetype || null,
-      message: message || null,
-      honeypot: null,
-    } as any);
-
-    setSubmitting(false);
-
-    if (dbError) {
-      setError(t('contactPage.serverError'));
-      return;
-    }
-
-    setSubmitted(true);
-  };
-
-  if (submitted) {
-    return (
-      <div className="bg-white">
-        <div className="max-w-lg mx-auto px-4 sm:px-6 py-24 sm:py-32 text-center">
-          <CheckCircle2 className="h-12 w-12 text-[hsl(var(--marketing-blue))] mx-auto mb-6" />
-          <h1 className="text-2xl font-bold text-[hsl(var(--marketing-navy))] mb-3">{t('contactPage.successHeading')}</h1>
-          <p className="text-[hsl(var(--marketing-navy)/0.55)]">
-            {t('contactPage.successBody')}
+  return (
+    <div>
+      {/* Header */}
+      <section className="bg-gradient-to-b from-primary/10 to-background py-20 sm:py-28">
+        <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
+          <h1 className="font-serif text-4xl font-bold text-foreground sm:text-5xl">
+            Get in Touch
+          </h1>
+          <p className="mt-6 text-lg text-muted-foreground">
+            We'd love to hear from you. Whether you have a question about
+            Refugium, need help getting started, or just want to say hello --
+            we're here.
           </p>
         </div>
-      </div>
-    );
-  }
+      </section>
 
-  return (
-    <div className="bg-white">
-      <div className="max-w-lg mx-auto px-4 sm:px-6 py-16 sm:py-24">
-        <h1 className="text-3xl font-bold text-[hsl(var(--marketing-navy))] mb-3">{t('contactPage.heading')}</h1>
-        <p className="text-[hsl(var(--marketing-navy)/0.55)] mb-10">
-          {t('contactPage.subheading')}
-        </p>
+      {/* Content */}
+      <section className="bg-background py-16 sm:py-24">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-12 lg:grid-cols-5">
+            {/* Info sidebar */}
+            <div className="space-y-8 lg:col-span-2">
+              <div>
+                <h2 className="font-serif text-2xl font-bold text-foreground">
+                  Reach out directly
+                </h2>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                  The best way to reach us is by email. We respond to every
+                  message personally -- usually within one business day.
+                </p>
+              </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Honeypot — hidden from humans */}
-          <div className="absolute opacity-0 pointer-events-none" aria-hidden="true">
-            <input type="text" name="website" tabIndex={-1} autoComplete="off" />
+              <div className="flex items-start gap-4 rounded-lg bg-muted/40 p-5">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                  <Mail className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-foreground">Email</p>
+                  <a
+                    href="mailto:info@refugium.app"
+                    className="text-sm text-primary hover:underline"
+                  >
+                    info@refugium.app
+                  </a>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4 rounded-lg bg-muted/40 p-5">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                  <MessageSquare className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-foreground">
+                    Demo questions
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Tried the demo and have questions? We'd love to walk you
+                    through anything you saw.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Contact form */}
+            <div className="lg:col-span-3">
+              <Card className="border shadow-sm">
+                <CardHeader>
+                  <CardTitle className="font-serif text-xl">
+                    Send us a message
+                  </CardTitle>
+                  <CardDescription>
+                    Fill out the form below and we'll get back to you soon.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <form
+                    onSubmit={(e) => e.preventDefault()}
+                    className="space-y-6"
+                  >
+                    <div className="grid gap-6 sm:grid-cols-2">
+                      <div className="space-y-2">
+                        <Label htmlFor="name">Name</Label>
+                        <Input
+                          id="name"
+                          placeholder="Your name"
+                          autoComplete="name"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="email">Email</Label>
+                        <Input
+                          id="email"
+                          type="email"
+                          placeholder="you@example.org"
+                          autoComplete="email"
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="organization">
+                        Organization{" "}
+                        <span className="text-muted-foreground">
+                          (optional)
+                        </span>
+                      </Label>
+                      <Input
+                        id="organization"
+                        placeholder="Your organization"
+                        autoComplete="organization"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="message">Message</Label>
+                      <Textarea
+                        id="message"
+                        placeholder="Tell us how we can help..."
+                        rows={5}
+                      />
+                    </div>
+                    <Button type="submit" size="lg" className="w-full">
+                      Send Message
+                    </Button>
+                    <p className="text-center text-xs text-muted-foreground">
+                      This form is for demonstration purposes. To reach us
+                      now, email{" "}
+                      <a
+                        href="mailto:info@refugium.app"
+                        className="text-primary hover:underline"
+                      >
+                        info@refugium.app
+                      </a>
+                      .
+                    </p>
+                  </form>
+                </CardContent>
+              </Card>
+            </div>
           </div>
-
-          <div className="space-y-1.5">
-            <Label htmlFor="name" className="text-sm text-[hsl(var(--marketing-navy)/0.7)]">{t('contactPage.nameLabel')}</Label>
-            <Input id="name" name="name" required maxLength={100} className="rounded-xl border-[hsl(var(--marketing-border))]" />
-          </div>
-
-          <div className="space-y-1.5">
-            <Label htmlFor="email" className="text-sm text-[hsl(var(--marketing-navy)/0.7)]">{t('contactPage.emailLabel')}</Label>
-            <Input id="email" name="email" type="email" required maxLength={255} className="rounded-xl border-[hsl(var(--marketing-border))]" />
-          </div>
-
-          <div className="space-y-1.5">
-            <Label htmlFor="organization" className="text-sm text-[hsl(var(--marketing-navy)/0.7)]">{t('contactPage.organizationLabel')}</Label>
-            <Input id="organization" name="organization" maxLength={150} className="rounded-xl border-[hsl(var(--marketing-border))]" />
-          </div>
-
-          <div className="space-y-1.5">
-            <Label className="text-sm text-[hsl(var(--marketing-navy)/0.7)]">{t('contactPage.archetypeLabel')}</Label>
-            <Select name="archetype">
-              <SelectTrigger className="rounded-xl border-[hsl(var(--marketing-border))]">
-                <SelectValue placeholder={t('contactPage.archetypePlaceholder')} />
-              </SelectTrigger>
-              <SelectContent>
-                {(Object.keys(archetypes) as ArchetypeKey[]).map((key) => (
-                  <SelectItem key={key} value={key}>{archetypes[key].name}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-1.5">
-            <Label htmlFor="message" className="text-sm text-[hsl(var(--marketing-navy)/0.7)]">{t('contactPage.messageLabel')}</Label>
-            <Textarea id="message" name="message" rows={4} maxLength={1000} className="rounded-xl border-[hsl(var(--marketing-border))] resize-none" />
-          </div>
-
-          {error && <p className="text-sm text-destructive">{error}</p>}
-
-          <Button
-            type="submit"
-            disabled={submitting}
-            className="w-full rounded-full bg-[hsl(var(--marketing-navy))] text-white hover:bg-[hsl(var(--marketing-navy)/0.9)] h-11"
-          >
-            {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : (
-              <>{t('contactPage.sendButton')} <ArrowRight className="ml-2 h-4 w-4" /></>
-            )}
-          </Button>
-        </form>
-      </div>
+        </div>
+      </section>
     </div>
   );
 }

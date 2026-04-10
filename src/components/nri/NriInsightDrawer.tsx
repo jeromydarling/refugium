@@ -17,7 +17,7 @@ import {
   SheetDescription,
 } from '@/components/ui/sheet';
 import { Info, ExternalLink, ThumbsDown } from 'lucide-react';
-import { toast } from '@/components/ui/sonner';
+import { toast } from 'sonner';
 
 interface NriInsightDrawerProps {
   title: string;

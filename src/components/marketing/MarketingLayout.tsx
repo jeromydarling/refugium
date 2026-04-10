@@ -1,7 +1,3 @@
-// PublicLayout — compatibility wrapper around MarketingLayout
-// When used as a route element (with <Outlet />), renders MarketingLayout directly.
-// When used as a wrapper component (with children), renders the marketing chrome around children.
-
 import { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -28,12 +24,14 @@ function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
           <span className="font-serif text-xl font-bold text-primary">
             Refugium
           </span>
         </Link>
 
+        {/* Desktop nav */}
         <nav className="hidden items-center gap-6 md:flex">
           {navLinks.map((link) => (
             <Link
@@ -49,15 +47,21 @@ function Header() {
           </Button>
         </nav>
 
+        {/* Mobile hamburger */}
         <button
           className="inline-flex items-center justify-center rounded-md p-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground md:hidden"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Toggle menu"
         >
-          {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          {mobileOpen ? (
+            <X className="h-5 w-5" />
+          ) : (
+            <Menu className="h-5 w-5" />
+          )}
         </button>
       </div>
 
+      {/* Mobile menu */}
       {mobileOpen && (
         <div className="border-t bg-background px-4 pb-4 pt-2 md:hidden">
           <nav className="flex flex-col gap-3">
@@ -88,6 +92,7 @@ function Footer() {
     <footer className="border-t bg-muted/40">
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid gap-8 md:grid-cols-3">
+          {/* Branding */}
           <div className="space-y-3">
             <Link to="/" className="inline-block">
               <span className="font-serif text-xl font-bold text-primary">
@@ -99,8 +104,11 @@ function Footer() {
             </p>
           </div>
 
+          {/* Navigation */}
           <div>
-            <h4 className="mb-3 text-sm font-semibold text-foreground">Navigation</h4>
+            <h4 className="mb-3 text-sm font-semibold text-foreground">
+              Navigation
+            </h4>
             <nav className="flex flex-col gap-2">
               {footerNavLinks.map((link) => (
                 <Link
@@ -114,13 +122,22 @@ function Footer() {
             </nav>
           </div>
 
+          {/* Legal */}
           <div>
-            <h4 className="mb-3 text-sm font-semibold text-foreground">Legal</h4>
+            <h4 className="mb-3 text-sm font-semibold text-foreground">
+              Legal
+            </h4>
             <nav className="flex flex-col gap-2">
-              <Link to="/privacy" className="text-sm text-muted-foreground transition-colors hover:text-primary">
+              <Link
+                to="/privacy"
+                className="text-sm text-muted-foreground transition-colors hover:text-primary"
+              >
                 Privacy Policy
               </Link>
-              <Link to="/terms" className="text-sm text-muted-foreground transition-colors hover:text-primary">
+              <Link
+                to="/terms"
+                className="text-sm text-muted-foreground transition-colors hover:text-primary"
+              >
                 Terms of Service
               </Link>
             </nav>
@@ -135,16 +152,12 @@ function Footer() {
   );
 }
 
-interface PublicLayoutProps {
-  children?: React.ReactNode;
-}
-
-export default function PublicLayout({ children }: PublicLayoutProps) {
+export default function MarketingLayout() {
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
       <main className="flex-1">
-        {children ?? <Outlet />}
+        <Outlet />
       </main>
       <Footer />
     </div>
