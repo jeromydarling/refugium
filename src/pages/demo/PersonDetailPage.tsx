@@ -1,16 +1,30 @@
+import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Card } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { getHousehold, getNeedsForHousehold, getSignalsForHousehold, getJourneyForHousehold, getVolunteer } from '@/data';
 import { NEED_CATEGORIES } from '@/data';
 import { NeedsBadgeRow } from '@/components/people/NeedsBadgeRow';
-import { RecoveryTimeline } from '@/components/people/RecoveryTimeline';
+import { RenewalTrail } from '@/components/people/RenewalTrail';
 import { RecoverySignalCard } from '@/components/nri/RecoverySignalCard';
 import { useDemoMode } from '@/contexts/DemoModeContext';
 import { useIsDesktop } from '@/hooks/useIsDesktop';
-import { ArrowLeft, Phone, Mail, MapPin, Mic, ClipboardList, UserPlus } from 'lucide-react';
+import {
+  ArrowLeft, Phone, MapPin, Compass, Bus,
+  ChevronDown, Mic, ClipboardList, UserPlus,
+  BookOpen, CheckCircle2,
+} from 'lucide-react';
+
+// ── Stage label map (mirrors RenewalTrail STAGES) ──
+const STAGE_LABELS: Record<string, string> = {
+  intake: 'Intake',
+  assessment: 'Assessment',
+  stabilization: 'Stabilization',
+  repair_rebuild: 'Rebuild',
+  closure: 'Restored',
+};
 
 const STATUS_STYLES: Record<string, string> = {
   acute: 'bg-red-100 text-red-800',
@@ -19,17 +33,56 @@ const STATUS_STYLES: Record<string, string> = {
   recovered: 'bg-green-100 text-green-800',
 };
 
-const PRIORITY_STYLES: Record<string, string> = {
-  critical: 'text-red-700',
-  high: 'text-orange-700',
-  medium: 'text-amber-700',
-  low: 'text-slate-600',
+const PRIORITY_DOTS: Record<string, string> = {
+  critical: 'bg-red-500',
+  high: 'bg-orange-500',
+  medium: 'bg-amber-500',
+  low: 'bg-slate-400',
 };
 
-const NOTE_ICONS: Record<string, string> = {
-  voice: 'Mic',
-  text: 'Text',
-  photo: 'Photo',
+const STATUS_BADGE_STYLE: Record<string, string> = {
+  unmet: 'bg-red-100 text-red-800',
+  in_progress: 'bg-amber-100 text-amber-800',
+  met: 'bg-green-100 text-green-800',
+};
+
+// ── Hardcoded next-step cards for the demo ──
+const NEXT_STEPS = [
+  {
+    id: 'ns-1',
+    title: 'Submit FEMA appeal documentation',
+    destination: 'FEMA Disaster Recovery Center — 4.2 mi',
+    transit: 'Bus 42 from Main & 3rd (25 min)',
+    whatToBring: 'Photo ID, damage photos, denial letter',
+    urgency: 'Today' as const,
+  },
+  {
+    id: 'ns-2',
+    title: 'Pick up prescription refills',
+    destination: 'CVS Pharmacy on Oak Blvd — 1.1 mi',
+    transit: 'Bus 12 from Elm & Pine (10 min)',
+    whatToBring: 'Insurance card, prescription list',
+    urgency: 'Today' as const,
+  },
+  {
+    id: 'ns-3',
+    title: 'Meet with Habitat for Humanity coordinator',
+    destination: 'Community Resource Hub — 2.8 mi',
+    transit: 'Bus 7 from downtown transit center (18 min)',
+    whatToBring: 'Home inspection report, repair estimates',
+    urgency: 'This Week' as const,
+  },
+];
+
+// ── Framer variants ──
+const sectionVariant = {
+  hidden: { opacity: 0, y: 24 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
+};
+
+const staggerContainer = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.08 } },
 };
 
 export default function PersonDetailPage() {
@@ -52,251 +105,445 @@ export default function PersonDetailPage() {
   const journey = getJourneyForHousehold(household.id);
   const volunteer = household.assignedVolunteerId ? getVolunteer(household.assignedVolunteerId) : null;
 
-  // ── Shared sub-sections ──
-  const backButton = (
-    <Link to="/demo/app/people" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-3">
-      <ArrowLeft className="h-4 w-4" /> Back
-    </Link>
-  );
+  const activeNeeds = needs.filter(n => n.status !== 'met');
+  const needsWithWhatMatters = needs.filter(n => n.whatMatters);
 
-  const householdHeader = (
-    <>
-      <div className="flex items-start justify-between gap-2">
-        <div>
-          <h2 className="font-serif text-xl font-bold">{household.familyName} Family</h2>
-          <p className="text-sm text-muted-foreground mt-0.5">{household.headOfHousehold}</p>
-        </div>
-        <Badge className={STATUS_STYLES[household.currentStatus]} variant="secondary">
-          {household.currentStatus}
-        </Badge>
-      </div>
-      <div className="mt-2 space-y-1 text-xs text-muted-foreground">
-        <p className="flex items-center gap-1.5"><MapPin className="h-3 w-3" />{household.address}</p>
-        <p className="flex items-center gap-1.5"><Phone className="h-3 w-3" />{household.phone}</p>
-        <p>{household.disasterEvent} &middot; {new Date(household.disasterDate).toLocaleDateString()}</p>
-      </div>
-    </>
-  );
+  // Determine current stage label
+  const currentStage = journey?.stages.find(s => s.status === 'active');
+  const currentStageName = currentStage ? STAGE_LABELS[currentStage.stage] || currentStage.stage : null;
 
-  const membersSection = (
-    <section>
-      <h3 className="text-sm font-semibold text-foreground mb-2">Household Members</h3>
-      <div className="space-y-2">
-        {household.members.map(m => (
-          <div key={m.id} className="flex items-center justify-between text-sm">
-            <div>
-              <span className="font-medium">{m.name}</span>
-              <span className="text-muted-foreground ml-2">({m.relationship})</span>
-            </div>
-            <div className="text-right">
-              <span className="text-muted-foreground">Age {m.age}</span>
-              {m.specialNeeds && (
-                <p className="text-xs text-destructive">{m.specialNeeds}</p>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
+  // Completed stages for "Trail Behind"
+  const completedStages = journey?.stages.filter(s => s.status === 'completed') || [];
 
-  const volunteerSection = volunteer ? (
-    <section>
-      <h3 className="text-sm font-semibold text-foreground mb-2">Assigned Volunteer</h3>
-      <Card className="p-3">
-        <p className="text-sm font-medium">{volunteer.name}</p>
-        <p className="text-xs text-muted-foreground">{volunteer.zone} &middot; {volunteer.availability}</p>
-        <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
-          <Phone className="h-3 w-3" />{volunteer.phone}
-        </p>
-      </Card>
-    </section>
-  ) : null;
-
-  const recoveryJourney = journey ? (
-    <section>
-      <h3 className="text-sm font-semibold text-foreground mb-3">Refuge Journey</h3>
-      <RecoveryTimeline journey={journey} />
-    </section>
-  ) : null;
-
-  const needsSection = (
-    <section>
-      <h3 className="text-sm font-semibold text-foreground mb-2">
-        Needs ({needs.filter(n => n.status !== 'met').length} active)
-      </h3>
-      <NeedsBadgeRow needs={needs.filter(n => n.status !== 'met')} />
-      <div className="mt-3 space-y-2">
-        {needs.filter(n => n.status !== 'met').map(n => {
-          const cat = NEED_CATEGORIES[n.category];
-          return (
-            <Card key={n.id} className="p-3">
-              <div className="flex items-start justify-between gap-2">
-                <div>
-                  <p className="text-sm font-medium">{n.title}</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">{n.description}</p>
-                  {n.referredTo && (
-                    <p className="text-xs text-primary mt-1">Referred to: {n.referredTo}</p>
-                  )}
-                  {n.whatMatters && (
-                    <p className="text-xs text-foreground/70 mt-1.5 italic border-l-2 border-accent/40 pl-2">
-                      {n.whatMatters}
-                    </p>
-                  )}
-                </div>
-                <div className="text-right shrink-0">
-                  <Badge variant="secondary" className={`text-xs ${cat?.color || ''}`}>{n.status}</Badge>
-                  <p className={`text-xs mt-1 font-medium ${PRIORITY_STYLES[n.priority]}`}>{n.priority}</p>
-                </div>
-              </div>
-            </Card>
-          );
-        })}
-      </div>
-    </section>
-  );
-
-  const signalsSection = signals.length > 0 ? (
-    <section>
-      <h3 className="text-sm font-semibold text-foreground mb-2">NRI Signals</h3>
-      <div className="space-y-3">
-        {signals.map(s => <RecoverySignalCard key={s.id} signal={s} />)}
-      </div>
-    </section>
-  ) : null;
-
-  const caseNotesSection = (
-    <section>
-      <h3 className="text-sm font-semibold text-foreground mb-2">Field Notes</h3>
-      <div className="space-y-3">
-        {household.caseNotes.map(n => (
-          <div key={n.id} className="border-l-2 border-border pl-3">
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <span className="font-medium text-foreground">{n.author}</span>
-              <span>&middot;</span>
-              <span>{new Date(n.date).toLocaleDateString()}</span>
-              <Badge variant="outline" className="text-xs">{NOTE_ICONS[n.type] || n.type}</Badge>
-            </div>
-            <p className="text-sm text-foreground mt-1">{n.content}</p>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-
+  // ── Action buttons (shared) ──
   const actionButtons = (
     <>
-      <Button size="sm" className="gap-1" onClick={() => simulateWrite('Contact logged')}>
+      <Button size="sm" className="gap-1.5" onClick={() => simulateWrite('Visit logged')}>
         <Mic className="h-4 w-4" />
-        Log Contact
+        Log Visit
       </Button>
-      <Button size="sm" variant="outline" className="gap-1" onClick={() => simulateWrite('Needs updated')}>
+      <Button size="sm" variant="outline" className="gap-1.5" onClick={() => simulateWrite('Needs updated')}>
         <ClipboardList className="h-4 w-4" />
         Update Needs
       </Button>
-      <Button size="sm" variant="outline" className="gap-1" onClick={() => simulateWrite('Volunteer assigned')}>
+      <Button size="sm" variant="outline" className="gap-1.5" onClick={() => simulateWrite('Volunteer assigned')}>
         <UserPlus className="h-4 w-4" />
         Assign
       </Button>
     </>
   );
 
-  // ── Desktop: two-column layout ──
-  if (isDesktop) {
-    return (
-      <div className="flex min-h-[calc(100vh-105px)]">
-        {/* Left sidebar */}
-        <div className="w-[380px] shrink-0 bg-muted/30 border-r p-6 sticky top-0 h-[calc(100vh-105px)] overflow-auto">
-          {backButton}
-          <div className="bg-primary/5 rounded-lg p-4 mb-6">
-            {householdHeader}
+  return (
+    <div className={isDesktop ? '' : 'pb-24'}>
+      {/* ═══════════════════════════════════════════════
+          1. HEADER — Parchment background
+         ═══════════════════════════════════════════════ */}
+      <div className="parchment px-4 pt-4 pb-5 sm:px-6">
+        <div className={isDesktop ? 'max-w-4xl mx-auto' : ''}>
+          <Link
+            to="/demo/app/people"
+            className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-3"
+          >
+            <ArrowLeft className="h-4 w-4" /> Back
+          </Link>
+
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <h1 className="font-serif text-2xl font-bold tracking-tight">
+                {household.familyName} Family
+              </h1>
+              <p className="text-sm text-muted-foreground mt-0.5">{household.headOfHousehold}</p>
+            </div>
+            <Badge className={STATUS_STYLES[household.currentStatus]} variant="secondary">
+              {household.currentStatus}
+            </Badge>
           </div>
-          {membersSection}
-          {volunteerSection && (
-            <>
-              <Separator className="my-4" />
-              {volunteerSection}
-            </>
+
+          <div className="mt-2.5 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
+            <span className="flex items-center gap-1"><MapPin className="h-3 w-3" />{household.address}</span>
+            <span className="flex items-center gap-1"><Phone className="h-3 w-3" />{household.phone}</span>
+            <span>{household.disasterEvent} &middot; {new Date(household.disasterDate).toLocaleDateString()}</span>
+          </div>
+
+          {/* Desktop: action buttons inline in header */}
+          {isDesktop && (
+            <div className="mt-4 flex items-center gap-2">
+              {actionButtons}
+            </div>
           )}
         </div>
+      </div>
 
-        {/* Right main area */}
-        <div className="flex-1 overflow-auto">
-          {/* Action bar row */}
-          <div className="sticky top-0 bg-background border-b px-6 py-3 flex items-center gap-2 z-10">
-            {actionButtons}
-          </div>
+      {/* ═══════════════════════════════════════════════
+          Main content column
+         ═══════════════════════════════════════════════ */}
+      <div className={`px-4 sm:px-6 py-6 space-y-8 ${isDesktop ? 'max-w-4xl mx-auto' : ''}`}>
 
-          <div className="p-6 space-y-6">
-            {recoveryJourney}
-            {recoveryJourney && <Separator />}
-            {needsSection}
-            {signalsSection && (
-              <>
-                <Separator />
-                {signalsSection}
-              </>
+        {/* ═══════════════════════════════════════════════
+            2. THE TRAIL — Hero section
+           ═══════════════════════════════════════════════ */}
+        {journey && (
+          <motion.section variants={sectionVariant} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+            <div className="parchment rounded-xl p-4 border border-[hsl(var(--ignatian-border))]">
+              <RenewalTrail journey={journey} />
+            </div>
+            {currentStageName && (
+              <p className="text-center mt-3 font-serif italic text-sm text-[hsl(var(--ignatian-brown))]">
+                You are here: {currentStageName}
+              </p>
             )}
-            <Separator />
-            {caseNotesSection}
+          </motion.section>
+        )}
+
+        {/* ═══════════════════════════════════════════════
+            3. NEXT STEPS — Primary content
+           ═══════════════════════════════════════════════ */}
+        <motion.section variants={sectionVariant} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+          <div className="flex items-center gap-2 mb-4">
+            <Compass className="h-5 w-5 text-[hsl(var(--ignatian-brown))]" />
+            <h2 className="font-serif text-lg font-semibold">Next Steps</h2>
           </div>
+
+          <motion.div className="space-y-3" variants={staggerContainer} initial="hidden" animate="visible">
+            {NEXT_STEPS.map(step => (
+              <motion.div
+                key={step.id}
+                variants={sectionVariant}
+                className={`parchment-card p-4 ${
+                  step.urgency === 'Today' ? 'border-l-4 border-l-[hsl(15_60%_50%)]' : ''
+                }`}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="space-y-1.5 min-w-0">
+                    <p className="text-sm font-semibold text-foreground">{step.title}</p>
+                    <p className="text-xs text-muted-foreground flex items-center gap-1">
+                      <MapPin className="h-3 w-3 shrink-0" />
+                      {step.destination}
+                    </p>
+                    <p className="text-xs text-muted-foreground flex items-center gap-1">
+                      <Bus className="h-3 w-3 shrink-0" />
+                      {step.transit}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      <span className="font-medium text-foreground/70">Bring:</span> {step.whatToBring}
+                    </p>
+                  </div>
+                  <Badge
+                    variant="secondary"
+                    className={`shrink-0 text-xs ${
+                      step.urgency === 'Today'
+                        ? 'bg-red-100 text-red-800'
+                        : 'bg-amber-100 text-amber-800'
+                    }`}
+                  >
+                    {step.urgency}
+                  </Badge>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </motion.section>
+
+        {/* ═══════════════════════════════════════════════
+            4. WHAT MATTERS — Warm context
+           ═══════════════════════════════════════════════ */}
+        {needsWithWhatMatters.length > 0 && (
+          <motion.section variants={sectionVariant} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-2 font-medium">
+              Field observations
+            </p>
+            <div className="border-l-3 border-l-amber-400/60 pl-4 space-y-3">
+              {needsWithWhatMatters.map(n => (
+                <p key={n.id} className="field-note">
+                  {n.whatMatters}
+                </p>
+              ))}
+            </div>
+          </motion.section>
+        )}
+
+        {/* ═══════════════════════════════════════════════
+            5. ACTIVE NEEDS — Compact
+           ═══════════════════════════════════════════════ */}
+        <motion.section variants={sectionVariant} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+          <h2 className="font-serif text-lg font-semibold mb-3">
+            Active Needs
+            <span className="text-sm font-normal text-muted-foreground ml-2">({activeNeeds.length})</span>
+          </h2>
+
+          <NeedsBadgeRow needs={activeNeeds} />
+
+          <div className="mt-3 space-y-1.5">
+            {activeNeeds.map(n => {
+              const cat = NEED_CATEGORIES[n.category];
+              return (
+                <NeedRow key={n.id} need={n} catColor={cat?.color} />
+              );
+            })}
+          </div>
+        </motion.section>
+
+        {/* ═══════════════════════════════════════════════
+            6. NRI SIGNALS — Subtle
+           ═══════════════════════════════════════════════ */}
+        {signals.length > 0 && (
+          <motion.section variants={sectionVariant} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-3 font-medium">
+              NRI noticed
+            </p>
+            <div className="space-y-3">
+              {signals.map(s => <RecoverySignalCard key={s.id} signal={s} />)}
+            </div>
+          </motion.section>
+        )}
+
+        {/* ═══════════════════════════════════════════════
+            7. TRAIL BEHIND — Collapsible
+           ═══════════════════════════════════════════════ */}
+        {completedStages.length > 0 && (
+          <TrailBehind stages={completedStages} />
+        )}
+
+        {/* ═══════════════════════════════════════════════
+            8. HOUSEHOLD & SUPPORT — Collapsible
+           ═══════════════════════════════════════════════ */}
+        <HouseholdSupport
+          household={household}
+          volunteer={volunteer}
+        />
+      </div>
+
+      {/* ═══════════════════════════════════════════════
+          9. ACTION BAR — Mobile sticky bottom
+         ═══════════════════════════════════════════════ */}
+      {!isDesktop && (
+        <div className="fixed bottom-16 left-0 right-0 bg-background/95 backdrop-blur-sm border-t p-3 flex gap-2 z-40">
+          <Button size="sm" className="flex-1 gap-1" onClick={() => simulateWrite('Visit logged')}>
+            <Mic className="h-4 w-4" />
+            Log Visit
+          </Button>
+          <Button size="sm" variant="outline" className="flex-1 gap-1" onClick={() => simulateWrite('Needs updated')}>
+            <ClipboardList className="h-4 w-4" />
+            Update Needs
+          </Button>
+          <Button size="sm" variant="outline" className="flex-1 gap-1" onClick={() => simulateWrite('Volunteer assigned')}>
+            <UserPlus className="h-4 w-4" />
+            Assign
+          </Button>
         </div>
-      </div>
-    );
-  }
-
-  // ── Mobile: single-column (unchanged) ──
-  return (
-    <div className="pb-24">
-      {/* Header */}
-      <div className="p-4 bg-primary/5">
-        {backButton}
-        {householdHeader}
-      </div>
-
-      <div className="p-4 space-y-6">
-        {membersSection}
-        <Separator />
-        {recoveryJourney}
-        {recoveryJourney && <Separator />}
-        {needsSection}
-        {signalsSection && (
-          <>
-            <Separator />
-            {signalsSection}
-          </>
-        )}
-        {meaningSection && (
-          <>
-            <Separator />
-            {meaningSection}
-          </>
-        )}
-        <Separator />
-        {caseNotesSection}
-        {volunteerSection && (
-          <>
-            <Separator />
-            {volunteerSection}
-          </>
-        )}
-      </div>
-
-      {/* Sticky action bar */}
-      <div className="fixed bottom-16 left-0 right-0 bg-background border-t p-3 flex gap-2 z-40">
-        <Button size="sm" className="flex-1 gap-1" onClick={() => simulateWrite('Contact logged')}>
-          <Mic className="h-4 w-4" />
-          Log Contact
-        </Button>
-        <Button size="sm" variant="outline" className="flex-1 gap-1" onClick={() => simulateWrite('Needs updated')}>
-          <ClipboardList className="h-4 w-4" />
-          Update Needs
-        </Button>
-        <Button size="sm" variant="outline" className="flex-1 gap-1" onClick={() => simulateWrite('Volunteer assigned')}>
-          <UserPlus className="h-4 w-4" />
-          Assign
-        </Button>
-      </div>
+      )}
     </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────
+   NeedRow — compact collapsible need row
+   ───────────────────────────────────────────────────── */
+
+interface NeedRowProps {
+  need: ReturnType<typeof getNeedsForHousehold>[number];
+  catColor?: string;
+}
+
+function NeedRow({ need, catColor }: NeedRowProps) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <Collapsible open={open} onOpenChange={setOpen}>
+      <CollapsibleTrigger className="w-full text-left">
+        <div className="flex items-center gap-2.5 py-2 px-3 rounded-lg hover:bg-muted/40 transition-colors cursor-pointer">
+          {/* Priority dot */}
+          <span className={`w-2 h-2 rounded-full shrink-0 ${PRIORITY_DOTS[need.priority]}`} />
+          {/* Title */}
+          <span className="text-sm font-medium text-foreground flex-1 min-w-0 truncate">
+            {need.title}
+          </span>
+          {/* Referred to */}
+          {need.referredTo && (
+            <span className="text-xs text-muted-foreground hidden sm:inline truncate max-w-[140px]">
+              {need.referredTo}
+            </span>
+          )}
+          {/* Status badge */}
+          <Badge variant="secondary" className={`text-[10px] shrink-0 ${STATUS_BADGE_STYLE[need.status] || ''}`}>
+            {need.status === 'in_progress' ? 'In Progress' : need.status}
+          </Badge>
+          {/* Expand chevron */}
+          <ChevronDown className={`h-3.5 w-3.5 text-muted-foreground shrink-0 transition-transform ${open ? 'rotate-180' : ''}`} />
+        </div>
+      </CollapsibleTrigger>
+
+      <CollapsibleContent>
+        <div className="pl-7 pr-3 pb-3 space-y-2">
+          <p className="text-xs text-muted-foreground">{need.description}</p>
+          {need.referredTo && (
+            <p className="text-xs text-primary">Referred to: {need.referredTo}</p>
+          )}
+          {need.whatMatters && (
+            <div className="border-l-2 border-amber-400/50 pl-2.5 mt-1.5">
+              <p className="field-note text-xs">{need.whatMatters}</p>
+            </div>
+          )}
+          <p className="text-[10px] text-muted-foreground">
+            Updated {new Date(need.updatedAt).toLocaleDateString()}
+          </p>
+        </div>
+      </CollapsibleContent>
+    </Collapsible>
+  );
+}
+
+/* ─────────────────────────────────────────────────────
+   TrailBehind — completed journey stages
+   ───────────────────────────────────────────────────── */
+
+interface TrailBehindProps {
+  stages: {
+    stage: string;
+    status: string;
+    date?: string;
+    notes?: string;
+  }[];
+}
+
+function TrailBehind({ stages }: TrailBehindProps) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <motion.section variants={sectionVariant} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+      <Collapsible open={open} onOpenChange={setOpen}>
+        <CollapsibleTrigger className="w-full text-left">
+          <div className="flex items-center gap-2 cursor-pointer group">
+            <BookOpen className="h-4 w-4 text-[hsl(var(--ignatian-brown))]" />
+            <h2 className="font-serif text-lg font-semibold">Trail Behind</h2>
+            <ChevronDown
+              className={`h-4 w-4 text-muted-foreground transition-transform ${open ? 'rotate-180' : ''}`}
+            />
+          </div>
+        </CollapsibleTrigger>
+
+        <CollapsibleContent>
+          <div className="mt-4 space-y-4 border-l-2 border-[hsl(var(--ignatian-border))] ml-2 pl-4">
+            {stages.map((s, i) => (
+              <div key={i} className="relative">
+                {/* Timeline dot */}
+                <div className="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-[hsl(25_35%_50%)] border-2 border-[hsl(var(--ignatian-cream))]" />
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-serif text-sm font-semibold text-[hsl(var(--ignatian-brown))]">
+                      {STAGE_LABELS[s.stage] || s.stage}
+                    </span>
+                    {s.date && (
+                      <span className="text-[10px] text-muted-foreground">
+                        {new Date(s.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                      </span>
+                    )}
+                    <CheckCircle2 className="h-3.5 w-3.5 text-green-600/60" />
+                  </div>
+                  {s.notes && (
+                    <p className="font-serif italic text-sm text-[hsl(var(--ignatian-brown))] opacity-80 mt-1 leading-relaxed">
+                      {s.notes}
+                    </p>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </CollapsibleContent>
+      </Collapsible>
+    </motion.section>
+  );
+}
+
+/* ─────────────────────────────────────────────────────
+   HouseholdSupport — members, volunteer, field notes
+   ───────────────────────────────────────────────────── */
+
+interface HouseholdSupportProps {
+  household: NonNullable<ReturnType<typeof getHousehold>>;
+  volunteer: ReturnType<typeof getVolunteer> | null;
+}
+
+function HouseholdSupport({ household, volunteer }: HouseholdSupportProps) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <motion.section variants={sectionVariant} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+      <Collapsible open={open} onOpenChange={setOpen}>
+        <CollapsibleTrigger className="w-full text-left">
+          <div className="flex items-center gap-2 cursor-pointer">
+            <h2 className="font-serif text-lg font-semibold">Household &amp; Support</h2>
+            <ChevronDown
+              className={`h-4 w-4 text-muted-foreground transition-transform ${open ? 'rotate-180' : ''}`}
+            />
+          </div>
+        </CollapsibleTrigger>
+
+        <CollapsibleContent>
+          <div className="mt-4 space-y-5">
+            {/* Members */}
+            <div>
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-2 font-medium">
+                Members
+              </p>
+              <div className="space-y-2">
+                {household.members.map(m => (
+                  <div key={m.id} className="flex items-center justify-between text-sm">
+                    <div>
+                      <span className="font-medium">{m.name}</span>
+                      <span className="text-muted-foreground ml-2">({m.relationship})</span>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-muted-foreground text-xs">Age {m.age}</span>
+                      {m.specialNeeds && (
+                        <p className="text-xs text-destructive">{m.specialNeeds}</p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Volunteer */}
+            {volunteer && (
+              <div>
+                <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-2 font-medium">
+                  Assigned Volunteer
+                </p>
+                <div className="parchment-card p-3">
+                  <p className="text-sm font-medium">{volunteer.name}</p>
+                  <p className="text-xs text-muted-foreground">{volunteer.zone} &middot; {volunteer.availability}</p>
+                  <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
+                    <Phone className="h-3 w-3" />{volunteer.phone}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Field Notes */}
+            {household.caseNotes.length > 0 && (
+              <div>
+                <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-2 font-medium">
+                  Field Notes
+                </p>
+                <div className="space-y-3">
+                  {household.caseNotes.map(n => (
+                    <div key={n.id} className="border-l-2 border-[hsl(var(--ignatian-border))] pl-3">
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <span className="font-medium text-foreground">{n.author}</span>
+                        <span>&middot;</span>
+                        <span>{new Date(n.date).toLocaleDateString()}</span>
+                        <Badge variant="outline" className="text-[10px]">{n.type}</Badge>
+                      </div>
+                      <p className="text-sm text-foreground mt-1">{n.content}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </CollapsibleContent>
+      </Collapsible>
+    </motion.section>
   );
 }
