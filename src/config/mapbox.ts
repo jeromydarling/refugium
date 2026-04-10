@@ -1,4 +1,4 @@
-export const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN || 'pk.eyJ1IjoidHJhbnNpdHUiLCJhIjoiY21uczVqOWVwMGFibzJxb24yazQ0ZGExZSJ9.YhRbPB1u7gFQmlvoEqfXsA';
+export const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN || 'pk.eyJ1IjoidHJhbnNpdHUiLCJhIjoiY21udDZyM3JxMGo1azJycTI1dWp2YXgwOCJ9.V7G9XaJxCCMtwRrO_TE9KA';
 
 export const MAP_DEFAULTS = {
   center: [-91.1871, 30.4515] as [number, number],
