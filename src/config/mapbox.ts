@@ -3,8 +3,8 @@ export const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN || '';
 export const MAP_DEFAULTS = {
   center: [-91.1871, 30.4515] as [number, number],
   zoom: 7,
-  // Community Standard Oil Company vintage style
-  style: 'mapbox://styles/mapbox/standard',
+  // Community Standard Oil Company vintage style (inspired by 1910s Standard Oil road maps)
+  style: 'mapbox://styles/mapbox-map-design/ckr0svm3922ki18qntevm857n',
 };
 
 export const PARTNER_TYPE_COLORS: Record<string, string> = {
