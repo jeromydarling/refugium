@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { DemoBanner } from '@/components/demo/DemoBanner';
 import { DemoSidebar } from '@/components/demo/DemoSidebar';
 import { NewCaseWizard } from '@/components/demo/NewCaseWizard';
+import { NriCompass } from '@/components/demo/NriCompass';
 import { useDemoMode } from '@/contexts/DemoModeContext';
 import { useIsDesktop } from '@/hooks/useIsDesktop';
 import { Users, Shield, ArrowUpDown, Search, Plus, LayoutDashboard, LayoutGrid, Calendar } from 'lucide-react';
@@ -73,6 +74,7 @@ export default function DemoApp() {
           </main>
         </div>
         {fab}
+        <NriCompass />
       </div>
     );
   }
@@ -107,6 +109,7 @@ export default function DemoApp() {
         </div>
       </nav>
       {fab}
+      <NriCompass />
     </div>
   );
 }
