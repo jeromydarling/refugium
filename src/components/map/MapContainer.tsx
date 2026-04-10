@@ -13,7 +13,7 @@ interface MapContainerProps {
   onMapReady?: (map: mapboxgl.Map) => void;
 }
 
-const isPlaceholderToken = MAPBOX_TOKEN.includes('placeholder');
+const isPlaceholderToken = !MAPBOX_TOKEN || MAPBOX_TOKEN.includes('placeholder');
 
 export default function MapContainer({
   center = MAP_DEFAULTS.center,

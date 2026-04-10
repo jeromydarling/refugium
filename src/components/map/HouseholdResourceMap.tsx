@@ -43,7 +43,7 @@ export default function HouseholdResourceMap({
   const [mapReady, setMapReady] = useState(false);
   const [mapError, setMapError] = useState(false);
 
-  const isPlaceholder = MAPBOX_TOKEN.includes('placeholder');
+  const isPlaceholder = !MAPBOX_TOKEN || MAPBOX_TOKEN.includes('placeholder');
 
   // Initialize map
   useEffect(() => {
