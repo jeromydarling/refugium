@@ -90,10 +90,13 @@ export default function MapContainer({
         />
         <MapPin className="h-10 w-10 text-slate-400" />
         <p className="text-sm font-medium text-slate-500">
-          Map requires Mapbox token
+          {isPlaceholderToken ? 'Map requires Mapbox token' : 'Map error — check console'}
         </p>
         <p className="text-xs text-slate-400">
-          Set VITE_MAPBOX_TOKEN in your environment
+          {isPlaceholderToken ? 'Set VITE_MAPBOX_TOKEN in your environment' : 'The map failed to load'}
+        </p>
+        <p className="text-[10px] text-slate-300 mt-1">
+          Token: {MAPBOX_TOKEN ? MAPBOX_TOKEN.slice(0, 10) + '...' : 'empty'}
         </p>
       </div>
     );
