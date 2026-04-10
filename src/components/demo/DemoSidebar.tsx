@@ -1,60 +1,77 @@
+import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useDemoMode } from '@/contexts/DemoModeContext';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   LayoutDashboard, LayoutGrid, Users, Shield, ArrowUpDown, Calendar,
-  LogOut, FileText, ClipboardList, Footprints, Anchor, Kanban,
+  LogOut, FileText, ClipboardList, Footprints, Anchor, Sprout,
   BookOpen, Settings, MapPin, Network, Package, FolderKanban,
-  Compass,
+  Compass, ChevronDown,
 } from 'lucide-react';
 
-interface NavGroup {
+interface NavItem {
+  path: string;
   label: string;
-  items: { path: string; label: string; icon: typeof LayoutDashboard; badge?: string }[];
+  icon: typeof LayoutDashboard;
+}
+
+interface NavGroup {
+  key: string;
+  label: string;
+  items: NavItem[];
+  defaultOpen?: boolean;
 }
 
 const NAV_GROUPS: NavGroup[] = [
   {
-    label: 'Command',
+    key: 'journeys',
+    label: 'Journeys',
+    defaultOpen: true,
     items: [
       { path: '/demo/app/dashboard', label: 'Dashboard', icon: LayoutDashboard },
       { path: '/demo/app/board', label: 'Board', icon: LayoutGrid },
-      { path: '/demo/app/reports', label: 'Reports', icon: FileText },
-    ],
-  },
-  {
-    label: 'Navigator',
-    items: [
       { path: '/demo/app/people', label: 'People', icon: Users },
-      { path: '/demo/app/refuge', label: 'Refuge', icon: Shield },
-      { path: '/demo/app/flow', label: 'Flow', icon: ArrowUpDown },
-      { path: '/demo/app/calendar', label: 'Calendar', icon: Calendar },
       { path: '/demo/app/visits', label: 'Visits', icon: Footprints },
-      { path: '/demo/app/activities', label: 'Activities', icon: ClipboardList },
+      { path: '/demo/app/provisions', label: 'Provisions', icon: Package },
     ],
   },
   {
-    label: 'Network',
+    key: 'partners',
+    label: 'Partners',
+    defaultOpen: true,
     items: [
+      { path: '/demo/app/refuge', label: 'Refuge', icon: Shield },
       { path: '/demo/app/anchors', label: 'Anchors', icon: Anchor },
-      { path: '/demo/app/pipeline', label: 'Pipeline', icon: Kanban },
+      { path: '/demo/app/pipeline', label: 'Cultivating', icon: Sprout },
       { path: '/demo/app/graph', label: 'Connections', icon: Network },
       { path: '/demo/app/zones', label: 'Zones', icon: MapPin },
     ],
   },
   {
-    label: 'Operations',
+    key: 'myday',
+    label: 'My Day',
+    defaultOpen: true,
     items: [
+      { path: '/demo/app/calendar', label: 'Calendar', icon: Calendar },
+      { path: '/demo/app/flow', label: 'Flow', icon: ArrowUpDown },
+      { path: '/demo/app/activities', label: 'Activities', icon: ClipboardList },
+    ],
+  },
+  {
+    key: 'stewardship',
+    label: 'Stewardship',
+    defaultOpen: false,
+    items: [
+      { path: '/demo/app/reports', label: 'Reports', icon: FileText },
       { path: '/demo/app/projects', label: 'Projects', icon: FolderKanban },
-      { path: '/demo/app/provisions', label: 'Provisions', icon: Package },
       { path: '/demo/app/playbooks', label: 'Playbooks', icon: BookOpen },
     ],
   },
 ];
 
-const BOTTOM_ITEMS = [
+const BOTTOM_ITEMS: NavItem[] = [
   { path: '/demo/app/journal', label: 'Journal', icon: Compass },
   { path: '/demo/app/settings', label: 'Settings', icon: Settings },
 ];
@@ -64,20 +81,43 @@ export function DemoSidebar() {
   const navigate = useNavigate();
   const { demoSession, endDemo } = useDemoMode();
 
+  // Track which groups are open
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => {
+    const initial: Record<string, boolean> = {};
+    NAV_GROUPS.forEach(g => {
+      // Auto-open the group containing the current route
+      const containsActive = g.items.some(item =>
+        location.pathname === item.path ||
+        (item.path === '/demo/app/people' && location.pathname.startsWith('/demo/app/people'))
+      );
+      initial[g.key] = containsActive || (g.defaultOpen ?? false);
+    });
+    return initial;
+  });
+
+  const toggleGroup = (key: string) => {
+    setOpenGroups(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
   const handleExit = () => {
     endDemo();
     navigate('/');
   };
 
-  const renderNavItem = (item: { path: string; label: string; icon: typeof LayoutDashboard; badge?: string }) => {
-    const isActive = location.pathname === item.path ||
-      (item.path !== '/demo/app/people' && location.pathname.startsWith(item.path)) ||
-      (item.path === '/demo/app/people' && location.pathname.startsWith('/demo/app/people'));
+  const isItemActive = (path: string) => {
+    if (path === '/demo/app/people') {
+      return location.pathname.startsWith('/demo/app/people');
+    }
+    return location.pathname === path;
+  };
+
+  const renderNavItem = (item: NavItem) => {
+    const isActive = isItemActive(item.path);
     return (
       <Link
         key={item.path}
         to={item.path}
-        className="relative flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+        className="relative flex items-center gap-3 px-3 py-1.5 rounded-lg text-[13px] font-medium transition-colors"
       >
         {isActive && (
           <motion.div
@@ -86,15 +126,10 @@ export function DemoSidebar() {
             transition={{ type: 'spring', stiffness: 350, damping: 30 }}
           />
         )}
-        <item.icon className={`h-4 w-4 relative z-10 ${isActive ? 'text-[hsl(var(--sidebar-primary))]' : 'opacity-70'}`} />
-        <span className={`relative z-10 text-[13px] ${isActive ? 'text-[hsl(var(--sidebar-primary))]' : 'opacity-80'}`}>
+        <item.icon className={`h-4 w-4 relative z-10 ${isActive ? 'text-[hsl(var(--sidebar-primary))]' : 'opacity-60'}`} />
+        <span className={`relative z-10 ${isActive ? 'text-[hsl(var(--sidebar-primary))]' : 'opacity-75'}`}>
           {item.label}
         </span>
-        {item.badge && (
-          <span className="relative z-10 ml-auto text-[9px] bg-primary/20 text-primary px-1.5 py-0.5 rounded-full">
-            {item.badge}
-          </span>
-        )}
       </Link>
     );
   };
@@ -111,25 +146,59 @@ export function DemoSidebar() {
 
       {/* Navigation */}
       <ScrollArea className="flex-1">
-        <nav className="px-3 pb-3 space-y-4">
-          {NAV_GROUPS.map(group => (
-            <div key={group.label}>
-              <p className="px-3 pb-1 text-[10px] font-semibold uppercase tracking-wider text-[hsl(var(--sidebar-foreground))]/40">
-                {group.label}
-              </p>
-              <div className="space-y-0.5">
-                {group.items.map(renderNavItem)}
+        <nav className="px-3 pb-3 space-y-1">
+          {NAV_GROUPS.map(group => {
+            const isOpen = openGroups[group.key] ?? false;
+            const hasActiveChild = group.items.some(item => isItemActive(item.path));
+
+            return (
+              <div key={group.key}>
+                <button
+                  onClick={() => toggleGroup(group.key)}
+                  className="w-full flex items-center justify-between px-3 py-2 rounded-lg hover:bg-[hsl(var(--sidebar-accent))]/50 transition-colors"
+                >
+                  <span className={`text-[10px] font-semibold uppercase tracking-wider ${
+                    hasActiveChild ? 'text-[hsl(var(--sidebar-primary))]' : 'text-[hsl(var(--sidebar-foreground))]/40'
+                  }`}>
+                    {group.label}
+                  </span>
+                  <motion.div
+                    animate={{ rotate: isOpen ? 180 : 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <ChevronDown className={`h-3 w-3 ${
+                      hasActiveChild ? 'text-[hsl(var(--sidebar-primary))]' : 'text-[hsl(var(--sidebar-foreground))]/30'
+                    }`} />
+                  </motion.div>
+                </button>
+
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.2, ease: 'easeInOut' }}
+                      className="overflow-hidden"
+                    >
+                      <div className="space-y-0.5 pb-1">
+                        {group.items.map(renderNavItem)}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </nav>
       </ScrollArea>
 
-      {/* Bottom: journal, settings, session */}
+      {/* Bottom: journal, settings */}
       <div className="border-t px-3 py-2 space-y-0.5">
         {BOTTOM_ITEMS.map(renderNavItem)}
       </div>
 
+      {/* Session info + exit */}
       <div className="border-t px-4 py-3 space-y-2">
         {demoSession && (
           <div className="text-xs space-y-0.5">
