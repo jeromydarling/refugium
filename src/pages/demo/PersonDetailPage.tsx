@@ -11,6 +11,8 @@ import { RenewalTrail } from '@/components/people/RenewalTrail';
 import { RecoverySignalCard } from '@/components/nri/RecoverySignalCard';
 import { useDemoMode } from '@/contexts/DemoModeContext';
 import { useIsDesktop } from '@/hooks/useIsDesktop';
+import HouseholdResourceMap from '@/components/map/HouseholdResourceMap';
+import { partners } from '@/data';
 import {
   ArrowLeft, Phone, MapPin, Compass, Bus,
   ChevronDown, Mic, ClipboardList, UserPlus,
@@ -194,6 +196,26 @@ export default function PersonDetailPage() {
             )}
           </motion.section>
         )}
+
+        {/* ═══════════════════════════════════════════════
+            2b. RESOURCE MAP — "Look at all this help"
+           ═══════════════════════════════════════════════ */}
+        <motion.section variants={sectionVariant} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+          <div className="flex items-center gap-2 mb-3">
+            <MapPin className="h-4 w-4 text-[hsl(var(--ignatian-brown))]" />
+            <h2 className="font-serif text-base font-semibold">Resources nearby</h2>
+            <span className="text-xs text-[hsl(var(--ignatian-muted))]">
+              {partners.length} organizations ready to help
+            </span>
+          </div>
+          <HouseholdResourceMap
+            householdName={`${household.familyName} Family`}
+            householdLat={household.lat}
+            householdLng={household.lng}
+            activePartnerIds={needs.filter(n => n.referredTo).map((_, i) => partners[i]?.id).filter(Boolean)}
+            partners={partners}
+          />
+        </motion.section>
 
         {/* ═══════════════════════════════════════════════
             3. NEXT STEPS — Primary content

@@ -1,9 +1,10 @@
-export const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN || 'pk.eyJ1IjoicmVmdWdpdW0tZGVtbyIsImEiOiJjbHRlc3QxMjMifQ.placeholder';
+export const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN || '';
 
 export const MAP_DEFAULTS = {
   center: [-91.1871, 30.4515] as [number, number],
   zoom: 7,
-  style: 'mapbox://styles/mapbox/light-v11',
+  // Community Standard Oil Company vintage style
+  style: 'mapbox://styles/mapbox/standard',
 };
 
 export const PARTNER_TYPE_COLORS: Record<string, string> = {
