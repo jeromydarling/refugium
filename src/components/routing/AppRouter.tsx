@@ -22,6 +22,7 @@ import RefugeTab from '@/pages/demo/RefugeTab';
 import FlowTab from '@/pages/demo/FlowTab';
 import CalendarView from '@/pages/demo/CalendarView';
 import ComingSoonPage from '@/pages/demo/ComingSoonPage';
+import SurvivorPortal from '@/pages/SurvivorPortal';
 
 // Not Found
 import NotFound from '@/pages/NotFound';
@@ -54,6 +55,9 @@ export function AppRouter() {
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/terms" element={<Terms />} />
       </Route>
+
+      {/* Survivor portal — secret link, no auth */}
+      <Route path="/r/:id" element={<SurvivorPortal />} />
 
       {/* Demo gate */}
       <Route path="/demo" element={<DemoGate />} />
