@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { getHousehold, getNeedsForHousehold, getSignalsForHousehold, getJourneyForHousehold, getVolunteer } from '@/data';
+import { getHousehold, getNeedsForHousehold, getSignalsForHousehold, getJourneyForHousehold, getVolunteer, getDonationsForHousehold, getSharedNotesForHousehold } from '@/data';
 import { NEED_CATEGORIES, volunteers } from '@/data';
 import { NeedsBadgeRow } from '@/components/people/NeedsBadgeRow';
 import { RenewalTrail } from '@/components/people/RenewalTrail';
@@ -20,6 +20,7 @@ import {
   ArrowLeft, Phone, MapPin, Compass, Bus,
   ChevronDown, Mic, ClipboardList, UserPlus,
   BookOpen, CheckCircle2, Share2, ExternalLink, Printer,
+  MessageSquareShare, Building2, Plus, Heart,
 } from 'lucide-react';
 
 // ── Stage label map (mirrors RenewalTrail STAGES) ──
@@ -114,6 +115,8 @@ export default function PersonDetailPage() {
   const signals = getSignalsForHousehold(household.id);
   const journey = getJourneyForHousehold(household.id);
   const volunteer = household.assignedVolunteerId ? getVolunteer(household.assignedVolunteerId) : null;
+  const householdDonations = getDonationsForHousehold(household.id);
+  const householdSharedNotes = getSharedNotesForHousehold(household.id);
 
   const activeNeeds = needs.filter(n => n.status !== 'met');
   const needsWithWhatMatters = needs.filter(n => n.whatMatters);
@@ -430,6 +433,13 @@ export default function PersonDetailPage() {
         )}
 
         {/* ═══════════════════════════════════════════════
+            6b. SHARED NOTES — Inter-org coordination
+           ═══════════════════════════════════════════════ */}
+        {householdSharedNotes.length > 0 && (
+          <SharedNotesSection notes={householdSharedNotes} />
+        )}
+
+        {/* ═══════════════════════════════════════════════
             7. TRAIL BEHIND — Collapsible
            ═══════════════════════════════════════════════ */}
         {completedStages.length > 0 && (
@@ -442,6 +452,7 @@ export default function PersonDetailPage() {
         <HouseholdSupport
           household={household}
           volunteer={volunteer}
+          donations={householdDonations}
         />
       </div>
 
@@ -535,6 +546,81 @@ function NeedRow({ need, catColor }: NeedRowProps) {
 }
 
 /* ─────────────────────────────────────────────────────
+   SharedNotesSection — Inter-org coordination notes
+   ───────────────────────────────────────────────────── */
+
+const ORG_COLORS: Record<string, string> = {
+  'Catholic Charities of Acadiana': 'bg-violet-50 text-violet-800 border-violet-200',
+  'Red Cross - Greater New Orleans': 'bg-red-50 text-red-800 border-red-200',
+  'Habitat for Humanity Greater Baton Rouge': 'bg-emerald-50 text-emerald-800 border-emerald-200',
+};
+
+function SharedNotesSection({ notes }: { notes: ReturnType<typeof getSharedNotesForHousehold> }) {
+  const [open, setOpen] = useState(false);
+  const { simulateWrite } = useDemoMode();
+
+  return (
+    <motion.section variants={sectionVariant} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+      <Collapsible open={open} onOpenChange={setOpen}>
+        <CollapsibleTrigger className="w-full text-left">
+          <div className="flex items-center gap-2 cursor-pointer group">
+            <MessageSquareShare className="h-4 w-4 text-sky-600" />
+            <h2 className="font-serif text-lg font-semibold">Shared Notes</h2>
+            <Badge variant="secondary" className="text-[10px] bg-sky-50 text-sky-700">
+              {notes.length}
+            </Badge>
+            <ChevronDown
+              className={`h-4 w-4 text-muted-foreground transition-transform ${open ? 'rotate-180' : ''}`}
+            />
+          </div>
+          <p className="text-[10px] text-muted-foreground mt-0.5 ml-6">
+            Visible to partner organizations
+          </p>
+        </CollapsibleTrigger>
+
+        <CollapsibleContent>
+          <div className="mt-4 space-y-3">
+            {notes.map(note => {
+              const orgStyle = ORG_COLORS[note.orgName] || 'bg-stone-50 text-stone-800 border-stone-200';
+              return (
+                <div
+                  key={note.id}
+                  className="border-l-3 border-l-sky-400/60 bg-sky-50/30 rounded-r-lg pl-4 pr-3 py-3"
+                >
+                  <div className="flex items-center gap-2 flex-wrap mb-1.5">
+                    <Badge variant="outline" className={`text-[10px] ${orgStyle}`}>
+                      <Building2 className="h-2.5 w-2.5 mr-1" />
+                      {note.orgName}
+                    </Badge>
+                    <span className="text-xs font-medium text-foreground">{note.authorName}</span>
+                    <span className="text-[10px] text-muted-foreground">
+                      {new Date(note.date).toLocaleDateString('en-US', {
+                        month: 'short', day: 'numeric', year: 'numeric',
+                      })}
+                    </span>
+                  </div>
+                  <p className="text-sm text-foreground leading-relaxed">{note.content}</p>
+                </div>
+              );
+            })}
+
+            <Button
+              size="sm"
+              variant="outline"
+              className="gap-1.5 mt-2"
+              onClick={() => simulateWrite('Shared note added')}
+            >
+              <Plus className="h-3.5 w-3.5" />
+              Add Note
+            </Button>
+          </div>
+        </CollapsibleContent>
+      </Collapsible>
+    </motion.section>
+  );
+}
+
+/* ─────────────────────────────────────────────────────
    TrailBehind — completed journey stages
    ───────────────────────────────────────────────────── */
 
@@ -597,15 +683,22 @@ function TrailBehind({ stages }: TrailBehindProps) {
 }
 
 /* ─────────────────────────────────────────────────────
-   HouseholdSupport — members, volunteer, field notes
+   HouseholdSupport — members, volunteer, donations, field notes
    ───────────────────────────────────────────────────── */
 
 interface HouseholdSupportProps {
   household: NonNullable<ReturnType<typeof getHousehold>>;
   volunteer: ReturnType<typeof getVolunteer> | null;
+  donations: ReturnType<typeof getDonationsForHousehold>;
 }
 
-function HouseholdSupport({ household, volunteer }: HouseholdSupportProps) {
+const DONATION_TYPE_BADGE: Record<string, string> = {
+  monetary: 'bg-emerald-50 text-emerald-800',
+  in_kind: 'bg-sky-50 text-sky-800',
+  service: 'bg-violet-50 text-violet-800',
+};
+
+function HouseholdSupport({ household, volunteer, donations }: HouseholdSupportProps) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -657,6 +750,38 @@ function HouseholdSupport({ household, volunteer }: HouseholdSupportProps) {
                   <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
                     <Phone className="h-3 w-3" />{volunteer.phone}
                   </p>
+                </div>
+              </div>
+            )}
+
+            {/* Donations received */}
+            {donations.length > 0 && (
+              <div>
+                <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-2 font-medium flex items-center gap-1.5">
+                  <Heart className="h-3 w-3" />
+                  Donations Received
+                </p>
+                <div className="space-y-2">
+                  {donations.map(d => (
+                    <div key={d.id} className="parchment-card p-3">
+                      <div className="flex items-center justify-between gap-2 mb-1">
+                        <span className="text-sm font-medium text-foreground">{d.donorName}</span>
+                        <Badge variant="secondary" className={`text-[10px] ${DONATION_TYPE_BADGE[d.type] || ''}`}>
+                          {d.type === 'in_kind' ? 'In-Kind' : d.type === 'service' ? 'Service' : 'Monetary'}
+                        </Badge>
+                      </div>
+                      <p className="text-xs text-muted-foreground">{d.purpose}</p>
+                      <div className="flex items-center gap-2 mt-1 text-[10px] text-muted-foreground">
+                        {d.type === 'monetary' && (
+                          <span className="font-semibold text-emerald-700">${d.amount.toLocaleString()}</span>
+                        )}
+                        {d.type === 'in_kind' && d.amount > 0 && (
+                          <span className="font-semibold text-sky-700">~${d.amount.toLocaleString()} value</span>
+                        )}
+                        <span>{new Date(d.date).toLocaleDateString()}</span>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             )}
