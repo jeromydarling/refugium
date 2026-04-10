@@ -2,7 +2,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useDemoMode } from '@/contexts/DemoModeContext';
 import { Button } from '@/components/ui/button';
-import { Users, Shield, ArrowUpDown, LogOut, LayoutDashboard, LayoutGrid } from 'lucide-react';
+import { Users, Shield, ArrowUpDown, LogOut, LayoutDashboard, LayoutGrid, Calendar } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 
 const ORG_ITEMS = [
@@ -14,6 +14,7 @@ const NAV_ITEMS = [
   { path: '/demo/app/people', label: 'People', icon: Users },
   { path: '/demo/app/refuge', label: 'Refuge', icon: Shield },
   { path: '/demo/app/flow', label: 'Flow', icon: ArrowUpDown },
+  { path: '/demo/app/calendar', label: 'Calendar', icon: Calendar },
 ];
 
 export function DemoSidebar() {

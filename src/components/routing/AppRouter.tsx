@@ -20,6 +20,7 @@ import PeopleTab from '@/pages/demo/PeopleTab';
 import PersonDetailPage from '@/pages/demo/PersonDetailPage';
 import RefugeTab from '@/pages/demo/RefugeTab';
 import FlowTab from '@/pages/demo/FlowTab';
+import CalendarView from '@/pages/demo/CalendarView';
 
 // Not Found
 import NotFound from '@/pages/NotFound';
@@ -51,6 +52,7 @@ export function AppRouter() {
         <Route path="people/:id" element={<PersonDetailPage />} />
         <Route path="refuge" element={<RefugeTab />} />
         <Route path="flow" element={<FlowTab />} />
+        <Route path="calendar" element={<CalendarView />} />
       </Route>
 
       {/* Catch-all */}
