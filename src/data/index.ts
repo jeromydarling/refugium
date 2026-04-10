@@ -18,3 +18,6 @@ export { signals, getSignalsForHousehold, getSystemSignals } from './mockSignals
 
 export type { CaseJourney } from './mockCaseJourneys';
 export { journeys, getJourneyForHousehold } from './mockCaseJourneys';
+
+export type { MeaningMap, MeaningObservation } from './mockMeaningMaps';
+export { meaningMaps, getMeaningMap } from './mockMeaningMaps';
