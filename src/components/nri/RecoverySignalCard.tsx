@@ -8,11 +8,11 @@ import { useState } from 'react';
 import { slideUp } from '@/lib/animations';
 
 const KIND_CONFIG: Record<string, { label: string; color: string; icon: typeof AlertTriangle }> = {
-  stalled_case: { label: 'Stalled Refuge', color: 'bg-red-100 text-red-800 border-red-200', icon: AlertTriangle },
-  quiet_need: { label: 'Quiet Need', color: 'bg-amber-100 text-amber-800 border-amber-200', icon: Eye },
-  connection_opportunity: { label: 'Connection', color: 'bg-blue-100 text-blue-800 border-blue-200', icon: Link2 },
-  celebration: { label: 'Celebration', color: 'bg-green-100 text-green-800 border-green-200', icon: PartyPopper },
-  heads_up: { label: 'Heads Up', color: 'bg-orange-100 text-orange-800 border-orange-200', icon: Lightbulb },
+  stalled_case: { label: 'Stalled Refuge', color: 'bg-red-50 text-red-800 border-red-200', icon: AlertTriangle },
+  quiet_need: { label: 'Quiet Need', color: 'bg-amber-50 text-amber-800 border-amber-200', icon: Eye },
+  connection_opportunity: { label: 'Connection', color: 'bg-sky-50 text-sky-800 border-sky-200', icon: Link2 },
+  celebration: { label: 'Celebration', color: 'bg-emerald-50 text-emerald-800 border-emerald-200', icon: PartyPopper },
+  heads_up: { label: 'Heads Up', color: 'bg-stone-100 text-stone-700 border-stone-200', icon: Lightbulb },
 };
 
 const STRENGTH_DOTS: Record<string, number> = {

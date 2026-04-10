@@ -6,9 +6,9 @@ import { Clock, MapPin, Users } from 'lucide-react';
 import { cardHover } from '@/lib/animations';
 
 const STATUS_STYLES: Record<string, string> = {
-  active: 'bg-green-100 text-green-800',
-  on_break: 'bg-amber-100 text-amber-800',
-  new: 'bg-blue-100 text-blue-800',
+  active: 'bg-emerald-50 text-emerald-800',
+  on_break: 'bg-amber-50 text-amber-800',
+  new: 'bg-sky-50 text-sky-800',
 };
 
 interface VolunteerCardProps {

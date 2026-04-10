@@ -29,10 +29,10 @@ import { useIsDesktop } from '@/hooks/useIsDesktop';
 import { staggerContainer, staggerItem, cardHover } from '@/lib/animations';
 
 const STATUS_COLORS: Record<string, { bg: string; bar: string; label: string }> = {
-  acute: { bg: 'bg-red-100', bar: 'bg-red-500', label: 'Acute' },
-  stabilizing: { bg: 'bg-amber-100', bar: 'bg-amber-500', label: 'Stabilizing' },
-  rebuilding: { bg: 'bg-blue-100', bar: 'bg-blue-500', label: 'Rebuilding' },
-  recovered: { bg: 'bg-green-100', bar: 'bg-green-500', label: 'Recovered' },
+  acute: { bg: 'bg-red-50', bar: 'bg-red-400', label: 'Acute' },
+  stabilizing: { bg: 'bg-amber-50', bar: 'bg-amber-400', label: 'Stabilizing' },
+  rebuilding: { bg: 'bg-sky-50', bar: 'bg-sky-400', label: 'Rebuilding' },
+  recovered: { bg: 'bg-emerald-50', bar: 'bg-emerald-400', label: 'Recovered' },
 };
 
 const RECENT_ACTIVITY = [
@@ -108,10 +108,10 @@ function getMostUrgentHouseholds(): { hh: Household; unmetCount: number }[] {
 }
 
 const STATUS_BORDER: Record<string, string> = {
-  acute: 'border-l-red-500',
-  stabilizing: 'border-l-amber-500',
-  rebuilding: 'border-l-blue-500',
-  recovered: 'border-l-green-500',
+  acute: 'border-l-red-400',
+  stabilizing: 'border-l-amber-400',
+  rebuilding: 'border-l-sky-400',
+  recovered: 'border-l-emerald-400',
 };
 
 export default function OrgDashboard() {

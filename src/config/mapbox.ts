@@ -8,16 +8,16 @@ export const MAP_DEFAULTS = {
 };
 
 export const PARTNER_TYPE_COLORS: Record<string, string> = {
-  church: '#9333ea',
-  nonprofit: '#2563eb',
-  government: '#6b7280',
-  host_family: '#ec4899',
-  business: '#16a34a',
+  church: '#6d5a8a',
+  nonprofit: '#5a7a9a',
+  government: '#7a7a72',
+  host_family: '#b07a7a',
+  business: '#6a8a6a',
 };
 
 export const STATUS_COLORS: Record<string, string> = {
-  acute: '#dc2626',
-  stabilizing: '#d97706',
-  rebuilding: '#2563eb',
-  recovered: '#16a34a',
+  acute: '#b05050',
+  stabilizing: '#b08a50',
+  rebuilding: '#5a7a9a',
+  recovered: '#6a8a6a',
 };

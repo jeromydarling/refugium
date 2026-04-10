@@ -11,10 +11,10 @@ import { StaggerList } from '@/components/shared/StaggerList';
 const STATUS_ORDER: Record<string, number> = { acute: 0, stabilizing: 1, rebuilding: 2, recovered: 3 };
 
 const STATUS_DOT_COLORS: Record<string, string> = {
-  acute: 'bg-red-500',
-  stabilizing: 'bg-amber-500',
-  rebuilding: 'bg-blue-500',
-  recovered: 'bg-green-500',
+  acute: 'bg-red-400',
+  stabilizing: 'bg-amber-400',
+  rebuilding: 'bg-sky-400',
+  recovered: 'bg-emerald-400',
 };
 
 const STATUS_LABELS: Record<string, string> = {
