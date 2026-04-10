@@ -54,7 +54,7 @@ export default function HouseholdResourceMap({
     try {
       const map = new mapboxgl.Map({
         container: containerRef.current,
-        style: 'mapbox://styles/mapbox/light-v11',
+        style: MAP_DEFAULTS.style,
         center: [householdLng, householdLat],
         zoom: 12,
       });
