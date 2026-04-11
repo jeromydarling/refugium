@@ -16,6 +16,7 @@ import { Separator } from '@/components/ui/separator';
 import { Compass, Heart, RotateCcw, Zap, Eye, X, Send, ArrowRight, AlertTriangle, Sparkles, ChevronRight } from 'lucide-react';
 import { checkNriScope } from '@/lib/nri/scopeGuardrails';
 import { useDemoMode } from '@/contexts/DemoModeContext';
+import { useIsDesktop } from '@/hooks/useIsDesktop';
 import { households, getNeedsForHousehold, getSignalsForHousehold, getSystemSignals } from '@/data';
 
 // ── Posture system (from CROS compassDirection.ts) ──
@@ -136,6 +137,7 @@ export function NriCompass() {
   const [messages, setMessages] = useState<{ role: 'user' | 'nri'; text: string }[]>([]);
   const [input, setInput] = useState('');
   const { isDemoMode } = useDemoMode();
+  const isDesktop = useIsDesktop();
   const location = useLocation();
 
   const posture = inferPosture(location.pathname);
@@ -183,12 +185,16 @@ export function NriCompass() {
       {/* Compass Button */}
       <motion.button
         onClick={() => setOpen(true)}
-        className="fixed bottom-8 left-8 z-50 w-12 h-12 rounded-full bg-[hsl(var(--ignatian-deep))] text-[hsl(var(--ignatian-cream))] shadow-lg hover:shadow-xl transition-shadow flex items-center justify-center"
+        className={`fixed z-[60] rounded-full bg-[hsl(var(--ignatian-deep))] text-[hsl(var(--ignatian-cream))] shadow-lg hover:shadow-xl transition-shadow flex items-center justify-center ${
+          isDesktop
+            ? 'bottom-8 left-8 w-12 h-12'
+            : 'bottom-[42px] left-1/2 -translate-x-1/2 w-14 h-14'
+        }`}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         aria-label="Open NRI Compass"
       >
-        <Compass className="h-6 w-6" />
+        <Compass className={isDesktop ? 'h-6 w-6' : 'h-7 w-7'} />
         {nudges.some(n => n.urgency === 'high') && (
           <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-primary border-2 border-[hsl(var(--ignatian-deep))]" />
         )}
