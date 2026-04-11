@@ -1,43 +1,36 @@
 interface AngelWingProps {
   className?: string;
-  /** Size in pixels — controls both width and height */
+  /** Size in pixels — controls height; width scales proportionally */
   size?: number;
 }
 
 /**
- * Single angel wing icon — simple outline with decorative curl.
- * Designed to sit beside the "Refugium" wordmark.
+ * Angel wing logo mark — Adobe Illustrator original from brand assets.
+ * Sits beside the "Refugium" wordmark.
  */
 export function AngelWing({ className = '', size = 24 }: AngelWingProps) {
+  // Original viewBox is 181 x 231.1 — scale width proportionally
+  const width = (size * 181) / 231.1;
+
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 64 64"
-      width={size}
+      viewBox="0 0 181 231.1"
+      width={width}
       height={size}
-      fill="none"
-      stroke="currentColor"
-      strokeLinecap="round"
-      strokeLinejoin="round"
       className={className}
       aria-hidden="true"
     >
       <path
-        d="M30 8
-           C20 8, 10 16, 8 28
-           C6 38, 10 48, 18 52
-           C20 53, 22 52, 22 50
-           C22 48, 20 46, 18 46
-           C16 46, 15 48, 14 50
-           C13 48, 12 44, 13 38
-           C14 30, 20 22, 30 18
-           C36 16, 44 20, 48 26
-           C52 32, 52 38, 50 42
-           C48 46, 42 48, 36 46
-           C42 44, 48 40, 50 34
-           C52 28, 48 18, 38 12
-           C35 10, 32 8, 30 8Z"
-        strokeWidth="3.5"
+        fill="currentColor"
+        d="M46.6,229.8c-4.7-1.1-3-8.5,1.7-7.3c6.4,2.1,14.2,1.2,20.5,0.6c16.6-2.2,32.3-7.7,47-15.2
+          c16.3-9.6,59.4-36.9,51.9-58.8c-5.5-5.9-14.3,1.8-20.7-0.6c-3.9-2.5-1-6.9,1.7-9c3.7-3.9,6.9-8.1,9.9-12.5
+          c15.1-29-0.5-22.3-19.4-11.3c-5.9,0.4-4.8-6.4-1.9-9.4c3.3-5.4,6.2-11,8.9-16.8c11.4-25.4,20.3-52,27-79
+          c-25.8,21.3-49.9,44.8-75.2,66.7C79.6,93,59.2,106.5,40,121.5C25.8,133,11.3,146.9,7.8,165.6C4,184,19.7,206.4,39.7,198
+          c11.9-2.9,21.6-14.3,18.3-26.9c-0.1-3.4-4.5-5.1-3.2-8.5c4.4-7,10.3,2.8,10.7,7.6c7.7,34-47.9,52.1-61.2,19.5
+          c-18.8-42.2,28.7-72.9,58-94.1C78,84,93.6,71.6,107.9,58.5c13.1-12.2,26.2-24,39.6-35.8c7-4.8,23.9-24.4,31-22.6
+          c12.5,2.7-24.2,92.5-30.2,102.2c33.4-15.8,25.8,22.3,10.2,37.5c17-3.8,22,14.7,14.9,27c-9.7,17.7-26.8,30-43,41.2
+          C105.8,222.9,75.6,235.2,46.6,229.8L46.6,229.8z"
       />
     </svg>
   );
