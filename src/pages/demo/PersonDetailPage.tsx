@@ -13,6 +13,7 @@ import { RenewalTrail } from '@/components/people/RenewalTrail';
 import { RecoverySignalCard } from '@/components/nri/RecoverySignalCard';
 import { useDemoMode } from '@/contexts/DemoModeContext';
 import { useIsDesktop } from '@/hooks/useIsDesktop';
+import { usePrintMode } from '@/hooks/usePrintMode';
 import HouseholdResourceMap from '@/components/map/HouseholdResourceMap';
 import { partners } from '@/data';
 import { toast } from 'sonner';
@@ -95,6 +96,7 @@ export default function PersonDetailPage() {
   const { id } = useParams<{ id: string }>();
   const { simulateWrite } = useDemoMode();
   const isDesktop = useIsDesktop();
+  const isPrinting = usePrintMode();
 
   const [showLogContact, setShowLogContact] = useState(false);
   const [contactType, setContactType] = useState<'Visit' | 'Call' | 'Text' | 'Email'>('Visit');
@@ -412,7 +414,7 @@ export default function PersonDetailPage() {
             {activeNeeds.map(n => {
               const cat = NEED_CATEGORIES[n.category];
               return (
-                <NeedRow key={n.id} need={n} catColor={cat?.color} />
+                <NeedRow key={n.id} need={n} catColor={cat?.color} forceOpen={isPrinting} />
               );
             })}
           </div>
@@ -436,14 +438,14 @@ export default function PersonDetailPage() {
             6b. SHARED NOTES — Inter-org coordination
            ═══════════════════════════════════════════════ */}
         {householdSharedNotes.length > 0 && (
-          <SharedNotesSection notes={householdSharedNotes} />
+          <SharedNotesSection notes={householdSharedNotes} forceOpen={isPrinting} />
         )}
 
         {/* ═══════════════════════════════════════════════
             7. TRAIL BEHIND — Collapsible
            ═══════════════════════════════════════════════ */}
         {completedStages.length > 0 && (
-          <TrailBehind stages={completedStages} />
+          <TrailBehind stages={completedStages} forceOpen={isPrinting} />
         )}
 
         {/* ═══════════════════════════════════════════════
@@ -453,6 +455,7 @@ export default function PersonDetailPage() {
           household={household}
           volunteer={volunteer}
           donations={householdDonations}
+          forceOpen={isPrinting}
         />
       </div>
 
@@ -495,13 +498,15 @@ export default function PersonDetailPage() {
 interface NeedRowProps {
   need: ReturnType<typeof getNeedsForHousehold>[number];
   catColor?: string;
+  forceOpen?: boolean;
 }
 
-function NeedRow({ need, catColor }: NeedRowProps) {
+function NeedRow({ need, catColor, forceOpen }: NeedRowProps) {
   const [open, setOpen] = useState(false);
+  const isOpen = open || !!forceOpen;
 
   return (
-    <Collapsible open={open} onOpenChange={setOpen}>
+    <Collapsible open={isOpen} onOpenChange={setOpen}>
       <CollapsibleTrigger className="w-full text-left">
         <div className="flex items-center gap-2.5 py-2 px-3 rounded-lg hover:bg-muted/40 transition-colors cursor-pointer">
           {/* Priority dot */}
@@ -521,7 +526,7 @@ function NeedRow({ need, catColor }: NeedRowProps) {
             {need.status === 'in_progress' ? 'In Progress' : need.status}
           </Badge>
           {/* Expand chevron */}
-          <ChevronDown className={`h-3.5 w-3.5 text-muted-foreground shrink-0 transition-transform ${open ? 'rotate-180' : ''}`} />
+          <ChevronDown className={`h-3.5 w-3.5 text-muted-foreground shrink-0 transition-transform print:hidden ${isOpen ? 'rotate-180' : ''}`} />
         </div>
       </CollapsibleTrigger>
 
@@ -555,13 +560,14 @@ const ORG_COLORS: Record<string, string> = {
   'Habitat for Humanity Greater Baton Rouge': 'bg-emerald-50 text-emerald-800 border-emerald-200',
 };
 
-function SharedNotesSection({ notes }: { notes: ReturnType<typeof getSharedNotesForHousehold> }) {
+function SharedNotesSection({ notes, forceOpen }: { notes: ReturnType<typeof getSharedNotesForHousehold>; forceOpen?: boolean }) {
   const [open, setOpen] = useState(false);
+  const isOpen = open || !!forceOpen;
   const { simulateWrite } = useDemoMode();
 
   return (
     <motion.section variants={sectionVariant} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-      <Collapsible open={open} onOpenChange={setOpen}>
+      <Collapsible open={isOpen} onOpenChange={setOpen}>
         <CollapsibleTrigger className="w-full text-left">
           <div className="flex items-center gap-2 cursor-pointer group">
             <MessageSquareShare className="h-4 w-4 text-sky-600" />
@@ -570,7 +576,7 @@ function SharedNotesSection({ notes }: { notes: ReturnType<typeof getSharedNotes
               {notes.length}
             </Badge>
             <ChevronDown
-              className={`h-4 w-4 text-muted-foreground transition-transform ${open ? 'rotate-180' : ''}`}
+              className={`h-4 w-4 text-muted-foreground transition-transform print:hidden ${isOpen ? 'rotate-180' : ''}`}
             />
           </div>
           <p className="text-[10px] text-muted-foreground mt-0.5 ml-6">
@@ -633,18 +639,19 @@ interface TrailBehindProps {
   }[];
 }
 
-function TrailBehind({ stages }: TrailBehindProps) {
+function TrailBehind({ stages, forceOpen }: TrailBehindProps & { forceOpen?: boolean }) {
   const [open, setOpen] = useState(false);
+  const isOpen = open || !!forceOpen;
 
   return (
     <motion.section variants={sectionVariant} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-      <Collapsible open={open} onOpenChange={setOpen}>
+      <Collapsible open={isOpen} onOpenChange={setOpen}>
         <CollapsibleTrigger className="w-full text-left">
           <div className="flex items-center gap-2 cursor-pointer group">
             <BookOpen className="h-4 w-4 text-[hsl(var(--ignatian-brown))]" />
             <h2 className="font-serif text-lg font-semibold">Trail Behind</h2>
             <ChevronDown
-              className={`h-4 w-4 text-muted-foreground transition-transform ${open ? 'rotate-180' : ''}`}
+              className={`h-4 w-4 text-muted-foreground transition-transform print:hidden ${isOpen ? 'rotate-180' : ''}`}
             />
           </div>
         </CollapsibleTrigger>
@@ -698,17 +705,18 @@ const DONATION_TYPE_BADGE: Record<string, string> = {
   service: 'bg-violet-50 text-violet-800',
 };
 
-function HouseholdSupport({ household, volunteer, donations }: HouseholdSupportProps) {
+function HouseholdSupport({ household, volunteer, donations, forceOpen }: HouseholdSupportProps & { forceOpen?: boolean }) {
   const [open, setOpen] = useState(false);
+  const isOpen = open || !!forceOpen;
 
   return (
     <motion.section variants={sectionVariant} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-      <Collapsible open={open} onOpenChange={setOpen}>
+      <Collapsible open={isOpen} onOpenChange={setOpen}>
         <CollapsibleTrigger className="w-full text-left">
           <div className="flex items-center gap-2 cursor-pointer">
             <h2 className="font-serif text-lg font-semibold">Household &amp; Support</h2>
             <ChevronDown
-              className={`h-4 w-4 text-muted-foreground transition-transform ${open ? 'rotate-180' : ''}`}
+              className={`h-4 w-4 text-muted-foreground transition-transform print:hidden ${isOpen ? 'rotate-180' : ''}`}
             />
           </div>
         </CollapsibleTrigger>

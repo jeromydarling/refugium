@@ -729,4 +729,10 @@ html.a11y-mode .a11y-voice-hint {
   body {
     font-size: 12pt;
   }
+
+  /* Map fills full width on print */
+  .mapboxgl-map {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
 }
