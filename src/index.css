@@ -730,9 +730,25 @@ html.a11y-mode .a11y-voice-hint {
     font-size: 12pt;
   }
 
-  /* Map fills full width on print */
-  .mapboxgl-map {
+  /* Force framer-motion animated sections visible (they use inline styles) */
+  [style*="opacity: 0"],
+  [style*="opacity:0"] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* Map and its container fill full width on print */
+  .mapboxgl-map,
+  .mapboxgl-canvas-container,
+  .mapboxgl-canvas {
     width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Remove max-width constraints so content fills the page */
+  .max-w-4xl,
+  .max-w-3xl,
+  .max-w-2xl {
     max-width: 100% !important;
   }
 }
