@@ -188,7 +188,7 @@ export function NriCompass() {
         className={`fixed rounded-full bg-[hsl(var(--ignatian-deep))] text-[hsl(var(--ignatian-cream))] shadow-lg hover:shadow-xl transition-shadow flex items-center justify-center ${
           isDesktop
             ? 'bottom-8 left-8 z-50 w-12 h-12'
-            : 'bottom-[20px] left-1/2 -translate-x-1/2 z-40 w-14 h-14'
+            : 'bottom-[36px] left-1/2 -translate-x-1/2 z-40 w-14 h-14'
         }`}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
