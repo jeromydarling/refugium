@@ -234,7 +234,7 @@ export default function PersonDetailPage() {
          ═══════════════════════════════════════════════ */}
       <div className="parchment px-4 pt-4 pb-5 sm:px-6">
         <div className={isDesktop ? 'max-w-4xl mx-auto' : ''}>
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center justify-between mb-3 print:hidden">
             <Link
               to="/demo/app/people"
               className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"

@@ -134,7 +134,7 @@ export default function DemoApp() {
     <div className="min-h-screen bg-background flex flex-col">
       <DemoBanner />
       {/* Mobile header with hamburger */}
-      <header className="sticky top-0 z-40 bg-background border-b px-4 py-2.5 flex items-center justify-between">
+      <header className="sticky top-0 z-40 bg-background border-b px-4 py-2.5 flex items-center justify-between print:hidden">
         <div className="flex items-center gap-3">
           <button onClick={() => setMenuOpen(true)} aria-label="Open menu">
             <Menu className="h-5 w-5 text-foreground" />

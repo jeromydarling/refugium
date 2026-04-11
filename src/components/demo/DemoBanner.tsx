@@ -16,7 +16,7 @@ export function DemoBanner() {
   };
 
   return (
-    <div className="bg-primary text-primary-foreground px-4 py-1.5 flex items-center justify-between gap-3 text-xs shrink-0">
+    <div className="bg-primary text-primary-foreground px-4 py-1.5 flex items-center justify-between gap-3 text-xs shrink-0 print:hidden">
       <div className="flex items-center gap-2 min-w-0">
         <Eye className="h-3 w-3 shrink-0 opacity-80" />
         <span className="font-medium truncate">
