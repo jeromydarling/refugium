@@ -132,8 +132,19 @@ function getDemoResponse(message: string, pathname: string): string {
 }
 
 // ── The Compass Component ──
-export function NriCompass() {
-  const [open, setOpen] = useState(false);
+interface NriCompassProps {
+  /** When provided, the component is controlled externally */
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  /** Hide the floating trigger button (e.g. when trigger lives in bottom nav) */
+  hideTrigger?: boolean;
+}
+
+export function NriCompass({ open: controlledOpen, onOpenChange, hideTrigger }: NriCompassProps = {}) {
+  const [internalOpen, setInternalOpen] = useState(false);
+  const open = controlledOpen ?? internalOpen;
+  const setOpen = onOpenChange ?? setInternalOpen;
+
   const [messages, setMessages] = useState<{ role: 'user' | 'nri'; text: string }[]>([]);
   const [input, setInput] = useState('');
   const { isDemoMode } = useDemoMode();
@@ -182,23 +193,21 @@ export function NriCompass() {
 
   return (
     <>
-      {/* Compass Button — on mobile sits behind bottom nav (z-40 < nav z-50), peeking up */}
-      <motion.button
-        onClick={() => setOpen(true)}
-        className={`fixed rounded-full bg-[hsl(var(--ignatian-deep))] text-[hsl(var(--ignatian-cream))] shadow-lg hover:shadow-xl transition-shadow flex items-center justify-center ${
-          isDesktop
-            ? 'bottom-8 left-8 z-50 w-12 h-12'
-            : 'bottom-[36px] left-1/2 -translate-x-1/2 z-40 w-14 h-14'
-        }`}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        aria-label="Open NRI Compass"
-      >
-        <Compass className={isDesktop ? 'h-6 w-6' : 'h-7 w-7'} />
-        {nudges.some(n => n.urgency === 'high') && (
-          <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-primary border-2 border-[hsl(var(--ignatian-deep))]" />
-        )}
-      </motion.button>
+      {/* Compass trigger button — hidden when trigger lives in bottom nav */}
+      {!hideTrigger && (
+        <motion.button
+          onClick={() => setOpen(true)}
+          className="fixed bottom-8 left-8 z-50 w-12 h-12 rounded-full bg-[hsl(var(--ignatian-deep))] text-[hsl(var(--ignatian-cream))] shadow-lg hover:shadow-xl transition-shadow flex items-center justify-center"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          aria-label="Open NRI Compass"
+        >
+          <Compass className="h-6 w-6" />
+          {nudges.some(n => n.urgency === 'high') && (
+            <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-primary border-2 border-[hsl(var(--ignatian-deep))]" />
+          )}
+        </motion.button>
+      )}
 
       {/* Compass Drawer */}
       <Sheet open={open} onOpenChange={setOpen}>
