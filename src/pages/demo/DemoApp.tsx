@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Outlet, Link, useLocation, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { DemoBanner } from '@/components/demo/DemoBanner';
@@ -94,23 +94,20 @@ export default function DemoApp() {
         <Outlet />
       </main>
       <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background border-t">
-        <div className="flex justify-around items-end">
-          {TABS.map((tab, i) => {
+        <div className="flex justify-around">
+          {TABS.map(tab => {
             const isActive = location.pathname.startsWith(tab.path);
             return (
-              <React.Fragment key={tab.path}>
-                {/* Spacer for compass button between tab 2 and 3 */}
-                {i === 2 && <div className="w-16 shrink-0" />}
-                <Link
-                  to={tab.path}
-                  className={`flex flex-col items-center gap-0.5 py-2.5 px-2 text-[10px] font-medium transition-colors ${
-                    isActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
-                  }`}
-                >
-                  <tab.icon className={`h-5 w-5 ${isActive ? 'text-primary' : ''}`} />
-                  {tab.label}
-                </Link>
-              </React.Fragment>
+              <Link
+                key={tab.path}
+                to={tab.path}
+                className={`flex flex-col items-center gap-0.5 py-2.5 px-2 text-[10px] font-medium transition-colors ${
+                  isActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                <tab.icon className={`h-5 w-5 ${isActive ? 'text-primary' : ''}`} />
+                {tab.label}
+              </Link>
             );
           })}
         </div>

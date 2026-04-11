@@ -182,13 +182,13 @@ export function NriCompass() {
 
   return (
     <>
-      {/* Compass Button */}
+      {/* Compass Button — on mobile sits behind bottom nav (z-40 < nav z-50), peeking up */}
       <motion.button
         onClick={() => setOpen(true)}
-        className={`fixed z-[60] rounded-full bg-[hsl(var(--ignatian-deep))] text-[hsl(var(--ignatian-cream))] shadow-lg hover:shadow-xl transition-shadow flex items-center justify-center ${
+        className={`fixed rounded-full bg-[hsl(var(--ignatian-deep))] text-[hsl(var(--ignatian-cream))] shadow-lg hover:shadow-xl transition-shadow flex items-center justify-center ${
           isDesktop
-            ? 'bottom-8 left-8 w-12 h-12'
-            : 'bottom-[42px] left-1/2 -translate-x-1/2 w-14 h-14'
+            ? 'bottom-8 left-8 z-50 w-12 h-12'
+            : 'bottom-[20px] left-1/2 -translate-x-1/2 z-40 w-14 h-14'
         }`}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
