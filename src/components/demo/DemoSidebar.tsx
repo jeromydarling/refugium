@@ -10,6 +10,7 @@ import {
   BookOpen, Settings, MapPin, Network, Package, FolderKanban,
   Compass, ChevronDown,
 } from 'lucide-react';
+import { AngelWing } from '@/components/shared/AngelWing';
 
 interface NavItem {
   path: string;
@@ -138,7 +139,8 @@ export function DemoSidebar() {
     <div className="fixed left-0 top-0 h-full w-60 z-50 bg-[hsl(var(--sidebar-background))] text-[hsl(var(--sidebar-foreground))] border-r flex flex-col">
       {/* Logo */}
       <div className="px-5 py-4">
-        <h1 className="font-serif text-lg font-bold text-[hsl(var(--sidebar-primary))]">
+        <h1 className="flex items-center gap-1.5 font-serif text-lg font-bold text-[hsl(var(--sidebar-primary))]">
+          <AngelWing size={20} className="text-[hsl(var(--sidebar-primary))]" />
           Refugium
         </h1>
         <p className="text-[10px] text-[hsl(var(--sidebar-foreground))]/50 mt-0.5">Disaster Navigator</p>

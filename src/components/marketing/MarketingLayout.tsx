@@ -3,6 +3,7 @@ import { Link, Outlet } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
+import { AngelWing } from "@/components/shared/AngelWing";
 
 const navLinks = [
   { label: "How It Works", to: "/how-it-works" },
@@ -26,7 +27,8 @@ function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2">
+        <Link to="/" className="flex items-center gap-1.5">
+          <AngelWing size={22} className="text-primary" />
           <span className="font-serif text-xl font-bold text-primary">
             Refugium
           </span>
@@ -103,7 +105,8 @@ function Footer() {
         <div className="grid gap-8 md:grid-cols-3">
           {/* Branding */}
           <div className="space-y-3">
-            <Link to="/" className="inline-block">
+            <Link to="/" className="inline-flex items-center gap-1.5">
+              <AngelWing size={20} className="text-primary" />
               <span className="font-serif text-xl font-bold text-primary">
                 Refugium
               </span>
