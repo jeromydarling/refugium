@@ -416,6 +416,126 @@ Accessed via `/r/:householdId` — no auth, no login. NRI greets them: "What do 
 
 ---
 
+## Implementation Checklist — DO NOT SKIP
+
+**"It compiles" is not "it works."** After building, audit every item below. A clean build with zero TypeScript errors does NOT mean the app is functional. Each of these has been missed in prior AI-assisted builds.
+
+### 1. Auth Must Be Real (CRITICAL — Security)
+
+- [ ] `Login.tsx` MUST call `supabase.auth.signInWithPassword()` — not just `navigate('/dashboard')`
+- [ ] `Signup.tsx` MUST call `supabase.auth.signUp()` — not just `navigate('/onboarding')`
+- [ ] Signup flow MUST create a tenant record and user profile in the database
+- [ ] Add a "Check your email" verification screen after signup
+- [ ] Add a "Forgot password?" link on the Login page → wire to `supabase.auth.resetPasswordForEmail()`
+- [ ] Verify that visiting `/dashboard` directly WITHOUT being logged in redirects to `/login`
+
+### 2. Route Protection (CRITICAL — Security)
+
+- [ ] EVERY app route (`/dashboard`, `/people`, `/people/:id`, etc.) MUST be wrapped in a `<ProtectedRoute>` that checks `supabase.auth.getUser()` before rendering
+- [ ] The existing `src/components/auth/ProtectedRoute.tsx` from CROS already does this — USE IT
+- [ ] Unauthenticated users must be redirected to `/login`, not shown a blank page
+- [ ] The survivor portal (`/r/:id`) is the ONLY route that should be accessible without auth
+
+### 3. No Page Should Import Mock Data Directly
+
+- [ ] Every page that displays data MUST go through a Supabase hook (e.g., `useHouseholds()`, `useNeeds()`)
+- [ ] Each hook MUST have a mock fallback for demo mode: `if (isDemoMode) return mockData`
+- [ ] Search the entire codebase for `from '@/data'` or `from '../data'` — any page-level import is a bug
+- [ ] The `src/data/*.ts` files are REFERENCE ONLY for schema shape — they should not be imported by production pages
+
+### 4. No "Coming Soon" Stubs in Production
+
+- [ ] Search the entire codebase for `"Coming Soon"`, `"coming soon"`, `toast("Coming`)
+- [ ] Every button that exists in the UI MUST do something real or be removed
+- [ ] If a feature isn't ready, remove the button entirely — don't show a broken promise
+- [ ] Specifically check: "Add Employer", "New Placement", "Match Mentor", and any similar CTA buttons
+
+### 5. Database Security (CRITICAL)
+
+- [ ] Review ALL RLS policies — any policy with `USING (true)` for INSERT/UPDATE/DELETE is a security hole
+- [ ] Every write policy MUST scope to the authenticated user's tenant: `USING (tenant_id = auth.jwt() ->> 'tenant_id')`
+- [ ] Check for `SECURITY DEFINER` views — these bypass RLS. Convert to `SECURITY INVOKER` unless there's a specific reason
+- [ ] Run `SELECT * FROM pg_policies` and verify every table has appropriate read/write policies
+
+### 6. API Keys and Secrets
+
+- [ ] `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` — set in `.env`
+- [ ] `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET` — set in Supabase dashboard secrets (not `.env`)
+- [ ] `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` — set in Supabase dashboard secrets
+- [ ] `GEMINI_API_KEY` — set in Supabase dashboard secrets (for NRI AI chat)
+- [ ] `USAJOBS_API_KEY`, `RAPIDAPI_KEY`, `API_211_KEY`, `HUD_BEARER_TOKEN` — set in Supabase dashboard secrets
+- [ ] Verify that NO secret keys are in client-side code (`VITE_` prefix = client-visible)
+- [ ] If Stripe checkout buttons exist, verify they don't error silently when keys are missing — show a clear error
+
+### 7. Demo Mode Must Actually Work
+
+- [ ] `DemoGatePage.tsx` collects name/email — these MUST be persisted (even to localStorage) and used throughout the session
+- [ ] Demo mode MUST create a temporary context (not a real tenant) so demo users can't see or affect real data
+- [ ] `simulateWrite()` calls must show realistic toasts, not generic "saved" messages
+- [ ] All demo pages must be navigable without auth — demo mode bypasses login
+
+### 8. Onboarding Flow
+
+- [ ] After signup, the onboarding flow MUST create: (1) a tenant record, (2) a user profile linked to that tenant, (3) default settings
+- [ ] The onboarding form should collect: organization name, organization type, and at minimum the user's role
+- [ ] After onboarding completes, redirect to `/dashboard` with the new tenant context active
+- [ ] If a user visits `/onboarding` but already has a tenant, redirect them to `/dashboard`
+
+### 9. Mobile Responsiveness
+
+- [ ] Test at 360px viewport width (smallest common phone)
+- [ ] Sidebar navigation needs a hamburger menu pattern on mobile (this is already built in the demo — port it)
+- [ ] Bottom tab bar on mobile is already built — verify it renders on all app routes
+- [ ] Forms, cards, and tables must not overflow horizontally on mobile
+- [ ] The NRI Compass button must be accessible on both mobile and desktop
+
+### 10. Data Export
+
+- [ ] People list needs CSV export button
+- [ ] Household detail page needs PDF export (already built with jsPDF — verify it works with real data)
+- [ ] Reports page needs both PDF and CSV export
+- [ ] Case notes should be exportable for funder compliance reports
+
+### 11. Notification & Communication
+
+- [ ] Add a notification bell/icon to the header or sidebar
+- [ ] NRI signals should appear as in-app notifications, not just on the dashboard
+- [ ] If Supabase Realtime is configured, wire it to push new signals/notes to connected clients
+
+### 12. Audit Trail
+
+- [ ] Case notes MUST have `created_at` and `updated_at` timestamps
+- [ ] If case notes are editable, store edit history (for compliance — 42 CFR Part 2 may apply)
+- [ ] Log who changed a household's status and when
+- [ ] The `field_notes` table already has `created_at` — add `updated_at` and `updated_by`
+
+### 13. Final Verification Checklist
+
+Run these checks AFTER you think you're done:
+
+```bash
+# 1. Check for mock data imports in pages (should be zero)
+grep -r "from '@/data'" src/pages/ --include="*.tsx" | grep -v "demo/" | grep -v ".test."
+
+# 2. Check for "Coming Soon" stubs
+grep -ri "coming soon" src/ --include="*.tsx"
+
+# 3. Check for navigate-only auth (fake login)
+grep -rn "navigate.*dashboard" src/pages/**/Login.tsx src/pages/**/Signup.tsx
+
+# 4. Check for USING (true) in RLS policies
+# Run in Supabase SQL editor:
+# SELECT tablename, policyname, qual FROM pg_policies WHERE qual = 'true';
+
+# 5. Check for missing route protection
+grep -rn "<Route" src/ --include="*.tsx" | grep -v "ProtectedRoute" | grep -v "marketing" | grep -v "demo" | grep -v "SurvivorPortal"
+
+# 6. Verify no secrets in client code
+grep -rn "sk_live\|sk_test\|secret_key\|GOOGLE_CLIENT_SECRET" src/ --include="*.ts" --include="*.tsx"
+```
+
+---
+
 ## Testing the Demo
 
 1. Marketing site: `/`
