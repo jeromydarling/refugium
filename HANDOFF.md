@@ -344,38 +344,158 @@ GEMINI_API_KEY=your-key  # for NRI AI chat
 
 ---
 
+## How CROS Code Connects to Refugium (READ THIS CAREFULLY)
+
+This repo contains TWO codebases layered on top of each other:
+
+1. **Refugium demo layer** — the pages, components, and mock data you see when you run the app. This is the working demo. It lives in `src/pages/demo/`, `src/components/demo/`, and `src/data/`.
+
+2. **CROS production layer** — a complete, battle-tested CRM framework with auth, tenancy, AI chat, calendar sync, reports, and 300+ hooks. It is DORMANT — not broken, not dead code. It was the original app that Refugium was built on top of. It lives in `src/contexts/`, `src/components/layout/`, `src/components/auth/`, `src/components/ai/`, `src/hooks/`, and `src/pages/` (non-demo pages).
+
+**The CROS layer is NOT scaffolding to be rewritten. It is working code to be ACTIVATED.**
+
+### The Migration Pattern: Demo → CROS
+
+For each feature area, you are NOT building from scratch. You are swapping the demo mock version for the CROS real version. Here is exactly how:
+
+#### Auth: `DemoModeContext` → `AuthContext` + `TenantContext`
+
+| Demo (current) | CROS (activate this) |
+|---|---|
+| `src/contexts/DemoModeContext.tsx` — fake auth, `simulateWrite()` | `src/contexts/AuthContext.tsx` — real Supabase auth with session management |
+| No login page — "Skip" button bypasses | `src/components/auth/LoginForm.tsx`, `SignupForm.tsx` — real forms |
+| No route protection | `src/components/auth/ProtectedRoute.tsx` — wraps routes, checks auth |
+| `useDemoMode()` hook | `useAuth()` hook from AuthContext |
+| `demoSession.organization` | `useTenant()` → real tenant from `TenantContext.tsx` |
+
+**What to do:** In `App.tsx`, add `<AuthProvider>` and `<TenantProvider>` wrapping the app. Replace `useDemoMode()` calls with `useAuth()`. Wrap app routes in `<ProtectedRoute>`.
+
+#### App Shell: `DemoSidebar` + `DemoApp` → `MainLayout` + `Sidebar`
+
+| Demo (current) | CROS (activate this) |
+|---|---|
+| `src/components/demo/DemoSidebar.tsx` — hardcoded nav groups | `src/components/layout/Sidebar.tsx` — dynamic nav from tenant config |
+| `src/pages/demo/DemoApp.tsx` — demo shell with bottom tabs | `src/components/layout/MainLayout.tsx` — production shell with header, sidebar, breadcrumbs |
+| `src/components/demo/DemoBanner.tsx` — "Read-only" banner | Not needed — remove in production |
+
+**What to do:** Replace the `DemoApp` layout with `MainLayout`. The sidebar nav structure from `DemoSidebar` (Journeys, Partners, My Day, Stewardship groups) should be ported into the real Sidebar component.
+
+#### AI Chat: `NriCompass` → `AIChatDrawer` + Compass System
+
+| Demo (current) | CROS (activate this) |
+|---|---|
+| `src/components/demo/NriCompass.tsx` — hardcoded mock responses | `src/components/ai/AIChatDrawer.tsx` — real chat UI with streaming |
+| `getDemoResponse()` function | `src/hooks/useAIChatSession.ts` — manages chat sessions |
+| Simple posture inference | `src/hooks/useCompassPosture.ts` — full posture inference from context |
+| Manual nudge generation | `src/hooks/useCompassSessionEngine.ts` — real nudge aggregation |
+| No AI backend | Supabase Edge Function `nri-chat` → Gemini Flash API |
+
+**What to do:** Keep the `NriCompass` UI pattern (the drawer, the posture indicator, the nudge panel) but swap `getDemoResponse()` for a real call to the Edge Function. The CROS hooks (`useCompassSessionEngine`, `useCompassPosture`, `useCompassGlow`) handle all the intelligence — they just need `AuthContext` to be active.
+
+#### Pages: `src/pages/demo/*` → Real pages with hooks
+
+Each demo page has a CROS equivalent or can be upgraded in-place:
+
+| Demo Page | What It Does | How to Upgrade |
+|---|---|---|
+| `OrgDashboard.tsx` | Dashboard with Now/Trends tabs | Replace `useMemo(() => computeKPIs())` with `useHouseholds()` + `useNeeds()` Supabase hooks |
+| `PeopleTab.tsx` | Household list with search/filter | Replace `import { households } from '@/data'` with `useHouseholds()` hook |
+| `PersonDetailPage.tsx` | Full household detail with trail, map, needs | Replace `getHousehold(id)` with `useHousehold(id)` hook; replace `getNeedsForHousehold(id)` with `useNeeds(id)` hook |
+| `RefugeTab.tsx` | Partner list with map | Replace `import { partners } from '@/data'` with `usePartners()` hook |
+| `FlowTab.tsx` | Tasks + volunteers + schedule | Replace mock `DEMO_TASKS` with `useTasks()` hook |
+| `BoardView.tsx` | Kanban by journey stage | Replace `households` import with `useHouseholds()` |
+| `CalendarView.tsx` | Monthly calendar | CROS has `src/components/calendar/` with Google Calendar sync — USE IT |
+| `ReportsPage.tsx` | PDF/CSV reports | CROS has `src/components/reports/` with full report builder — USE IT |
+| `ProvisionsPage.tsx` | Supplies + donations | Replace `donations` import with `useDonations()` hook |
+
+**The pattern is always the same:**
+1. Keep the demo page's UI (it's already designed and working)
+2. Replace `import { X } from '@/data'` with a Supabase hook
+3. Each hook should check `isDemoMode` and return mock data as fallback
+4. Replace `simulateWrite('...')` calls with real Supabase mutations (`supabase.from('table').insert(...)`)
+
+#### Hooks: 300+ CROS hooks exist — DON'T REBUILD THEM
+
+The `src/hooks/` directory has 300+ hooks. Many are CROS-specific and won't be needed, but these are directly usable:
+
+| Hook | Purpose | Dependency |
+|---|---|---|
+| `useAuth()` | Current user, login/logout | `AuthContext` |
+| `useTenant()` | Current org context | `TenantContext` |
+| `useCompassSessionEngine()` | NRI nudge aggregation | Auth + Tenant |
+| `useCompassPosture()` | AI tone inference | Auth |
+| `useCompassGlow()` | Compass presence indicator | Auth |
+| `useIsMobile()` | < 768px breakpoint | None |
+| `useIsDesktop()` | >= 1024px breakpoint | None |
+| `usePrintMode()` | Print media query | None |
+| `use-toast` | Toast notifications | None |
+
+**Do NOT rewrite these hooks.** If a hook fails because `AuthContext` doesn't exist yet, the fix is to add `AuthProvider` — not to rewrite the hook.
+
+#### Contexts: 7 CROS contexts exist
+
+| Context | File | When to Activate |
+|---|---|---|
+| `AuthContext` | `src/contexts/AuthContext.tsx` | Immediately — this is the foundation |
+| `TenantContext` | `src/contexts/TenantContext.tsx` | Immediately — after auth |
+| `DemoModeContext` | `src/contexts/DemoModeContext.tsx` | Keep as-is for demo mode fallback |
+| `ImpersonationContext` | `src/contexts/ImpersonationContext.tsx` | After admin console is wired |
+| `ViewModeContext` | `src/contexts/ViewModeContext.tsx` | After role-based views are needed |
+| `NotificationContext` | `src/contexts/NotificationContext.tsx` | After Supabase Realtime is configured |
+| `OnboardingContext` | `src/contexts/OnboardingContext.tsx` | After signup flow is wired |
+
+### What NOT to Do
+
+- **DO NOT** delete CROS files because they have TypeScript errors when `AuthContext` isn't provided. Fix the provider chain instead.
+- **DO NOT** rewrite hooks that already exist. If `useCompassSessionEngine` throws because it can't find auth, the answer is to add `AuthProvider`, not to write a new hook.
+- **DO NOT** create new page components for features that already have demo pages. Upgrade the demo page in place.
+- **DO NOT** create a new sidebar component. Port the nav structure into the existing `Sidebar.tsx`.
+- **DO NOT** build a new AI chat component. The `AIChatDrawer` exists — wire it to the Edge Function.
+- **DO NOT** build new calendar, reports, or volunteer management UI. These exist in CROS `src/components/` — adapt them.
+
+### The Correct Activation Order
+
+1. **Add `AuthProvider` + `TenantProvider`** to `App.tsx` (wrap the router)
+2. **Wire Login/Signup** to real Supabase Auth
+3. **Add `ProtectedRoute`** to all app routes
+4. **Create Supabase hooks** (`useHouseholds`, `useNeeds`, `usePartners`, `useVolunteers`, `useDonations`, `useSignals`) — each with `isDemoMode` fallback
+5. **Swap imports** in each demo page: `from '@/data'` → the new hook
+6. **Swap `simulateWrite()`** calls → real Supabase mutations
+7. **Wire NRI chat** to Edge Function (keep `NriCompass` UI, replace `getDemoResponse()`)
+8. **Activate CROS calendar** component with Google Calendar sync
+9. **Activate CROS reports** component with real data
+10. **Configure Stripe, Gmail, external APIs** via dashboard secrets
+
+---
+
 ## What to Keep vs Delete
 
-### KEEP (actively used or ready to wire)
-- Everything in `src/pages/demo/` — the entire demo app
+### KEEP (actively used — the demo app)
+- Everything in `src/pages/demo/` — upgrade these pages in place
 - Everything in `src/pages/marketing/` — the marketing site
 - `src/pages/SurvivorPortal.tsx` — survivor secret-link portal
 - `src/components/demo/`, `people/`, `refuge/`, `flow/`, `nri/`, `map/`, `shared/`, `marketing/`
-- `src/components/ui/` — all 56 shadcn components
-- `src/data/` — mock data (reference for schema)
+- `src/components/ui/` — all 56 shadcn components (DO NOT MODIFY)
+- `src/data/` — mock data (reference for schema + demo mode fallback)
 - `src/services/` — API service layer (reference for Edge Functions)
 - `src/lib/animations.ts`, `utils.ts`, `nri/`, `relatio/`
 - `src/config/`, `src/hooks/useIsDesktop.ts`, `use-mobile.tsx`, `use-toast.ts`
 
-### KEEP (CROS code ready for adaptation)
-- `src/components/layout/` — real app shell
-- `src/components/auth/` — protected routes
-- `src/components/dashboard/` — 33 dashboard components
-- `src/components/calendar/` — Google Calendar sync
-- `src/components/contacts/` — contact management
-- `src/components/reports/` — report builder + PDF
-- `src/components/volunteers/` — volunteer management
-- `src/components/settings/` — org configuration
-- `src/components/admin/`, `operator/` — admin console
-- `src/components/ai/`, `compass/` — full NRI compass system
-- `src/components/relatio/` — integration framework
+### KEEP (CROS code — ACTIVATE, don't rewrite)
 - `src/contexts/AuthContext.tsx`, `TenantContext.tsx` — auth/tenant providers
-- `src/pages/` (CROS pages) — Dashboard, CommandCenter, People, PersonDetail, Pipeline, Volunteers, Events, Calendar, Reports, Metros, etc.
+- `src/components/layout/` — real app shell (MainLayout, Sidebar, Header)
+- `src/components/auth/` — ProtectedRoute, login/signup forms
+- `src/components/ai/`, `compass/` — full NRI compass system
+- `src/components/calendar/` — month/week views, Google Calendar sync
+- `src/components/reports/` — report builder + PDF templates
+- `src/components/volunteers/` — volunteer management UI
+- `src/components/settings/` — integration cards, feature toggles
+- `src/components/relatio/` — integration connectors, migration assistant
+- `src/components/dashboard/` — 33 dashboard card components
+- `src/hooks/useCompass*.ts`, `useAuth.ts`, `useTenant.ts` — core hooks
 
-### SAFE TO DELETE (after migration)
-- `src/pages/demo/` — replaced by real pages once auth is wired
-- `src/components/demo/DemoBanner.tsx` — demo-only
-- `src/components/demo/DemoSidebar.tsx` — replaced by real Sidebar
+### SAFE TO DELETE (only after real auth is working)
+- `src/components/demo/DemoBanner.tsx` — demo-only indicator
 - `src/components/demo/DemoGuidedTour.tsx` — CROS-specific
 - `src/components/demo/DemoSessionExpiry.tsx` — CROS-specific
 - `src/components/demo/DemoActivityPulse.tsx` — CROS-specific
