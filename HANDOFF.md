@@ -251,6 +251,45 @@ Each function in `src/services/resourceApi.ts` has a TODO comment showing the re
 | `searchHealthServices(zip)` | `health-centers` | HRSA Health Center Finder (no auth) |
 | `getNavigationSteps(householdId)` | `navigation-steps` | Composite: queries above + household data |
 
+### Edge Functions: 278 Exist, You Need ~12 (IMPORTANT)
+
+The `supabase/functions/` directory contains **278 Edge Functions from the original CROS codebase**. The vast majority are NOT relevant to Refugium. They will fail Deno type-checks (missing `npm:openai` resolution, stale Supabase generic types, undefined symbols like `automationRunId`, etc.). **These errors are expected and do not affect the frontend.**
+
+**DO NOT try to fix all 278 functions. DO NOT "quarantine" them. DO NOT delete them.**
+
+Instead, **only deploy the functions Refugium needs.** Create these NEW Edge Functions from scratch (they are simple API proxies):
+
+| Function Name | Purpose | Complexity |
+|---|---|---|
+| `nri-chat` | NRI AI chat — receives message + context, calls Gemini Flash, returns response | Medium |
+| `fema-disasters` | Proxy to FEMA API — no auth needed | Simple |
+| `weather-alerts` | Proxy to NWS API — User-Agent header | Simple |
+| `job-search` | Proxy to USAJOBS + JSearch — API keys | Simple |
+| `snap-retailers` | Proxy to USDA ArcGIS — no auth | Simple |
+| `shelter-search` | Proxy to RapidAPI shelter API | Simple |
+| `social-services` | Proxy to 211 API — trial key | Simple |
+| `hud-fmr` | Proxy to HUD API — Bearer token | Simple |
+| `health-centers` | Proxy to HRSA API — no auth | Simple |
+| `transportation` | GTFS feeds + static data | Simple |
+| `navigation-steps` | Composite: combines above APIs + household data | Medium |
+| `stripe-checkout` | Creates Stripe checkout session (if billing is needed) | Medium |
+
+**The other 266 functions** (campaign sync, automation gates, communio governance, enrichment workers, etc.) are CROS infrastructure. They can be activated later if/when those features are needed. For now, they sit dormant — do not deploy them, do not fix their type errors, do not delete them.
+
+**To deploy only Refugium functions:**
+```bash
+# Deploy individual functions (not all at once)
+supabase functions deploy nri-chat
+supabase functions deploy fema-disasters
+supabase functions deploy weather-alerts
+# ... etc.
+
+# DO NOT run:
+# supabase functions deploy  (this deploys ALL 278 and will fail)
+```
+
+**If your build system tries to type-check all functions:** Add a `.supabaserc` or build config that only includes the functions listed above. The CROS functions in `supabase/functions/` are not broken — they just have dependencies (OpenAI SDK, specific Supabase types) that aren't installed in this project because Refugium doesn't use them.
+
 ### Auth Integration
 
 **Current:** `DemoModeContext` provides `isDemoMode`, `simulateWrite()`, `demoSession`.
